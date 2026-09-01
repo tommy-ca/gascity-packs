@@ -243,6 +243,7 @@ def test_plain_gastown_polecat_sling_starts_default_graph_workflow(
     (
         ("gc", "gascity", "gc.implementation-worker", "# GC Role Worker"),
         ("bmad", "bmad", "bmad.story-implementer", "# BMAD Story Implementer"),
+        ("pstack", "pstack", "pstack.implementation-worker", "# PStack Implementation Worker"),
         (
             "superpowers",
             "superpowers",
