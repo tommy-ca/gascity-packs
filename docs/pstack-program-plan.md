@@ -302,7 +302,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Appendix A. Prototype evidence
 
-Isolation lives on `feat/pstack-pack-honesty` at ancestor `2f65f7b`. HEAD is `8e0ec24` on `feat/pstack-pack-honesty`. gastownhall PR 385 is closed unmerged. Focused pack tests printed 50 passed. mapping-gaps validate-only printed `Change 'pstack-mapping-gaps' is valid`. Disposable live-city import with `GC_TEST_BIN` set printed 4 passed and 1 skipped on `tests/test_maintained_packs_live_gc.py`. Scratch city `/tmp/pstack-sling-probe-pmkbrigx/retry` listed and showed `pstack-poteto-mode` and `pstack-build`. Inference-gate `--setup-only` for pack pstack printed `setup-only gate passed for pstack`. Workdir was `/tmp/pstack-inference-setup-gitpin-366837`. That city showed `pstack-review` and `pstack-build` with `formula_v2` and a `gascity/roles` import. write_city still shows all 40 formulas. This is a second city shape. After `bd init`, `gc formula cook pstack-poteto-mode` created root `de-fr9`. `gc formula cook pstack-build --attach de-a5l` failed. The compiler said unknown formulas v2 target `gc.run-operator`. `gc sling --dry-run demo/claude` planned a route for both formulas. No live session ran. Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven. Pin still `29c84db` / `sha256:89aee457`. Do not restamp it. Restamp of gastownhall registry.toml is not the publication vehicle. Panel stamp remains verified-unproven. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com.
+Isolation lives on `feat/pstack-pack-honesty` at ancestor `2f65f7b`. HEAD is `19e9e50` before this honesty tick. gastownhall PR 385 is closed unmerged. Inference-gate `--setup-only` printed `setup-only gate passed for pstack`. That city showed `pstack-review` and `pstack-build`. write_city shows all 40 formulas. Arena picked cook plus route of `pstack-poteto-mode` then `pstack-build` in a disposable roles city. Receipt is sling JSON root id plus `gc.routed_to`. Full drain is not required. `pstack-review` then `pstack-build` launch is not that receipt. Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven. Pin still `29c84db` / `sha256:89aee457`. Do not restamp it. Restamp of gastownhall registry.toml is not the publication vehicle. Panel stamp remains verified-unproven. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com.
 
 ## Appendix B. Alternatives rejected
 
@@ -313,6 +313,8 @@ Catalog restamp of gastownhall `registry.toml` as the publication vehicle. Lost.
 A third GitHub PR for restamp. Already lost.
 
 A new remaining-units delta just to write sling again. Lost. Remaining-units already names sling, publish, compiler, and panel stamp.
+
+Treat inference-gate `pstack-review` then `pstack-build` launch as remaining-units sling. Lost. Arena base is cook plus route of `pstack-poteto-mode` then `pstack-build`.
 
 Rewrite the live checker to pack-vendor `grok-4.6-fast-xhigh`. Lost. Host plugin `check-plan.mjs` is the live checker.
 
@@ -334,4 +336,4 @@ The catalog pin on this branch still points at gastownhall `tree/main/pstack`. T
 
 ## Appendix D. Links and reading list
 
-`pstack/DESIGN.md` Provider panel fanout. `openspec/specs/gascity-provider-panel/spec.md`. `openspec/specs/pstack-gascity-pack/spec.md`. `openspec/specs/pstack-delivery-evidence/spec.md`. `openspec/changes/2026-09-03-pstack-graph-honesty/`. `pstack/scripts/apply_intent_change.py`. `validate_registry.py` foreign-source message names registry.gascity.com/publish and refuses a tommy-ca catalog source. Hosted publish is `gc pack registry publish`. Use `skills/how/SKILL.md` and `skills/interrogate/SKILL.md` on `pr-pstack-panel-stamp`. Use `skills/how/SKILL.md` on `pr-pstack-graph-honesty`.
+`pstack/DESIGN.md` Provider panel fanout. `openspec/specs/gascity-provider-panel/spec.md`. `openspec/specs/pstack-gascity-pack/spec.md`. `openspec/specs/pstack-delivery-evidence/spec.md`. `openspec/changes/archive/2026-09-03-pstack-graph-honesty/`. `openspec/changes/archive/2026-09-03-pstack-host-sling-receipt/`. `pstack/scripts/apply_intent_change.py`. `validate_registry.py` foreign-source message names registry.gascity.com/publish and refuses a tommy-ca catalog source. Hosted publish is `gc pack registry publish`. Use `skills/how/SKILL.md` and `skills/interrogate/SKILL.md` on `pr-pstack-panel-stamp`. Use `skills/how/SKILL.md` on `pr-pstack-graph-honesty`.

@@ -914,6 +914,22 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "pstack-review" in setup_block
     assert "pstack-build" in setup_block
     assert "MUST NOT treat setup-only formula show as formula sling" in setup_block
+    receipt_req = (
+        "Host sling receipts of pstack-poteto-mode then pstack-build are cook plus route"
+    )
+    assert receipt_req in delivery_spec
+    receipt_block = delivery_spec.split("### Requirement: " + receipt_req, 1)[1]
+    receipt_block = receipt_block.split("### Requirement:", 1)[0]
+    assert "pstack-poteto-mode" in receipt_block
+    assert "pstack-build" in receipt_block
+    assert "gc.routed_to" in receipt_block
+    assert "sling JSON" in receipt_block
+    assert "full drain of `pstack-build` is not required" in receipt_block
+    assert (
+        "MUST NOT treat `pstack-review` then `pstack-build` as the remaining-units sling"
+        in receipt_block
+    )
+    assert "This change MUST NOT sling" in receipt_block
     three_ids = (
         "`pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`"
     )
