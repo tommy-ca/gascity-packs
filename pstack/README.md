@@ -41,8 +41,7 @@ gc rig add .
    The intended GitHub form is
    `gc import add https://github.com/gastownhall/gascity-packs.git//pstack`.
    That URL works only when the imported git ref contains `pstack/`. `origin/main`
-   does not contain `pstack/` yet. Registry `0.1.0` is a catalog pin, not a slung
-   production release. Do not restamp it without a host sling of
+   does not contain `pstack/` yet. Registry `0.1.0` is a catalog pin, not a slung production release. Do not restamp it without a host sling of
    `pstack-poteto-mode` and `pstack-build`. Restamp of gastownhall
    `registry.toml` is not the publication vehicle. Hosted dest is
    `gc pack registry publish` of pack path `pstack/` to
