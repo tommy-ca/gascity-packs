@@ -376,16 +376,17 @@ treat a generic JSON `id` as a sling root. It MUST reject formula show
 and `--setup-only` logs. It MUST NOT call `launch_review_formula` or
 `launch_build_formula` for this pair. A complete proof MUST include both
 formulas with both `gc.routed_to` values. A poteto-only row MAY persist
-as a failed partial. Hosted submit of `gc pack registry publish` waits on
-the operator review-gate after dry-run. Registry whoami is present.
-Catalog restamp of gastownhall `registry.toml` is not that dest. Full
-drain of `pstack-build` is not required. The receipt MUST NOT be
-`pstack-review` then `pstack-build`. Formula show is not a receipt.
+as a failed partial. Hosted submit of unscoped `pstack` from remote
+`tommy` waits on the later scoped-name unit. Registry whoami is present.
+Dry-run of `gc pack registry publish` of pack path `pstack/` from this
+branch is proven. That dry-run MUST NOT be treated as registry
+acceptance. Catalog restamp of gastownhall `registry.toml` is not that
+dest. Full drain of `pstack-build` is not required. The receipt MUST NOT
+be `pstack-review` then `pstack-build`. Formula show is not a receipt.
 Setup-only show is not a receipt. `pstack-poteto-mode` MUST NOT auto-sling
 the classified formula. The sling unit MUST NOT be a GitHub PR. The
-operator MUST NOT sling into a canonical city. Dry-run of
-`gc pack registry publish` of pack path `pstack/` from this branch is
-proven. Submit was not sent.
+operator MUST NOT sling into a canonical city. Submit was not sent. This
+change MUST NOT rename `pstack/pack.toml`.
 
 #### Scenario: Cook plus route of pstack-poteto-mode then pstack-build is the sling receipt
 
@@ -419,7 +420,8 @@ proven. Submit was not sent.
 - **AND** the request is not submitted
 - **AND** catalog restamp of gastownhall `registry.toml` is not the dest
 - **AND** `gc pack registry whoami` succeeds
-- **AND** submit waits on the operator review-gate
+- **AND** unscoped hosted submit from tommy waits on the scoped-name unit
+- **AND** dry-run is not registry acceptance
 
 ## Non-Goals
 
