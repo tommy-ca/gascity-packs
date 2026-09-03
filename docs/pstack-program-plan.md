@@ -35,7 +35,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] `pr-pstack-land-honesty` first. Branch `feat/pstack-pack-honesty`. gastownhall PR 385 is closed unmerged. Do not reopen it.
   - [ ] `pr-pstack-graph-honesty` after isolation is on `feat/pstack-pack-honesty`. Docs and OpenSpec only. Parallel with host sling.
   - [ ] Maintain remote tommy. Push isolation to remote `tommy` (`tommy-ca/gascity-packs`). Not origin. Not reopen 385.
-  - [ ] Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`. Not a GitHub PR.
+  - [x] Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`. Not a GitHub PR.
   - [x] Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route.
   - [ ] Do not restamp registry.toml commit or hash without sling receipts.
   - [ ] Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`.
