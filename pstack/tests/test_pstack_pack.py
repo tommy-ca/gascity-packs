@@ -904,9 +904,15 @@ def test_delivery_checks_cover_pstack() -> None:
         assert "dest-env" not in body
     program = (PACKS_ROOT / "docs/pstack-program-plan.md").read_text()
     assert "pr-pstack-land-honesty" in program
+    assert "pr-pstack-publish" in program
     assert "pr-pstack-panel-stamp" in program
     assert "Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`" in program
-    assert "Restamp `registry.toml` 0.1.0 after sling receipts of `pstack-poteto-mode` and `pstack-build`" in program
+    assert "Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven" in program
+    assert "Do not restamp registry.toml commit or hash without sling receipts" in program
+    assert "Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`" in program
+    assert "Restamp of gastownhall registry.toml is not the publication vehicle" in program
+    assert "Maintain remote tommy" in program
+    assert "Restamp `registry.toml` 0.1.0 after sling receipts of `pstack-poteto-mode` and `pstack-build`" not in program
     assert "gastownhall PR 385 is closed unmerged" in program
     assert "registry.gascity.com" in program
     assert "is on 385" not in program

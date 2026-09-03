@@ -1,12 +1,12 @@
 # PStack program plan
 
-A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. Isolation is on branch `feat/pstack-pack-honesty`. It is not landed on gastownhall main. gastownhall PR 385 is closed unmerged. Do not reopen it. Host sling and registry restamp remain. Operator publication dest is https://registry.gascity.com/publish. This change does not publish. The program then stamps formulas only after Gas City consumes `gc.provider_panel`. The live graph is this file.
+A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. Isolation is on branch `feat/pstack-pack-honesty`. It is not landed on gastownhall main. gastownhall PR 385 is closed unmerged. Do not reopen it. Maintain remote tommy. Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven. Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`. Operator publication dest is https://registry.gascity.com. Restamp of gastownhall registry.toml is not the publication vehicle. This change does not publish, sling, restamp hashes, or stamp panel keys. The live graph is this file.
 
 ## How to read this
 
 One box is one unit of work. Every box names the evidence that checks it. A nested box is a sub-step of the box above it. Check a box only when its evidence exists, a file, a log line, a screenshot, a test run, or a SHA. The body is a how-to. The appendices explain and record.
 
-The program runs `skills/poteto-mode/playbooks/autopilot-stack.md`. The operator lands `pr-pstack-land-honesty` then later `pr-pstack-panel-stamp`. Owners do not merge.
+The execution playbook is `skills/poteto-mode/playbooks/orchestrate.md`. That playbook is the standing fork plus registry program. The operator maintains the tommy fork and publishes. Owners do not merge to gastownhall. The operator lands nothing on origin.
 
 Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. The operator lands the stack. Isolation is already on feat/pstack-pack-honesty. Done when a host city slings pstack-poteto-mode and pstack-build, 0.1.0 is restamped after those receipts, and formulas still omit gc.provider_panel until the compiler consumer exists."
+- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. The operator publishes via gc pack registry publish after sling. Isolation is already on feat/pstack-pack-honesty. Done when host sling receipts exist, hosted publish is queued or shown, and formulas still omit gc.provider_panel until the compiler consumer exists."
 - [ ] Read these from trunk at program start. Re-read them at every tick.
   - [ ] `git show origin/main:.github/workflows/ci.yml`
   - [ ] `git show origin/main:registry.toml`
@@ -25,7 +25,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] `git show origin/main:gascity/REQUIREMENTS.md`
   - [ ] `git show origin/main:validate_registry.py`
 - [ ] Arm the 30-minute audit tick with `scheduler_create` (`interval: "30m"`, `fire_immediately: true`) and `monitor` for event wakes. Never leave the cadence to memory.
-- [ ] Use this tick prompt, verbatim. "Re-read docs/pstack-program-plan.md. The execution playbook is the host plugin skills/poteto-mode/playbooks/autopilot-stack.md, not a path on this origin/main. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by side effects only. Stand down a stuck lane and dispatch its replacement now. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
+- [ ] Use this tick prompt, verbatim. "Re-read docs/pstack-program-plan.md. The execution playbook is the host plugin skills/poteto-mode/playbooks/orchestrate.md, not a path on this origin/main. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by side effects only. Stand down a stuck lane and dispatch its replacement now. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
 - [ ] On the operator's hold or stand-down, send every owner a zero-writes order at once.
 
 ### Spawn owners
@@ -33,12 +33,17 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] From this parent session, spawn one owner per PR with `spawn_subagent` (`isolation: "worktree"`). Depth is 1. Owners do not spawn.
 - [ ] Follow this dependency graph. Start dependent work only after its parent merges, or base it on the parent branch when the execution playbook stacks.
   - [ ] `pr-pstack-land-honesty` first. Branch `feat/pstack-pack-honesty`. gastownhall PR 385 is closed unmerged. Do not reopen it.
+  - [ ] Maintain remote tommy. Push isolation to remote `tommy` (`tommy-ca/gascity-packs`). Not origin. Not reopen 385.
   - [ ] Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`. Not a GitHub PR.
-  - [ ] Restamp `registry.toml` 0.1.0 after sling receipts of `pstack-poteto-mode` and `pstack-build`.
+  - [ ] Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven.
+  - [ ] Do not restamp registry.toml commit or hash without sling receipts.
+  - [ ] Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`.
+  - [ ] Restamp of gastownhall registry.toml is not the publication vehicle.
+  - [ ] After receipts, `pr-pstack-publish` via `gc pack registry publish pstack`.
   - [ ] Gas City compiler consumer for `gc.provider_panel`. Outside this packs formula tree.
   - [ ] `pr-pstack-panel-stamp` after that consumer exists.
-- [ ] Hold the file boundaries. `pr-pstack-land-honesty` must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml` until the restamp box. `pr-pstack-panel-stamp` touches formulas, schemas, and tests.
-- [ ] Hold the review gate. `pr-pstack-land-honesty` changes no interaction. It is not review-gated. `pr-pstack-panel-stamp` changes sling behavior. It is review-gated.
+- [ ] Hold the file boundaries. `pr-pstack-land-honesty` must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-publish` must not rename `pstack/pack.toml` in this honesty change. `pr-pstack-panel-stamp` touches formulas, schemas, and tests.
+- [ ] Hold the review gate. `pr-pstack-land-honesty` changes no interaction. It is not review-gated. `pr-pstack-publish` talks to the hosted registry. It is review-gated. `pr-pstack-panel-stamp` changes sling behavior. It is review-gated.
 
 ### PR mechanics, for every PR
 
@@ -52,7 +57,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 - [ ] At the merge-ready head SHA, run the swarm per `skills/swarm/SKILL.md`. One gates lane. The ten live lanes from the PR's **Verify, live** block. The perf lane from its **Verify, perf** block. One audit lane that reads the diff and the receipts and distrusts the PR body.
 - [ ] Clean only when every lane is `PASS`. Findings go back to the owner. A new head gets a fresh swarm and a fresh verdict.
-- [ ] Root appends the PR to the Graphite stack. The operator lands it. Owners do not merge.
+- [ ] Root does not merge to gastownhall. The operator lands nothing on origin. Owners do not merge.
 
 ### Boot recipe, for every live lane
 
@@ -119,14 +124,67 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Merge.**
 
-- [ ] Root's clean verdict at the exact head SHA.
-- [ ] Bugbot triage done.
-- [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends the PR to the Graphite stack and the operator lands it.
+- [ ] Isolation is already on `feat/pstack-pack-honesty`.
+- [ ] Do not merge to gastownhall.
+- [ ] Do not reopen gastownhall PR 385.
+- [ ] Maintain remote tommy.
+
+## Publish pstack to hosted Registry (`pr-pstack-publish`)
+
+**Depends on.** Host sling receipts of `pstack-poteto-mode` and `pstack-build`.
+
+**Files.**
+
+- [ ] Later scoped-name unit may edit `pstack/pack.toml` and pack tests.
+- [ ] This honesty change must not rename `pstack/pack.toml`.
+
+**Build.**
+
+- [ ] Do not run `gc pack registry publish` in this honesty change.
+
+**You see.**
+
+- [ ] `gc pack registry publish --dry-run` is the later evidence. This box stays unchecked in this honesty change.
+
+**Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+
+- [ ] Pack tests lock `pr-pstack-publish` and refuse restamp as the publication vehicle. Run `uv run --with pytest --with pyyaml pytest -q pstack/tests/test_pstack_pack.py`.
+
+**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `grok-4.6` at the PR head, per the boot recipe.
+
+- [ ] Lane 1. Confirm host sling receipts of both formulas. Save `sling-receipts.png`. Pass when cook and route receipts exist for `pstack-poteto-mode` and `pstack-build`.
+- [ ] Lane 2. Confirm isolation is on remote `tommy`. Save `tommy-push.png`. Pass when `tommy/feat/pstack-pack-honesty` contains isolation.
+- [ ] Lane 3. Dry-run hosted publish. Save `publish-dry-run.png`. Pass when `gc pack registry publish --dry-run` exits 0 against pack path `pstack/`.
+- [ ] Lane 4. Confirm pack name is still `pstack`. Save `pack-name.png`. Pass when `pstack/pack.toml` `[pack] name` is `pstack`.
+- [ ] Lane 5. Confirm `registry.toml` pin is unchanged in this honesty change. Save `no-restamp.png`. Pass when `commit` and `hash` match the parent blob.
+- [ ] Lane 6. Confirm gastownhall PR 385 stays closed. Save `no-385.png`. Pass when that PR is not reopened.
+- [ ] Lane 7. Grep formulas for `gc.provider_panel`. Save `no-panel.png`. Pass when the grep is empty.
+- [ ] Lane 8. Confirm `validate_registry.py` still names gastownhall. Save `canonical-repo.png`. Pass when `CANONICAL_REPO` is unchanged.
+- [ ] Lane 9. Confirm dest is registry.gascity.com. Save `hosted-dest.png`. Pass when publish targets registry.gascity.com.
+- [ ] Lane 10. Confirm registry login and pushed HEAD. Save `registry-login.png`. Pass when the operator is logged in and HEAD is on remote `tommy`.
+
+**Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+
+- [ ] Metric. Wall time of `gc pack registry publish --dry-run` for pack path `pstack/`.
+- [ ] Probe. Run that dry-run at the head after sling receipts exist.
+- [ ] Baseline. Record the dry-run seconds first.
+- [ ] Rule. Head fails if dry-run is more than twice the recorded seconds without an accepted cost note.
+
+**Review gate.** The operator reviews before publish. Publish is an interaction with the registry.
+
+- [ ] Copy lane 3 screenshots into `<media path>/pr-pstack-publish-review-dry-run.png`.
+- [ ] Record a 30 to 60 second video of the dry-run on the worktree child's real surface. Save it as `<media path>/pr-pstack-publish-review.mp4`.
+- [ ] Post the screenshots and the video in chat. Stop at merge-ready. Wait for the operator's click.
+
+**Merge.**
+
+- [ ] Operator publishes with `gc pack registry publish pstack`.
+- [ ] Do not merge to gastownhall.
+- [ ] Do not restamp gastownhall `registry.toml` as the publication vehicle.
 
 ## Stamp panel keys after the consumer (`pr-pstack-panel-stamp`)
 
-**Depends on.** `pr-pstack-land-honesty`. Gas City compiler consumer for `gc.provider_panel`.
+**Depends on.** `pr-pstack-publish`. Gas City compiler consumer for `gc.provider_panel`.
 
 **Files.**
 
@@ -175,10 +233,9 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Merge.**
 
-- [ ] Root's clean verdict at the exact head SHA.
-- [ ] Bugbot triage done.
-- [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends the PR to the Graphite stack and the operator lands it.
+- [ ] Do not merge to gastownhall.
+- [ ] Stamp only after the compiler consumer exists.
+- [ ] Formulas stay unstamped until that consumer exists.
 
 ## Close the program
 
@@ -187,15 +244,15 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Appendix A. Prototype evidence
 
-Explorer 01 proved production and panel plans still sequenced a foreign OpenSpec checkout while isolation already lived in the working tree. Isolation lives on `feat/pstack-pack-honesty` at `2f65f7b`. gastownhall PR 385 is closed unmerged. Arena candidate 1 is one master plan. Candidate 2 is an index plus three files. Live sling of a panel remains unproven. `GC_TEST_BIN` unset.
+Explorer 01 proved production and panel plans still sequenced a foreign OpenSpec checkout while isolation already lived in the working tree. Isolation lives on `feat/pstack-pack-honesty` at `2f65f7b`. gastownhall PR 385 is closed unmerged. Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven this session. Registry restamp remains verified-unproven this session. Pin still `29c84db` / `sha256:89aee457`. Panel stamp remains verified-unproven this session. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com. `GC_TEST_BIN` unset.
 
 ## Appendix B. Alternatives rejected
 
-Three stacked plans plus an index. Extra files for the same DAG. Lost.
+Merge isolation to gastownhall. Lost.
 
-A foreign OpenSpec archive node. This repository owns Gherkin. Lost.
+Catalog restamp of gastownhall `registry.toml` as the publication vehicle. Lost.
 
-A third GitHub PR for restamp. TRACEABILITY wants restamp after sling receipts. Lost.
+A third GitHub PR for restamp. Already lost.
 
 ## Appendix C. Risks
 
@@ -203,8 +260,12 @@ A third GitHub PR for restamp. TRACEABILITY wants restamp after sling receipts. 
 
 Gas City compiler is outside this packs tree. `pr-pstack-panel-stamp` must not start on Gherkin alone.
 
-Dual corpus. `pstack/skills/arena/SKILL.md` still documents Cursor Task. Watch that in stamp lane 10.
+Dual corpus. `pstack/skills/arena/SKILL.md` still documents Cursor Task. Host plugin `check-plan.mjs` is the live checker. Pack vendor `check-plan.mjs` is a second corpus. Watch that in stamp lane 10.
+
+Scoped name is a later unit. `pstack/pack.toml` stays unscoped `pstack` in this honesty change.
+
+Hosted publish needs registry login and a pushed HEAD on remote `tommy`.
 
 ## Appendix D. Links and reading list
 
-`pstack/DESIGN.md` Provider panel fanout. `openspec/specs/gascity-provider-panel/spec.md`. `openspec/specs/pstack-gascity-pack/spec.md`. `pstack/scripts/apply_intent_change.py`. Use `skills/how/SKILL.md` and `skills/interrogate/SKILL.md` on `pr-pstack-panel-stamp`.
+`pstack/DESIGN.md` Provider panel fanout. `openspec/specs/gascity-provider-panel/spec.md`. `openspec/specs/pstack-gascity-pack/spec.md`. `pstack/scripts/apply_intent_change.py`. `validate_registry.py` foreign-source message names registry.gascity.com/publish and refuses a tommy-ca catalog source. Hosted publish is `gc pack registry publish`. Use `skills/how/SKILL.md` and `skills/interrogate/SKILL.md` on `pr-pstack-panel-stamp`.
