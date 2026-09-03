@@ -20,7 +20,7 @@ Do not pin `tommy-ca/pstack`.
 
 OpenSpec change payloads do not live under `pstack/`. Durable Gherkin lives
 at repository `openspec/`. Disposable live-city import is exercised when `GC_TEST_BIN` is set.
-Formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven.
+Formula sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route by `scripts/pstack_host_sling_proof.py`.
 
 ## Mapping
 
@@ -40,7 +40,7 @@ Formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven.
 ## Evidence classes
 
 - **Static:** TOML/YAML parse, source parity, formula metadata, schema references, provider-name absence.
-- **Metadata:** inspectable formula TOML plus disposable live-city formula list, formula show, and agent listing. Inference-gate `--setup-only` also shows `pstack-review` and `pstack-build` in a roles city. Validates declared node metadata only. There is no separate graph-cook script. Host sling receipts are cook plus route of `pstack-poteto-mode` then `pstack-build` and remain unproven.
+- **Metadata:** inspectable formula TOML plus disposable live-city formula list, formula show, and agent listing. Inference-gate `--setup-only` also shows `pstack-review` and `pstack-build` in a roles city. Validates declared node metadata only. There is no separate graph-cook script. Host sling of `pstack-poteto-mode` then `pstack-build` is proven as cook plus route by `scripts/pstack_host_sling_proof.py`.
 - **Runtime:** provider and live Gas City execution; not performed by pack-local verification.
 - **Unavailable:** optional pack, provider, or live city not present; reported with a reason.
 

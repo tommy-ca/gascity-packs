@@ -1,6 +1,6 @@
 # PStack program plan
 
-A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. Isolation is on branch `feat/pstack-pack-honesty`. It is not landed on gastownhall main. gastownhall PR 385 is closed unmerged. Do not reopen it. Maintain remote tommy. Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven. Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`. Operator publication dest is https://registry.gascity.com. Restamp of gastownhall registry.toml is not the publication vehicle. This change does not publish, sling, restamp hashes, or stamp panel keys. The live graph is this file.
+A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. Isolation is on branch `feat/pstack-pack-honesty`. It is not landed on gastownhall main. gastownhall PR 385 is closed unmerged. Do not reopen it. Maintain remote tommy. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`. Operator publication dest is https://registry.gascity.com. Restamp of gastownhall registry.toml is not the publication vehicle. This change does not publish, restamp hashes, or stamp panel keys. The live graph is this file.
 
 ## How to read this
 
@@ -36,7 +36,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] `pr-pstack-graph-honesty` after isolation is on `feat/pstack-pack-honesty`. Docs and OpenSpec only. Parallel with host sling.
   - [ ] Maintain remote tommy. Push isolation to remote `tommy` (`tommy-ca/gascity-packs`). Not origin. Not reopen 385.
   - [ ] Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`. Not a GitHub PR.
-  - [ ] Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven.
+  - [x] Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route.
   - [ ] Do not restamp registry.toml commit or hash without sling receipts.
   - [ ] Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`.
   - [ ] Restamp of gastownhall registry.toml is not the publication vehicle.
@@ -302,7 +302,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Appendix A. Prototype evidence
 
-Isolation lives on `feat/pstack-pack-honesty` at ancestor `2f65f7b`. gastownhall PR 385 is closed unmerged. Inference-gate `--setup-only` printed `setup-only gate passed for pstack`. That city showed `pstack-review` and `pstack-build`. write_city shows all 40 formulas. After `bd init`, `gc formula cook pstack-poteto-mode` created root `de-fr9`. `gc formula cook pstack-build --attach de-a5l` failed with unknown formulas v2 target `gc.run-operator`. That city lacked roles. Arena picked cook plus route of `pstack-poteto-mode` then `pstack-build` in a disposable roles city. Receipt is sling JSON root id plus `gc.routed_to`. A poteto-only row is a failed partial. Full drain is not required. `pstack-review` then `pstack-build` launch is not that receipt. Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven. Pin still `29c84db` / `sha256:89aee457`. Do not restamp it. Restamp of gastownhall registry.toml is not the publication vehicle. Panel stamp remains verified-unproven. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com.
+Isolation lives on `feat/pstack-pack-honesty` at ancestor `2f65f7b`. gastownhall PR 385 is closed unmerged. Inference-gate `--setup-only` printed `setup-only gate passed for pstack`. After `bd init`, `gc formula cook pstack-build --attach de-a5l` failed with unknown formulas v2 target `gc.run-operator` in a city that lacked roles. `scripts/pstack_host_sling_proof.py` then cooked and routed both formulas in a disposable roles city. Poteto root `fi-06k`. Build root `fi-awr`. Both `gc.routed_to` values were `fixture/gc.run-operator`. Full drain was not waited. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. Pin still `29c84db` / `sha256:89aee457`. Do not restamp it. Restamp of gastownhall registry.toml is not the publication vehicle. Panel stamp remains verified-unproven. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com.
 
 ## Appendix B. Alternatives rejected
 

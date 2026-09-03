@@ -53,7 +53,7 @@ The maintained-pack live test matrix MUST import PStack into a scratch city with
 
 ### Requirement: PStack traceability references durable truth
 
-`pstack/TRACEABILITY.md` MUST point to the durable canonical specification `openspec/specs/pstack-gascity-pack/spec.md` and MUST NOT point to a removed change directory as the current contract. Its evidence classes MUST continue to distinguish static, metadata, runtime, and unavailable claims. It MUST name `docs/pstack-program-plan.md` as the live program. That plan's Arm `git show origin/main:` list MUST name files that exist in this repository's origin/main. Focused pack tests MUST require the live Durable Gherkin AND that TRACEABILITY does not name another project as the Gherkin owner. A former-checkout token grep MUST NOT substitute for that AND. It MUST say disposable live-city import is exercised when `GC_TEST_BIN` is set. It MUST say formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven. Pack tests MUST lock both sentences. The live-program scenario MUST name `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`. Pack tests MUST lock that three-id sequence in the TRACEABILITY requirement.
+`pstack/TRACEABILITY.md` MUST point to the durable canonical specification `openspec/specs/pstack-gascity-pack/spec.md` and MUST NOT point to a removed change directory as the current contract. Its evidence classes MUST continue to distinguish static, metadata, runtime, and unavailable claims. It MUST name `docs/pstack-program-plan.md` as the live program. That plan's Arm `git show origin/main:` list MUST name files that exist in this repository's origin/main. Focused pack tests MUST require the live Durable Gherkin AND that TRACEABILITY does not name another project as the Gherkin owner. A former-checkout token grep MUST NOT substitute for that AND. It MUST say disposable live-city import is exercised when `GC_TEST_BIN` is set. It MUST say formula sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route by `scripts/pstack_host_sling_proof.py`. Pack tests MUST lock both sentences. They MUST fail if TRACEABILITY still says that sling remains unproven. The live-program scenario MUST name `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`. Pack tests MUST lock that three-id sequence in the TRACEABILITY requirement.
 
 #### Scenario: Traceability path is stable
 
@@ -90,9 +90,9 @@ The maintained-pack live test matrix MUST import PStack into a scratch city with
 - **WHEN** a reader follows the OpenSpec payload note
 - **AND** the focused pack tests run
 - **THEN** TRACEABILITY says disposable live-city import is exercised when `GC_TEST_BIN` is set
-- **AND** TRACEABILITY says formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven
+- **AND** TRACEABILITY says formula sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route by `scripts/pstack_host_sling_proof.py`
+- **AND** TRACEABILITY does not say that sling remains unproven
 - **AND** TRACEABILITY does not say `Live city sling remains unproven`
-- **AND** the tests fail if either required sentence is missing
 
 #### Scenario: Tests lock the three program ids in TRACEABILITY Gherkin
 
@@ -226,10 +226,9 @@ The live program MUST name isolation on branch `feat/pstack-pack-honesty`.
 gastownhall PR 385 is closed unmerged. It is not the land vehicle. The program
 MUST NOT reopen it as the merge path. The program MUST NOT merge isolation to
 gastownhall. The operator MUST maintain the tommy-ca fork as remote `tommy`.
-The live program MUST name host sling of
-`pstack-poteto-mode` then `pstack-build` as the next operator unit after
-isolation is in this tree. That unit MUST NOT be a GitHub PR. Host sling of
-those formulas remains unproven. The program MUST NOT restamp
+Host sling of `pstack-poteto-mode` then `pstack-build` is proven as cook plus
+route by `scripts/pstack_host_sling_proof.py`. That unit MUST NOT be a GitHub
+PR. Canonical-city sling is forbidden. The program MUST NOT restamp
 `registry.toml` `commit` or `hash` without those sling receipts.
 Hosted publication to registry.gascity.com MUST wait on those receipts.
 It is the publication vehicle. Restamp of gastownhall `registry.toml` is not
@@ -247,16 +246,16 @@ Pack tests MUST fail if any
 `provider_panel`. Presence of `openspec/specs/gascity-provider-panel/spec.md`
 MUST NOT authorize a formula stamp. The boot recipe and REQUIREMENTS MUST
 validate `openspec/changes/archive/2026-09-02-pstack-mapping-gaps` without
-`--change`. This change MUST NOT publish. This change MUST NOT sling.
-This change MUST NOT restamp hashes. This change MUST NOT stamp panel keys.
+`--change`. This change MUST NOT publish. This change MUST NOT restamp hashes.
+This change MUST NOT stamp panel keys.
 
 #### Scenario: Host sling is the next operator unit
 
 - **GIVEN** `docs/pstack-program-plan.md`
 - **WHEN** an operator follows the spawn graph after isolation is on `feat/pstack-pack-honesty`
-- **THEN** the next unit names host sling of `pstack-poteto-mode` and `pstack-build`
+- **THEN** host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route
 - **AND** that unit is not a GitHub PR
-- **AND** host sling of those formulas remains unproven
+- **AND** the proof command is `scripts/pstack_host_sling_proof.py`
 - **AND** hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`
 - **AND** restamp of gastownhall `registry.toml` is not the publication vehicle
 
@@ -311,7 +310,6 @@ This change MUST NOT restamp hashes. This change MUST NOT stamp panel keys.
 - **AND** publish is `gc pack registry publish` of pack path `pstack/`
 - **AND** the dest is registry.gascity.com
 - **AND** this change does not rename `pstack/pack.toml`
-- **AND** `pr-pstack-publish` sits between sling and `pr-pstack-panel-stamp`
 
 ### Requirement: PStack setup formulas compile in the inference-gate city
 
