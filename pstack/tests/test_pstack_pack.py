@@ -958,6 +958,8 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "fast-forward of `feat/pstack-pack-honesty`" in remaining
     assert "It is not a gastownhall land" in remaining
     assert "Fork default tracks isolation while gastownhall does not accept PRs" in remaining
+    assert "spawn graph does not present unscoped submit as the next click" in remaining
+    assert "a `--require-git` failure on pin `29c84db` is not a restamp trigger" in remaining
     three_ids = (
         "`pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`"
     )
@@ -969,6 +971,7 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`" in program
     assert "tommy `main` is a fast-forward of `feat/pstack-pack-honesty`" in program
     assert "Not a gastownhall merge" in program
+    assert "Unscoped submit is not the next click" in program
     assert "Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route" in program
     assert "Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven" not in program
     assert "Do not restamp registry.toml commit or hash without sling receipts" in program
