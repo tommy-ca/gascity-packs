@@ -45,7 +45,7 @@ gc rig add .
    `pstack-poteto-mode` and `pstack-build`. Restamp of gastownhall
    `registry.toml` is not the publication vehicle. Hosted dest is
    `gc pack registry publish` of pack path `pstack/` to
-   `https://registry.gascity.com`. Submit waits on registry login.
+   `https://registry.gascity.com`. Submit waits on the operator review-gate.
 
 2. **Import the rig roles in `city.toml`.** Then run `gc import install`:
 
