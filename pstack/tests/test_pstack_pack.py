@@ -906,6 +906,14 @@ def test_delivery_checks_cover_pstack() -> None:
     delivery_spec = (PACKS_ROOT / "openspec/specs/pstack-delivery-evidence/spec.md").read_text()
     assert "gc formula show" in delivery_spec
     assert "MUST NOT treat formula show as formula sling" in delivery_spec
+    setup_req = "PStack setup formulas compile in the inference-gate city"
+    assert setup_req in delivery_spec
+    setup_block = delivery_spec.split("### Requirement: " + setup_req, 1)[1]
+    setup_block = setup_block.split("### Requirement:", 1)[0]
+    assert "--setup-only" in setup_block
+    assert "pstack-review" in setup_block
+    assert "pstack-build" in setup_block
+    assert "MUST NOT treat setup-only formula show as formula sling" in setup_block
     three_ids = (
         "`pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`"
     )
