@@ -903,6 +903,14 @@ def test_delivery_checks_cover_pstack() -> None:
         assert "tbd" not in body
         assert "dest-env" not in body
     program = (PACKS_ROOT / "docs/pstack-program-plan.md").read_text()
+    delivery_spec = (PACKS_ROOT / "openspec/specs/pstack-delivery-evidence/spec.md").read_text()
+    assert "gc formula show" in delivery_spec
+    assert "MUST NOT treat formula show as formula sling" in delivery_spec
+    three_ids = (
+        "`pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`"
+    )
+    assert three_ids in delivery_spec
+    assert three_ids in (ROOT / "TRACEABILITY.md").read_text()
     assert "pr-pstack-land-honesty" in program
     assert "pr-pstack-publish" in program
     assert "pr-pstack-panel-stamp" in program
