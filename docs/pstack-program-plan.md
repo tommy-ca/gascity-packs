@@ -1,6 +1,6 @@
 # PStack program plan
 
-A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. This program lands isolation and OpenSpec on PR 385, dogfoods a host city, restamps 0.1.0 after sling receipts, then stamps formulas only after Gas City consumes `gc.provider_panel`. The live graph is this file. Isolation and OpenSpec are on PR 385. Host sling and registry restamp remain.
+A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. Isolation is on branch `feat/pstack-pack-honesty`. It is not landed on gastownhall main. gastownhall PR 385 is closed unmerged. Do not reopen it. Host sling and registry restamp remain. Operator publication dest is https://registry.gascity.com/publish. This change does not publish. The program then stamps formulas only after Gas City consumes `gc.provider_panel`. The live graph is this file.
 
 ## How to read this
 
@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. The operator lands the stack. Done when PR 385 has isolation plus this plan, a host city slings pstack-poteto-mode and pstack-build, 0.1.0 is restamped after those receipts, and formulas still omit gc.provider_panel until the compiler consumer exists."
+- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. The operator lands the stack. Isolation is already on feat/pstack-pack-honesty. Done when a host city slings pstack-poteto-mode and pstack-build, 0.1.0 is restamped after those receipts, and formulas still omit gc.provider_panel until the compiler consumer exists."
 - [ ] Read these from trunk at program start. Re-read them at every tick.
   - [ ] `git show origin/main:.github/workflows/ci.yml`
   - [ ] `git show origin/main:registry.toml`
@@ -32,9 +32,9 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 - [ ] From this parent session, spawn one owner per PR with `spawn_subagent` (`isolation: "worktree"`). Depth is 1. Owners do not spawn.
 - [ ] Follow this dependency graph. Start dependent work only after its parent merges, or base it on the parent branch when the execution playbook stacks.
-  - [ ] `pr-pstack-land-honesty` first. Existing PR 385. Branch `feat/pstack-pack-honesty`.
-  - [ ] Host sling of `pstack-poteto-mode` and `pstack-build` after `pr-pstack-land-honesty` is on 385. Not a GitHub PR.
-  - [ ] Restamp `registry.toml` 0.1.0 on the same PR after sling receipts.
+  - [ ] `pr-pstack-land-honesty` first. Branch `feat/pstack-pack-honesty`. gastownhall PR 385 is closed unmerged. Do not reopen it.
+  - [ ] Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`. Not a GitHub PR.
+  - [ ] Restamp `registry.toml` 0.1.0 after sling receipts of `pstack-poteto-mode` and `pstack-build`.
   - [ ] Gas City compiler consumer for `gc.provider_panel`. Outside this packs formula tree.
   - [ ] `pr-pstack-panel-stamp` after that consumer exists.
 - [ ] Hold the file boundaries. `pr-pstack-land-honesty` must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml` until the restamp box. `pr-pstack-panel-stamp` touches formulas, schemas, and tests.
@@ -59,7 +59,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 Each live lane runs in its own `isolation: "worktree"` child at the PR head. Drive the real surface (running app, CLI, tests, or Grok browser tools).
 
 - [ ] `git fetch origin <head-branch> && git checkout <head SHA>`.
-- [ ] Use the repo CLI. `uv run --with pytest --with pyyaml pytest -q pstack/tests/test_pstack_pack.py`. `python pstack/scripts/apply_intent_change.py --source openspec/changes/archive/2026-09-02-pstack-program-arm-list --validate-only`.
+- [ ] Use the repo CLI. `uv run --with pytest --with pyyaml pytest -q pstack/tests/test_pstack_pack.py`. `python pstack/scripts/apply_intent_change.py --source openspec/changes/archive/2026-09-02-pstack-mapping-gaps --validate-only`.
 - [ ] Save every screenshot to `/tmp/swarm-<pr-id>/worker-<n>/<slug>.png` and return the paths with the report.
 
 ## Land isolation and OpenSpec (`pr-pstack-land-honesty`)
@@ -85,7 +85,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Build.**
 
-- [x] Commit isolation, filled panel Purpose, `openspec/` including archived `pstack-gherkin-restamp`, and this plan onto PR 385 at `2f65f7b`. Do not stamp `gc.provider_panel`. Do not restamp `registry.toml` in this box.
+- [x] Commit isolation, filled panel Purpose, `openspec/` including archived `pstack-gherkin-restamp`, and this plan on `feat/pstack-pack-honesty` at `2f65f7b`. Do not stamp `gc.provider_panel`. Do not restamp `registry.toml` in this box.
 
 **You see.**
 
@@ -187,7 +187,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Appendix A. Prototype evidence
 
-Explorer 01 proved production and panel plans still sequenced a foreign OpenSpec checkout while isolation already lived in the working tree. Isolation is now on PR 385 tip `2f65f7b`. Arena candidate 1 is one master plan. Candidate 2 is an index plus three files. Live sling of a panel remains unproven. `GC_TEST_BIN` unset.
+Explorer 01 proved production and panel plans still sequenced a foreign OpenSpec checkout while isolation already lived in the working tree. Isolation lives on `feat/pstack-pack-honesty` at `2f65f7b`. gastownhall PR 385 is closed unmerged. Arena candidate 1 is one master plan. Candidate 2 is an index plus three files. Live sling of a panel remains unproven. `GC_TEST_BIN` unset.
 
 ## Appendix B. Alternatives rejected
 
@@ -195,7 +195,7 @@ Three stacked plans plus an index. Extra files for the same DAG. Lost.
 
 A foreign OpenSpec archive node. This repository owns Gherkin. Lost.
 
-A third GitHub PR for restamp. TRACEABILITY wants restamp on the same isolation head after sling receipts. Nested under 385.
+A third GitHub PR for restamp. TRACEABILITY wants restamp after sling receipts. Lost.
 
 ## Appendix C. Risks
 
