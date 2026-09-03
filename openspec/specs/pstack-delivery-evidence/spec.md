@@ -376,12 +376,15 @@ treat a generic JSON `id` as a sling root. It MUST reject formula show
 and `--setup-only` logs. It MUST NOT call `launch_review_formula` or
 `launch_build_formula` for this pair. A complete proof MUST include both
 formulas with both `gc.routed_to` values. A poteto-only row MAY persist
-as a failed partial. Remaining-units and publish stay blocked until the
-proof is complete. Full drain of `pstack-build` is not required. The
-receipt MUST NOT be `pstack-review` then `pstack-build`. Formula show is
-not a receipt. Setup-only show is not a receipt. `pstack-poteto-mode`
-MUST NOT auto-sling the classified formula. The sling unit MUST NOT be a
-GitHub PR. The operator MUST NOT sling into a canonical city.
+as a failed partial. Hosted submit of `gc pack registry publish` waits on
+registry login after the proof is complete. Catalog restamp of
+gastownhall `registry.toml` is not that dest. Full drain of
+`pstack-build` is not required. The receipt MUST NOT be `pstack-review`
+then `pstack-build`. Formula show is not a receipt. Setup-only show is
+not a receipt. `pstack-poteto-mode` MUST NOT auto-sling the classified
+formula. The sling unit MUST NOT be a GitHub PR. The operator MUST NOT
+sling into a canonical city. Dry-run of `gc pack registry publish` of
+pack path `pstack/` from this branch is proven. Submit was not sent.
 
 #### Scenario: Cook plus route of pstack-poteto-mode then pstack-build is the sling receipt
 
@@ -403,6 +406,17 @@ GitHub PR. The operator MUST NOT sling into a canonical city.
 - **WHEN** the input is formula-show JSON with only a generic `id`, or a `--setup-only` log
 - **THEN** parse fails
 - **AND** it does not return that `id` as a sling root
+
+#### Scenario: Hosted publish dry-run is proven
+
+- **GIVEN** a clean checkout of `feat/pstack-pack-honesty` tracking remote `tommy`
+- **WHEN** an operator runs `gc pack registry publish --dry-run pstack/`
+- **THEN** the command exits 0
+- **AND** the request names pack `pstack` version `0.1.0`
+- **AND** the registry is `https://registry.gascity.com`
+- **AND** the repository is `https://github.com/tommy-ca/gascity-packs`
+- **AND** the request is not submitted
+- **AND** catalog restamp of gastownhall `registry.toml` is not the dest
 
 ## Non-Goals
 

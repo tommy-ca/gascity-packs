@@ -937,6 +937,10 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "extract_sling_root_id" in receipt_block
     assert "failed partial" in receipt_block
     assert "This change MUST NOT sling" not in receipt_block
+    assert "gc pack registry publish" in receipt_block
+    assert "--dry-run" in receipt_block
+    assert "the request is not submitted" in receipt_block
+    assert "stay blocked until the proof is complete" not in receipt_block
     remaining = delivery_spec.split(
         "### Requirement: Remaining program units stay host sling then compiler then panel stamp",
         1,
