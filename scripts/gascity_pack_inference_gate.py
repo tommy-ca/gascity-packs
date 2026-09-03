@@ -1653,6 +1653,33 @@ def extract_sling_root_id(output: str) -> str | None:
     return find_first_key(payload, ("root_bead_id", "workflow_id", "root_id", "bead_id", "id"))
 
 
+HOST_SLING_ROOT_KEYS = ("root_bead_id", "workflow_id", "root_id", "bead_id")
+
+
+def parse_host_sling_root(output: str) -> str:
+    if "setup-only gate passed" in output:
+        raise GateError("setup-only logs are not host sling receipts")
+    payload = extract_json_payload(output)
+    if payload is None:
+        raise GateError("sling JSON missing")
+    if find_first_key(payload, HOST_SLING_ROOT_KEYS) is None:
+        raise GateError("formula show and setup-only logs are not host sling receipts")
+    root = extract_sling_root_id(output)
+    if root is None:
+        raise GateError("sling JSON root id missing")
+    return root
+
+
+def parse_host_sling_routed_to(bead: Mapping[str, Any]) -> str:
+    metadata = bead.get("metadata")
+    if not isinstance(metadata, dict):
+        raise GateError("bead metadata missing gc.routed_to")
+    routed = metadata.get("gc.routed_to")
+    if not isinstance(routed, str) or not routed.strip():
+        raise GateError("bead metadata missing gc.routed_to")
+    return routed.strip()
+
+
 def find_first_key(value: Any, keys: Sequence[str]) -> str | None:
     if isinstance(value, dict):
         for key in keys:

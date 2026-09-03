@@ -600,6 +600,25 @@ def test_extract_sling_root_id_searches_nested_json() -> None:
     assert gascity_pack_inference_gate.extract_sling_root_id("not json") is None
 
 
+def test_parse_host_sling_root_reuses_extract_then_rejects_show() -> None:
+    sling = '{"root_bead_id": "de-fr9", "id": "noise"}'
+    show = '{"id": "show-1", "steps": []}'
+    setup = "setup-only gate passed for pstack\n{\"id\": \"setup-1\"}"
+
+    assert gascity_pack_inference_gate.parse_host_sling_root(sling) == "de-fr9"
+    with pytest.raises(gascity_pack_inference_gate.GateError, match="formula show"):
+        gascity_pack_inference_gate.parse_host_sling_root(show)
+    with pytest.raises(gascity_pack_inference_gate.GateError, match="setup-only"):
+        gascity_pack_inference_gate.parse_host_sling_root(setup)
+
+
+def test_parse_host_sling_routed_to_requires_metadata() -> None:
+    bead = {"id": "de-fr9", "metadata": {"gc.routed_to": "demo/claude"}}
+    assert gascity_pack_inference_gate.parse_host_sling_routed_to(bead) == "demo/claude"
+    with pytest.raises(gascity_pack_inference_gate.GateError, match="gc.routed_to"):
+        gascity_pack_inference_gate.parse_host_sling_routed_to({"id": "de-fr9"})
+
+
 def test_list_beads_uses_gc_bd_list_when_file_store_absent(tmp_path) -> None:
     workspace = gascity_pack_inference_gate.GateWorkspace(
         root=tmp_path,
