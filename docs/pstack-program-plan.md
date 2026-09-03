@@ -41,7 +41,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] Do not restamp registry.toml commit or hash without sling receipts.
   - [x] Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`.
   - [ ] Restamp of gastownhall registry.toml is not the publication vehicle.
-  - [ ] After receipts, `pr-pstack-publish` via `gc pack registry publish pstack`.
+  - [ ] After receipts, `pr-pstack-publish` waits on the scoped-name unit. Unscoped submit is not the next click.
   - [ ] Gas City compiler consumer for `gc.provider_panel`. Outside this packs formula tree.
   - [ ] `pr-pstack-panel-stamp` after that consumer exists.
 - [ ] Hold the file boundaries. `pr-pstack-land-honesty` must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-graph-honesty` touches TRACEABILITY Gherkin, `pstack/TRACEABILITY.md`, `pstack/README.md`, pack tests, and Appendix A. It must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-publish` must not rename `pstack/pack.toml` in this honesty change. `pr-pstack-panel-stamp` touches formulas, schemas, and tests.
@@ -237,7 +237,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Merge.**
 
-- [ ] Operator publishes with `gc pack registry publish pstack`.
+- [ ] Operator publishes after the scoped-name unit. Unscoped `gc pack registry publish pstack` is not this honesty tick.
 - [ ] Do not merge to gastownhall.
 - [ ] Do not restamp gastownhall `registry.toml` as the publication vehicle.
 

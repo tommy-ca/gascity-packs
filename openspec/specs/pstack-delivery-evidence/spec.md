@@ -233,13 +233,17 @@ It is not a gastownhall land. Host sling of `pstack-poteto-mode` then
 `scripts/pstack_host_sling_proof.py`. That unit MUST NOT be a GitHub PR.
 Canonical-city sling is forbidden. The program MUST NOT restamp
 `registry.toml` `commit` or `hash` without those sling receipts.
+A clone of tommy `main` that fails `validate_registry.py --require-git` on
+unreachable pin `29c84db` MUST NOT be treated as a restamp trigger.
 Hosted publication to registry.gascity.com MUST wait on those receipts.
 It is the publication vehicle. Restamp of gastownhall `registry.toml` is not
 the publication vehicle. `make registry-publish` is not hosted publish.
 The program MUST name `pr-pstack-publish` after sling. Publish is
 `gc pack registry publish` of pack path `pstack/` to registry.gascity.com.
 A scoped name is a later unit. This change MUST NOT rename `pstack/pack.toml`.
-Unscoped hosted submit from tommy waits on that unit. The program MUST keep
+Unscoped hosted submit from tommy waits on that unit. The live program spawn
+graph MUST NOT present unscoped `gc pack registry publish pstack` as the next
+click after sling receipts. The program MUST keep
 ids `pr-pstack-land-honesty` and `pr-pstack-panel-stamp`.
 It MUST insert `pr-pstack-publish` between sling and panel stamp.
 `pstack/TRACEABILITY.md` MUST name both formulas on the restamp gate.
@@ -314,6 +318,8 @@ This change MUST NOT stamp panel keys.
 - **AND** publish is `gc pack registry publish` of pack path `pstack/`
 - **AND** the dest is registry.gascity.com
 - **AND** this change does not rename `pstack/pack.toml`
+- **AND** unscoped hosted submit waits on the scoped-name unit
+- **AND** spawn graph does not present unscoped submit as the next click
 
 #### Scenario: Fork default tracks isolation while gastownhall does not accept PRs
 
@@ -322,6 +328,7 @@ This change MUST NOT stamp panel keys.
 - **THEN** tommy `main` is a fast-forward of `feat/pstack-pack-honesty`
 - **AND** that update is not a gastownhall merge
 - **AND** 385 is not reopened
+- **AND** a `--require-git` failure on pin `29c84db` is not a restamp trigger
 
 ### Requirement: PStack setup formulas compile in the inference-gate city
 
