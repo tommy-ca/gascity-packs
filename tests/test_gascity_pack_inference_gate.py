@@ -250,6 +250,8 @@ def test_build_gate_env_uses_nightly_ollama_auth_shape(tmp_path) -> None:
     assert "GC_BEADS" not in env
     assert "GC_DOLT" not in env
     assert env["DOLT_ROOT_PATH"] == str(workspace.gc_home)
+    assert env["GIT_CONFIG_GLOBAL"] == str(workspace.gc_home / "gitconfig")
+    assert env["GIT_CONFIG_NOSYSTEM"] == "1"
     dolt_config = json.loads((workspace.gc_home / ".dolt" / "config_global.json").read_text(encoding="utf-8"))
     assert dolt_config["user.email"] == "gascity-pack-gate@example.invalid"
 
@@ -524,6 +526,32 @@ def test_build_gate_env_exposes_host_pytest_to_isolated_runtime(tmp_path) -> Non
     pythonpath_parts = env["PYTHONPATH"].split(os.pathsep)
     assert pythonpath_parts[0] == existing_pythonpath
     assert str(pytest_root) in pythonpath_parts
+
+
+def test_seed_claude_project_state_keeps_config_dir_when_home_is_unwritable(
+    tmp_path,
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    home.chmod(0o500)
+    config_dir = tmp_path / "claude-config"
+    city_dir = tmp_path / "city"
+    rig_dir = tmp_path / "rig"
+    city_dir.mkdir()
+    rig_dir.mkdir()
+
+    try:
+        gascity_pack_inference_gate.seed_claude_project_state(
+            home=home,
+            config_dir=config_dir,
+            project_paths=[city_dir, rig_dir],
+        )
+        assert not (home / ".claude.json").exists()
+        data = json.loads((config_dir / ".claude.json").read_text(encoding="utf-8"))
+        assert data["hasCompletedOnboarding"] is True
+        assert data["projects"][str(city_dir.resolve())]["hasTrustDialogAccepted"] is True
+    finally:
+        home.chmod(0o700)
 
 
 def test_seed_claude_project_state_writes_home_and_config_state(tmp_path) -> None:

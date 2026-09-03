@@ -1080,6 +1080,8 @@ def build_gate_env(
     env["XDG_RUNTIME_DIR"] = str(workspace.runtime_dir)
     env["DOLT_ROOT_PATH"] = str(workspace.gc_home)
     env["CLAUDE_CONFIG_DIR"] = str(workspace.claude_config_dir)
+    env["GIT_CONFIG_GLOBAL"] = str(workspace.gc_home / "gitconfig")
+    env["GIT_CONFIG_NOSYSTEM"] = "1"
     pythonpath = pythonpath_with_host_modules(source.get("PYTHONPATH"), ("pytest",))
     if pythonpath:
         env["PYTHONPATH"] = pythonpath
@@ -1202,25 +1204,36 @@ def write_dolt_global_config(gc_home: Path) -> None:
 
 
 def seed_claude_project_state(*, home: Path, config_dir: Path, project_paths: Sequence[Path]) -> None:
+    wrote = False
+    errors: list[str] = []
     for state_path in claude_state_paths(home, config_dir):
-        state = load_json_object(state_path)
-        state["hasCompletedOnboarding"] = True
-        if not str(state.get("theme") or "").strip():
-            state["theme"] = "light"
-        projects = state.get("projects")
-        if not isinstance(projects, dict):
-            projects = {}
-            state["projects"] = projects
-        for project_path in project_paths:
-            key = str(project_path.resolve())
-            entry = projects.get(key)
-            if not isinstance(entry, dict):
-                entry = {}
-            entry["hasCompletedProjectOnboarding"] = True
-            entry["hasTrustDialogAccepted"] = True
-            entry.setdefault("projectOnboardingSeenCount", 1)
-            projects[key] = entry
-        save_json_object(state_path, state)
+        try:
+            state = load_json_object(state_path)
+            state["hasCompletedOnboarding"] = True
+            if not str(state.get("theme") or "").strip():
+                state["theme"] = "light"
+            projects = state.get("projects")
+            if not isinstance(projects, dict):
+                projects = {}
+                state["projects"] = projects
+            for project_path in project_paths:
+                key = str(project_path.resolve())
+                entry = projects.get(key)
+                if not isinstance(entry, dict):
+                    entry = {}
+                entry["hasCompletedProjectOnboarding"] = True
+                entry["hasTrustDialogAccepted"] = True
+                entry.setdefault("projectOnboardingSeenCount", 1)
+                projects[key] = entry
+            save_json_object(state_path, state)
+            wrote = True
+        except OSError as exc:
+            errors.append(f"{state_path}: {exc}")
+    if not wrote:
+        raise GateError(
+            "could not write Claude project state; "
+            + "; ".join(errors)
+        )
 
 
 def claude_state_paths(home: Path, config_dir: Path) -> list[Path]:
