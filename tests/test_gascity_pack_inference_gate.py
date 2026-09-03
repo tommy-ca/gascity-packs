@@ -611,6 +611,23 @@ def test_parse_host_sling_root_reuses_extract_then_rejects_show() -> None:
     with pytest.raises(gascity_pack_inference_gate.GateError, match="setup-only"):
         gascity_pack_inference_gate.parse_host_sling_root(setup)
 
+    live = json.dumps(
+        {
+            "bead_id": "fi-06k",
+            "dry_run": False,
+            "formula": "pstack-poteto-mode",
+            "method": "formula",
+            "ok": True,
+            "queued": False,
+            "routed": True,
+            "schema_version": "1",
+            "success": True,
+            "target": "fixture/gc.run-operator",
+            "workflow_id": "fi-06k",
+        }
+    )
+    assert gascity_pack_inference_gate.parse_host_sling_root(live) == "fi-06k"
+
 
 def test_parse_host_sling_routed_to_requires_metadata() -> None:
     bead = {"id": "de-fr9", "metadata": {"gc.routed_to": "demo/claude"}}
