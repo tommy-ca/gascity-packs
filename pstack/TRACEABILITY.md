@@ -35,12 +35,12 @@ Formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven.
 | Source/runtime separation | `vendor/pstack/` versus runtime assets | Source-binding/parity test |
 | Dual source of truth | `ARCHITECTURE.md` | Cursor pstack for vendor corpus, gascity-packs workflow packs for packing |
 | OpenSpec change payloads | not shipped under `pstack/` | Durable Gherkin is `openspec/specs/`. `scripts/apply_intent_change.py` refuses a `--source` inside the pack |
-| Live program | `docs/pstack-program-plan.md` | Recursive task graph for isolation land, host sling, hosted publish, and later panel stamp |
+| Live program | `docs/pstack-program-plan.md` | Recursive task graph for isolation land, host sling, hosted publish, and later panel stamp. The plan names `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp` |
 
 ## Evidence classes
 
 - **Static:** TOML/YAML parse, source parity, formula metadata, schema references, provider-name absence.
-- **Metadata:** inspectable formula TOML plus disposable live-city formula and agent listing. Validates declared node metadata only. There is no separate graph-cook script.
+- **Metadata:** inspectable formula TOML plus disposable live-city formula list, formula show, and agent listing. Validates declared node metadata only. There is no separate graph-cook script.
 - **Runtime:** provider and live Gas City execution; not performed by pack-local verification.
 - **Unavailable:** optional pack, provider, or live city not present; reported with a reason.
 

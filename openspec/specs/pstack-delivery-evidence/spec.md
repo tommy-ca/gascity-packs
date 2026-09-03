@@ -26,7 +26,7 @@ The pack repository CI MUST run the PStack pack test suite and `gc lint pstack` 
 
 ### Requirement: PStack is exercised through a disposable live city
 
-The maintained-pack live test matrix MUST import PStack into a scratch city with the real Gas City CLI. It MUST derive PStack's formulas and agents from its checkout, verify that each resolves through the imported city, and assert the observed doctor delta against an explicit expected set. The live test MUST retain the canary control that proves doctor findings are being surfaced. Every PStack formula MUST declare `formula_compiler >= 2.0.0` and MUST NOT retain deprecated `contract = "graph.v2"`; the expected PStack-specific doctor delta MUST be empty.
+The maintained-pack live test matrix MUST import PStack into a scratch city with the real Gas City CLI. It MUST derive PStack's formulas and agents from its checkout, verify that each resolves through the imported city, and assert the observed doctor delta against an explicit expected set. The live test MUST retain the canary control that proves doctor findings are being surfaced. Every PStack formula MUST declare `formula_compiler >= 2.0.0` and MUST NOT retain deprecated `contract = "graph.v2"`; the expected PStack-specific doctor delta MUST be empty. The live matrix MUST compile each discovered formula with `gc formula show`. It MUST NOT treat formula show as formula sling.
 
 #### Scenario: PStack formulas and agents resolve through Gas City
 
@@ -44,9 +44,16 @@ The maintained-pack live test matrix MUST import PStack into a scratch city with
 - **AND** the live suite records no additional PStack-specific finding
 - **AND** the canary control continues to observe its intentional `formula-requirements` finding
 
+#### Scenario: PStack formulas compile through formula show
+
+- **GIVEN** a real executable Gas City CLI is provided to the live test fixture
+- **WHEN** a scratch city imports the pack under test
+- **THEN** `gc formula show` exits 0 for every formula discovered under that pack's `formulas/`
+- **AND** no provider, publication, or canonical city state is mutated
+
 ### Requirement: PStack traceability references durable truth
 
-`pstack/TRACEABILITY.md` MUST point to the durable canonical specification `openspec/specs/pstack-gascity-pack/spec.md` and MUST NOT point to a removed change directory as the current contract. Its evidence classes MUST continue to distinguish static, metadata, runtime, and unavailable claims. It MUST name `docs/pstack-program-plan.md` as the live program. That plan's Arm `git show origin/main:` list MUST name files that exist in this repository's origin/main. Focused pack tests MUST require the live Durable Gherkin AND that TRACEABILITY does not name another project as the Gherkin owner. A former-checkout token grep MUST NOT substitute for that AND. It MUST say disposable live-city import is exercised when `GC_TEST_BIN` is set. It MUST say formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven. Pack tests MUST lock both sentences.
+`pstack/TRACEABILITY.md` MUST point to the durable canonical specification `openspec/specs/pstack-gascity-pack/spec.md` and MUST NOT point to a removed change directory as the current contract. Its evidence classes MUST continue to distinguish static, metadata, runtime, and unavailable claims. It MUST name `docs/pstack-program-plan.md` as the live program. That plan's Arm `git show origin/main:` list MUST name files that exist in this repository's origin/main. Focused pack tests MUST require the live Durable Gherkin AND that TRACEABILITY does not name another project as the Gherkin owner. A former-checkout token grep MUST NOT substitute for that AND. It MUST say disposable live-city import is exercised when `GC_TEST_BIN` is set. It MUST say formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven. Pack tests MUST lock both sentences. The live-program scenario MUST name `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`. Pack tests MUST lock that three-id sequence in the TRACEABILITY requirement.
 
 #### Scenario: Traceability path is stable
 
@@ -60,7 +67,7 @@ The maintained-pack live test matrix MUST import PStack into a scratch city with
 - **GIVEN** `pstack/TRACEABILITY.md` and `docs/pstack-program-plan.md`
 - **WHEN** an operator follows the live program
 - **THEN** TRACEABILITY names `docs/pstack-program-plan.md`
-- **AND** that plan names `pr-pstack-land-honesty` then `pr-pstack-panel-stamp`
+- **AND** that plan names `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`
 
 #### Scenario: Arm list is re-runnable on trunk
 
@@ -86,6 +93,13 @@ The maintained-pack live test matrix MUST import PStack into a scratch city with
 - **AND** TRACEABILITY says formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven
 - **AND** TRACEABILITY does not say `Live city sling remains unproven`
 - **AND** the tests fail if either required sentence is missing
+
+#### Scenario: Tests lock the three program ids in TRACEABILITY Gherkin
+
+- **GIVEN** `openspec/specs/pstack-delivery-evidence/spec.md` and `pstack/tests/test_pstack_pack.py`
+- **WHEN** the focused pack tests run
+- **THEN** the TRACEABILITY recursive-graph scenario names `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`
+- **AND** the tests fail if that three-id sequence is missing from the TRACEABILITY requirement
 
 ### Requirement: Formula requirement metadata is checked in delivery
 

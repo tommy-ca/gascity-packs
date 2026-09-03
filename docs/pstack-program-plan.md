@@ -33,6 +33,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] From this parent session, spawn one owner per PR with `spawn_subagent` (`isolation: "worktree"`). Depth is 1. Owners do not spawn.
 - [ ] Follow this dependency graph. Start dependent work only after its parent merges, or base it on the parent branch when the execution playbook stacks.
   - [ ] `pr-pstack-land-honesty` first. Branch `feat/pstack-pack-honesty`. gastownhall PR 385 is closed unmerged. Do not reopen it.
+  - [ ] `pr-pstack-graph-honesty` after isolation is on `feat/pstack-pack-honesty`. Docs and OpenSpec only. Parallel with host sling.
   - [ ] Maintain remote tommy. Push isolation to remote `tommy` (`tommy-ca/gascity-packs`). Not origin. Not reopen 385.
   - [ ] Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`. Not a GitHub PR.
   - [ ] Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven.
@@ -42,8 +43,8 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] After receipts, `pr-pstack-publish` via `gc pack registry publish pstack`.
   - [ ] Gas City compiler consumer for `gc.provider_panel`. Outside this packs formula tree.
   - [ ] `pr-pstack-panel-stamp` after that consumer exists.
-- [ ] Hold the file boundaries. `pr-pstack-land-honesty` must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-publish` must not rename `pstack/pack.toml` in this honesty change. `pr-pstack-panel-stamp` touches formulas, schemas, and tests.
-- [ ] Hold the review gate. `pr-pstack-land-honesty` changes no interaction. It is not review-gated. `pr-pstack-publish` talks to the hosted registry. It is review-gated. `pr-pstack-panel-stamp` changes sling behavior. It is review-gated.
+- [ ] Hold the file boundaries. `pr-pstack-land-honesty` must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-graph-honesty` touches TRACEABILITY Gherkin, `pstack/TRACEABILITY.md`, `pstack/README.md`, pack tests, and Appendix A. It must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-publish` must not rename `pstack/pack.toml` in this honesty change. `pr-pstack-panel-stamp` touches formulas, schemas, and tests.
+- [ ] Hold the review gate. `pr-pstack-land-honesty` changes no interaction. It is not review-gated. `pr-pstack-graph-honesty` changes no interaction. It is not review-gated. `pr-pstack-publish` talks to the hosted registry. It is review-gated. `pr-pstack-panel-stamp` changes sling behavior. It is review-gated.
 
 ### PR mechanics, for every PR
 
@@ -125,6 +126,63 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 **Merge.**
 
 - [ ] Isolation is already on `feat/pstack-pack-honesty`.
+- [ ] Do not merge to gastownhall.
+- [ ] Do not reopen gastownhall PR 385.
+- [ ] Maintain remote tommy.
+
+## Align TRACEABILITY recursive graph (`pr-pstack-graph-honesty`)
+
+**Depends on.** Isolation on `feat/pstack-pack-honesty`.
+
+**Files.**
+
+- [x] Create `openspec/changes/archive/2026-09-03-pstack-graph-honesty/proposal.md`.
+- [x] Create `openspec/changes/archive/2026-09-03-pstack-graph-honesty/specs/pstack-delivery-evidence/spec.md`.
+- [x] Create `openspec/changes/archive/2026-09-03-pstack-graph-honesty/design.md`.
+- [x] Create `openspec/changes/archive/2026-09-03-pstack-graph-honesty/adr.md`.
+- [x] Create `openspec/changes/archive/2026-09-03-pstack-graph-honesty/tasks.md`.
+- [x] Edit `pstack/TRACEABILITY.md`.
+- [x] Edit `pstack/README.md`.
+- [x] Edit `pstack/tests/test_pstack_pack.py`.
+- [x] Edit `docs/pstack-program-plan.md` Appendix A.
+
+**Build.**
+
+- [x] Author intent-driven artifacts under `openspec/changes/2026-09-03-pstack-graph-honesty/`. Archived on operator go.
+
+**You see.**
+
+- [x] The TRACEABILITY recursive-graph scenario names `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`.
+
+**Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+
+- [x] Pack tests lock the three-id sequence in the TRACEABILITY requirement. Run `uv run --with pytest --with pyyaml pytest -q pstack/tests/test_pstack_pack.py`.
+
+**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `grok-4.6` at the PR head, per the boot recipe.
+
+- [ ] Lane 1. Validate the new change. Save `graph-honesty-validate.png`. Pass when `python pstack/scripts/apply_intent_change.py --source openspec/changes/2026-09-03-pstack-graph-honesty --validate-only` prints `Change 'pstack-graph-honesty' is valid`.
+- [ ] Lane 2. Confirm mapping-gaps still validates. Save `mapping-gaps.png`. Pass when mapping-gaps validate-only exits 0.
+- [ ] Lane 3. Read the recursive-graph scenario. Save `three-ids.png`. Pass when the delta names publish between land-honesty and panel-stamp.
+- [ ] Lane 4. Grep formulas for `gc.provider_panel`. Save `no-panel-honesty.png`. Pass when the grep is empty.
+- [ ] Lane 5. Confirm `registry.toml` pin is unchanged. Save `pin-unchanged.png`. Pass when commit is `29c84db` and hash is `sha256:89aee457`.
+- [ ] Lane 6. Confirm gastownhall PR 385 stays closed. Save `no-385-honesty.png`. Pass when that PR is not reopened.
+- [ ] Lane 7. Confirm pack name is still `pstack`. Save `pack-name-honesty.png`. Pass when `pstack/pack.toml` `[pack] name` is `pstack`.
+- [ ] Lane 8. Confirm remaining-units still names hosted dest. Save `hosted-dest-honesty.png`. Pass when remaining-units still names `gc pack registry publish`.
+- [ ] Lane 9. Confirm host `check-plan.mjs` is still the live checker. Save `host-checker.png`. Pass when host plugin `check-plan.mjs` prints `0 problems`.
+- [ ] Lane 10. Confirm the change is archived. Save `archived.png`. Pass when `openspec/changes/archive/2026-09-03-pstack-graph-honesty/` exists and no live `openspec/changes/2026-09-03-pstack-graph-honesty/` dir remains.
+
+**Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+
+- [ ] Metric. Wall time of `pstack/tests/test_pstack_pack.py`.
+- [ ] Probe. `uv run --with pytest --with pyyaml pytest -q pstack/tests/test_pstack_pack.py` at trunk then at the head, interleaved.
+- [ ] Baseline. Record the trunk seconds first.
+- [ ] Rule. Head fails if it is more than twice the trunk seconds.
+
+**Review gate.** None. `pr-pstack-graph-honesty` is not review-gated.
+
+**Merge.**
+
+- [ ] Isolation stays on `feat/pstack-pack-honesty`.
 - [ ] Do not merge to gastownhall.
 - [ ] Do not reopen gastownhall PR 385.
 - [ ] Maintain remote tommy.
@@ -244,7 +302,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Appendix A. Prototype evidence
 
-Explorer 01 proved production and panel plans still sequenced a foreign OpenSpec checkout while isolation already lived in the working tree. Isolation lives on `feat/pstack-pack-honesty` at `2f65f7b`. gastownhall PR 385 is closed unmerged. Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven this session. Registry restamp remains verified-unproven this session. Pin still `29c84db` / `sha256:89aee457`. Panel stamp remains verified-unproven this session. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com. `GC_TEST_BIN` unset.
+Isolation lives on `feat/pstack-pack-honesty` at ancestor `2f65f7b`. HEAD is `f0027d9` on remote `tommy`. gastownhall PR 385 is closed unmerged. Focused pack tests printed 50 passed. mapping-gaps validate-only printed `Change 'pstack-mapping-gaps' is valid`. Disposable live-city import with `GC_TEST_BIN` set printed 4 passed and 1 skipped on `tests/test_maintained_packs_live_gc.py`. Scratch city `/tmp/pstack-sling-probe-pmkbrigx/retry` listed and showed `pstack-poteto-mode` and `pstack-build`. After `bd init`, `gc formula cook pstack-poteto-mode` created root `de-fr9`. `gc formula cook pstack-build --attach de-a5l` failed. The compiler said unknown formulas v2 target `gc.run-operator`. `gc sling --dry-run demo/claude` planned a route for both formulas. No live session ran. Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven. Pin still `29c84db` / `sha256:89aee457`. Do not restamp it. Restamp of gastownhall registry.toml is not the publication vehicle. Panel stamp remains verified-unproven. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com.
 
 ## Appendix B. Alternatives rejected
 
@@ -253,6 +311,10 @@ Merge isolation to gastownhall. Lost.
 Catalog restamp of gastownhall `registry.toml` as the publication vehicle. Lost.
 
 A third GitHub PR for restamp. Already lost.
+
+A new remaining-units delta just to write sling again. Lost. Remaining-units already names sling, publish, compiler, and panel stamp.
+
+Rewrite the live checker to pack-vendor `grok-4.6-fast-xhigh`. Lost. Host plugin `check-plan.mjs` is the live checker.
 
 ## Appendix C. Risks
 
@@ -266,6 +328,10 @@ Scoped name is a later unit. `pstack/pack.toml` stays unscoped `pstack` in this 
 
 Hosted publish needs registry login and a pushed HEAD on remote `tommy`.
 
+Orchestrate ceremony can drown host sling. Sling is not a GitHub PR. Do not spawn worktree owners to sling.
+
+The catalog pin on this branch still points at gastownhall `tree/main/pstack`. That path is absent on `origin/main`. Do not treat the pin as a gastownhall main import.
+
 ## Appendix D. Links and reading list
 
-`pstack/DESIGN.md` Provider panel fanout. `openspec/specs/gascity-provider-panel/spec.md`. `openspec/specs/pstack-gascity-pack/spec.md`. `pstack/scripts/apply_intent_change.py`. `validate_registry.py` foreign-source message names registry.gascity.com/publish and refuses a tommy-ca catalog source. Hosted publish is `gc pack registry publish`. Use `skills/how/SKILL.md` and `skills/interrogate/SKILL.md` on `pr-pstack-panel-stamp`.
+`pstack/DESIGN.md` Provider panel fanout. `openspec/specs/gascity-provider-panel/spec.md`. `openspec/specs/pstack-gascity-pack/spec.md`. `openspec/specs/pstack-delivery-evidence/spec.md`. `openspec/changes/2026-09-03-pstack-graph-honesty/`. `pstack/scripts/apply_intent_change.py`. `validate_registry.py` foreign-source message names registry.gascity.com/publish and refuses a tommy-ca catalog source. Hosted publish is `gc pack registry publish`. Use `skills/how/SKILL.md` and `skills/interrogate/SKILL.md` on `pr-pstack-panel-stamp`. Use `skills/how/SKILL.md` on `pr-pstack-graph-honesty`.

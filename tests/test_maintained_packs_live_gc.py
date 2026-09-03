@@ -38,6 +38,7 @@ from gc_live_city import (
     discover_formulas,
     gc_output,
     gc_test_bin,  # noqa: F401 -- pytest fixture, used by name
+    run_gc,
     write_canary_pack,
     write_city,
 )
@@ -220,6 +221,26 @@ def test_pack_formulas_resolve_through_a_city(
         f"formulas {pack} ships did not resolve in a city that imports it: "
         + ", ".join(sorted(missing))
     )
+
+
+@pytest.mark.parametrize("pack", MAINTAINED_PACKS)
+def test_pack_formulas_show_through_a_city(
+    pack: str, tmp_path: Path, gc_test_bin: Path  # noqa: F811
+) -> None:
+    expected = discover_formulas(pack_dir(pack))
+    if not expected:
+        pytest.skip(f"{pack} ships no formulas")
+
+    imports, rig_imports = wiring(pack)
+    workspace = write_city(tmp_path, imports, rig_imports)
+
+    for name in sorted(expected):
+        result = run_gc(gc_test_bin, workspace, "formula", "show", name)
+        output = result.stdout + result.stderr
+        assert result.returncode == 0, (
+            f"{pack} formula {name} failed gc formula show "
+            f"(exit {result.returncode}). Output:\n{output}"
+        )
 
 
 @pytest.mark.parametrize("pack", MAINTAINED_PACKS)
