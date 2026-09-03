@@ -693,6 +693,9 @@ def test_readme_documents_required_gas_city_roles() -> None:
     assert "../gascity/roles" in text
     assert "gc import install" in text
     assert "gc import add https://github.com/gastownhall/gascity-packs.git//pstack" in text
+    assert "origin/main" in text and "does not contain `pstack/`" in text
+    assert "gc pack registry publish" in text
+    assert "https://registry.gascity.com" in text
     assert 'source = "../gascity-packs/pstack"' in text
     assert "not a slung production release" in text
     assert "does not expand `gc.graph_operator`" in text
