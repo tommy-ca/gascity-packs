@@ -868,7 +868,11 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "openspec/changes/pstack-gascity-pack/" not in traceability
     assert "intent/changes/audit-pstack-gascity-pack-contracts" not in traceability
     assert "Disposable live-city import is exercised when `GC_TEST_BIN` is set." in traceability
-    assert "Formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven." in traceability
+    assert (
+        "Formula sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route by `scripts/pstack_host_sling_proof.py`."
+        in traceability
+    )
+    assert "Formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven." not in traceability
     assert "Live city sling remains unproven." not in traceability
     assert "archive proven" not in traceability
     assert "not silently imported" in traceability
@@ -938,7 +942,9 @@ def test_delivery_checks_cover_pstack() -> None:
         1,
     )[1]
     remaining = remaining.split("### Requirement:", 1)[0]
-    assert "This change MUST NOT sling" in remaining
+    assert "This change MUST NOT sling" not in remaining
+    assert "scripts/pstack_host_sling_proof.py" in remaining
+    assert "is proven as cook plus route" in remaining
     three_ids = (
         "`pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`"
     )
@@ -948,7 +954,8 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "pr-pstack-publish" in program
     assert "pr-pstack-panel-stamp" in program
     assert "Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`" in program
-    assert "Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven" in program
+    assert "Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route" in program
+    assert "Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven" not in program
     assert "Do not restamp registry.toml commit or hash without sling receipts" in program
     assert "Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`" in program
     assert "Restamp of gastownhall registry.toml is not the publication vehicle" in program
@@ -1095,7 +1102,11 @@ def test_pack_does_not_ship_openspec_change_payloads() -> None:
     assert not (PACKS_ROOT / "docs/openspec-changes").exists()
     requirements = (ROOT / "REQUIREMENTS.md").read_text()
     assert "intent/changes/audit-pstack-gascity-pack-contracts" not in requirements
-    assert "Formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven." in requirements
+    assert (
+        "Formula sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route by `scripts/pstack_host_sling_proof.py`."
+        in requirements
+    )
+    assert "Formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven." not in requirements
     assert "Live city sling remains unproven." not in requirements
     assert "dest-env" not in requirements
     plan = (PACKS_ROOT / "docs/pstack-gascity-pack-apply-plan.md").read_text()
