@@ -905,8 +905,12 @@ def test_delivery_checks_cover_pstack() -> None:
     program = (PACKS_ROOT / "docs/pstack-program-plan.md").read_text()
     assert "pr-pstack-land-honesty" in program
     assert "pr-pstack-panel-stamp" in program
-    assert "Host sling of `pstack-poteto-mode` and `pstack-build` after `pr-pstack-land-honesty` is on 385" in program
-    assert "Restamp `registry.toml` 0.1.0 on the same PR after sling receipts" in program
+    assert "Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`" in program
+    assert "Restamp `registry.toml` 0.1.0 after sling receipts of `pstack-poteto-mode` and `pstack-build`" in program
+    assert "gastownhall PR 385 is closed unmerged" in program
+    assert "registry.gascity.com" in program
+    assert "is on 385" not in program
+    assert "on the same PR" not in program
     assert "Gas City compiler is outside this packs tree" in program
     assert "must not start on Gherkin alone" in program
     assert "dest-env" not in program
@@ -1084,6 +1088,28 @@ def load_apply_intent_change():
     return module
 
 
+def boot_recipe_validate_source() -> pathlib.Path:
+    needle = "python pstack/scripts/apply_intent_change.py --source "
+    program = (PACKS_ROOT / "docs/pstack-program-plan.md").read_text()
+    requirements = (ROOT / "REQUIREMENTS.md").read_text()
+
+    def extract(text: str) -> tuple[str, str]:
+        idx = text.find(needle)
+        assert idx != -1
+        rest = text[idx + len(needle) :]
+        line = rest.splitlines()[0]
+        path = line.split()[0]
+        return path, line
+
+    program_src, program_line = extract(program)
+    req_src, req_line = extract(requirements)
+    assert program_src == req_src
+    assert "program-arm-list" not in program_src
+    assert "--change" not in program_line
+    assert "--change" not in req_line.split(" validates", 1)[0]
+    return PACKS_ROOT / program_src
+
+
 def test_apply_intent_change_derives_change_name_from_source() -> None:
     script = (ROOT / "scripts/apply_intent_change.py").read_text()
     assert "DEFAULT_CHANGE" not in script
@@ -1121,7 +1147,8 @@ def test_apply_intent_change_derives_change_name_from_source() -> None:
             raise AssertionError("dest inside source was accepted")
     if shutil.which("openspec") is None:
         pytest.skip("openspec CLI not installed")
-    archive = PACKS_ROOT / "openspec/changes/archive/2026-09-02-pstack-mapping-gaps"
+    archive = boot_recipe_validate_source()
+    assert archive.is_dir()
     derived = subprocess.run(
         [
             sys.executable,
