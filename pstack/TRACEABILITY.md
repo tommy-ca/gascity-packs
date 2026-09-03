@@ -40,7 +40,7 @@ Formula sling of `pstack-poteto-mode` and `pstack-build` remains unproven.
 ## Evidence classes
 
 - **Static:** TOML/YAML parse, source parity, formula metadata, schema references, provider-name absence.
-- **Metadata:** inspectable formula TOML plus disposable live-city formula list, formula show, and agent listing. Validates declared node metadata only. There is no separate graph-cook script.
+- **Metadata:** inspectable formula TOML plus disposable live-city formula list, formula show, and agent listing. Inference-gate `--setup-only` also shows `pstack-review` and `pstack-build` in a roles city. Validates declared node metadata only. There is no separate graph-cook script.
 - **Runtime:** provider and live Gas City execution; not performed by pack-local verification.
 - **Unavailable:** optional pack, provider, or live city not present; reported with a reason.
 
