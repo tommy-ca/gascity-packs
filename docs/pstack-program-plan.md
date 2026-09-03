@@ -219,7 +219,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 - [x] Lane 7. Grep formulas for `gc.provider_panel`. Save `no-panel.png`. Pass when the grep is empty.
 - [x] Lane 8. Confirm `validate_registry.py` still names gastownhall. Save `canonical-repo.png`. Pass when `CANONICAL_REPO` is unchanged.
 - [x] Lane 9. Confirm dest is registry.gascity.com. Save `hosted-dest.png`. Pass when publish targets registry.gascity.com.
-- [ ] Lane 10. Confirm registry login and pushed HEAD. Save `registry-login.png`. Pass when the operator is logged in and HEAD is on remote `tommy`.
+- [x] Lane 10. Confirm registry login and pushed HEAD. Save `registry-login.png`. Pass when the operator is logged in and HEAD is on remote `tommy`.
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
@@ -302,7 +302,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Appendix A. Prototype evidence
 
-Isolation lives on `feat/pstack-pack-honesty` at ancestor `2f65f7b`. gastownhall PR 385 is closed unmerged. Inference-gate `--setup-only` printed `setup-only gate passed for pstack`. After `bd init`, `gc formula cook pstack-build --attach de-a5l` failed with unknown formulas v2 target `gc.run-operator` in a city that lacked roles. `scripts/pstack_host_sling_proof.py` then cooked and routed both formulas in a disposable roles city. Poteto root `fi-06k`. Build root `fi-awr`. Both `gc.routed_to` values were `fixture/gc.run-operator`. Full drain was not waited. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. `gc pack registry publish --dry-run pstack/` exited 0. Registry `https://registry.gascity.com`. Repository `https://github.com/tommy-ca/gascity-packs`. Pack `pstack` `0.1.0`. Submit was not sent. `gc pack registry whoami` failed without login. Sibling packs ship by landing on gastownhall `main` and stamping `registry.toml`. pstack cannot. Pin still `29c84db` / `sha256:89aee457`. Do not restamp it. Restamp of gastownhall registry.toml is not the publication vehicle. Panel stamp remains verified-unproven. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com.
+Isolation lives on `feat/pstack-pack-honesty` at ancestor `2f65f7b`. gastownhall PR 385 is closed unmerged. Inference-gate `--setup-only` printed `setup-only gate passed for pstack`. After `bd init`, `gc formula cook pstack-build --attach de-a5l` failed with unknown formulas v2 target `gc.run-operator` in a city that lacked roles. `scripts/pstack_host_sling_proof.py` then cooked and routed both formulas in a disposable roles city. Poteto root `fi-06k`. Build root `fi-awr`. Both `gc.routed_to` values were `fixture/gc.run-operator`. Full drain was not waited. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. `gc pack registry publish --dry-run pstack/` exited 0. Registry `https://registry.gascity.com`. Repository `https://github.com/tommy-ca/gascity-packs`. Pack `pstack` `0.1.0`. Submit was not sent. `gc pack registry whoami` succeeds as `@tommy-ca`. Submit waits on the operator review-gate. Sibling packs ship by landing on gastownhall `main` and stamping `registry.toml`. pstack cannot. Pin still `29c84db` / `sha256:89aee457`. Do not restamp it. Restamp of gastownhall registry.toml is not the publication vehicle. Panel stamp remains verified-unproven. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com.
 
 ## Appendix B. Alternatives rejected
 
@@ -328,7 +328,7 @@ Dual corpus. `pstack/skills/arena/SKILL.md` still documents Cursor Task. Host pl
 
 Scoped name is a later unit. `pstack/pack.toml` stays unscoped `pstack` in this honesty change.
 
-Hosted publish needs registry login and a pushed HEAD on remote `tommy`.
+Hosted publish needs the operator review-gate click. Registry whoami is present. HEAD is on remote `tommy`.
 
 Orchestrate ceremony can drown host sling. Sling is not a GitHub PR. Do not spawn worktree owners to sling.
 
