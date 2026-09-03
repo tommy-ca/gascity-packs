@@ -371,16 +371,19 @@ The operator MUST host-sling `pstack-poteto-mode` then `pstack-build`
 in a disposable city that imports `gascity/roles` and sets
 `[daemon] formula_v2 = true`. That city MAY be the inference-gate city
 after `--setup-only`, or an equivalent city. A receipt for each formula
-is the sling JSON root id plus `gc.routed_to`. Parse MUST reuse
-`extract_sling_root_id`. Parse MUST reject formula show and `--setup-only`
-logs. A complete proof MUST include both formulas. A poteto-only receipt
-MAY persist. Full drain of `pstack-build` is not required. The receipt
-MUST NOT be `pstack-review` then `pstack-build`. Formula show is not a
-receipt. Setup-only show is not a receipt. `pstack-poteto-mode` MUST NOT
-auto-sling the classified formula. The sling unit MUST NOT be a GitHub PR.
-The operator MUST NOT sling into a canonical city. This change MUST NOT
-restamp `registry.toml`, stamp `gc.provider_panel`, rename
-`pstack/pack.toml`, or publish. This change MUST NOT sling.
+is the sling JSON root id plus `gc.routed_to`. `parse_host_sling_root`
+MUST call `extract_sling_root_id` only after the payload has a sling root
+key (`root_bead_id`, `workflow_id`, `root_id`, or `bead_id`). It MUST NOT
+treat a generic JSON `id` as a sling root. It MUST reject formula show
+and `--setup-only` logs. It MUST NOT call `launch_review_formula` or
+`launch_build_formula` for this pair. A complete proof MUST include both
+formulas with both `gc.routed_to` values. A poteto-only row MAY persist
+as a failed partial. Remaining-units and publish stay blocked until the
+proof is complete. Full drain of `pstack-build` is not required. The
+receipt MUST NOT be `pstack-review` then `pstack-build`. Formula show is
+not a receipt. Setup-only show is not a receipt. `pstack-poteto-mode`
+MUST NOT auto-sling the classified formula. The sling unit MUST NOT be a
+GitHub PR. The operator MUST NOT sling into a canonical city.
 
 #### Scenario: Cook plus route of pstack-poteto-mode then pstack-build is the sling receipt
 
@@ -393,8 +396,15 @@ restamp `registry.toml`, stamp `gc.provider_panel`, rename
 - **AND** full drain of `pstack-build` is not required
 - **AND** the classified formula from `pstack.route.v1` is not auto-slung
 - **AND** formula show and `--setup-only` logs are not receipts
+- **AND** a poteto-only row is a failed partial, not a complete proof
 - **AND** the city is not a canonical city
-- **AND** this change does not sling
+
+#### Scenario: Parse rejects show logs and generic JSON ids
+
+- **GIVEN** `parse_host_sling_root` and `extract_sling_root_id`
+- **WHEN** the input is formula-show JSON with only a generic `id`, or a `--setup-only` log
+- **THEN** parse fails
+- **AND** it does not return that `id` as a sling root
 
 ## Non-Goals
 

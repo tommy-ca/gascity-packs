@@ -929,7 +929,16 @@ def test_delivery_checks_cover_pstack() -> None:
         "MUST NOT treat `pstack-review` then `pstack-build` as the remaining-units sling"
         in receipt_block
     )
-    assert "This change MUST NOT sling" in receipt_block
+    assert "parse_host_sling_root" in receipt_block
+    assert "extract_sling_root_id" in receipt_block
+    assert "failed partial" in receipt_block
+    assert "This change MUST NOT sling" not in receipt_block
+    remaining = delivery_spec.split(
+        "### Requirement: Remaining program units stay host sling then compiler then panel stamp",
+        1,
+    )[1]
+    remaining = remaining.split("### Requirement:", 1)[0]
+    assert "This change MUST NOT sling" in remaining
     three_ids = (
         "`pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`"
     )
