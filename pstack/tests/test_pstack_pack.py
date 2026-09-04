@@ -699,7 +699,9 @@ def test_readme_documents_required_gas_city_roles() -> None:
     assert 'source = "../gascity-packs/pstack"' in text
     assert "not a slung production release" in text
     assert "even after host sling of" in text
+    assert "`pstack-poteto-mode`" in text and "`pstack-build`" in text
     assert "`29c84db` is not a restamp trigger" in text
+    assert "without a host sling of `pstack-poteto-mode` and `pstack-build`" not in text
     assert "does not expand `gc.graph_operator`" in text
     assert "sequential Gas City graphs" in text or "sequential annotated steps" in text
     assert "not multi-provider fanout" in text
@@ -965,6 +967,8 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "spawn graph does not present unscoped submit as the next click" in remaining
     assert "even after those sling receipts" in remaining
     assert "without those sling receipts" not in remaining
+    assert "MUST wait on the scoped-name unit even after those sling receipts" in remaining
+    assert "MUST wait on those receipts" not in remaining
     assert "a `--require-git` failure on pin `29c84db` is not a restamp trigger" in remaining
     three_ids = (
         "`pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`"
@@ -982,7 +986,9 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven" not in program
     assert "Do not restamp registry.toml commit or hash even after sling receipts" in program
     assert "Do not restamp registry.toml commit or hash without sling receipts" not in program
-    assert "Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`" in program
+    assert "Hosted publish waits on the scoped-name unit even after sling receipts of `pstack-poteto-mode` and `pstack-build`" in program
+    assert "Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`" not in program
+    assert "after the scoped-name unit" in program
     assert "Restamp of gastownhall registry.toml is not the publication vehicle" in program
     assert "Maintain remote tommy" in program
     assert "Restamp `registry.toml` 0.1.0 after sling receipts of `pstack-poteto-mode` and `pstack-build`" not in program
