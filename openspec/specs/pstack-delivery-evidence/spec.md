@@ -131,9 +131,8 @@ Feature: pstack-delivery-evidence
 Rule: Catalog pin on gastownhall main is not the first live city
 
 The pack MUST NOT treat an unmerged registry `0.1.0` pin as a gastownhall
-`main` import. First publication of `tommy-ca/pstack` is already submitted.
-Sling is not by itself a publication go. Unscoped hosted submit is forbidden.
-Do not send a second publish request. Host sling of those formulas is proven
+`main` import. Unscoped hosted submit is forbidden. Host sling of
+`pstack-poteto-mode` and `pstack-build` is proven
 and is not by itself a publication go. Formula catalog strings MUST NOT claim Gas City
 expands `gc.graph_operator`. Catalog strings MUST describe the current
 sequential graphs. They MUST NOT claim this checkout cooks `gc.provider_panel`.
@@ -247,9 +246,9 @@ Canonical-city sling is forbidden. The program MUST NOT restamp
 `registry.toml` `commit` or `hash` even after those sling receipts.
 A clone of tommy `main` that fails `validate_registry.py --require-git` on
 unreachable pin `29c84db` MUST NOT be treated as a restamp trigger.
-Hosted identity is `tommy-ca/pstack` even after those sling receipts.
-Unscoped hosted submit is forbidden. Do not send a second publish request.
-Staff land of the queued request is outside this checkout. Sling receipts are
+Hosted identity is `tommy-ca/pstack`.
+Unscoped hosted submit is forbidden.
+Staff land is outside this checkout. Sling receipts are
 not a publication go. Hosted publication to registry.gascity.com is the
 publication vehicle. Restamp of gastownhall `registry.toml` is not
 the publication vehicle. `make registry-publish` is not hosted publish.
@@ -257,7 +256,7 @@ The program MUST name `pr-pstack-publish` after sling. Publish is
 `gc pack registry publish` of pack path `pstack/` to registry.gascity.com.
 `[pack] name` is `tommy-ca/pstack`.
 Directory and formula stems stay `pstack`. Vendor `upstream.toml` MUST NOT name `tommy-ca/pstack`.
-Hosted submit of unscoped `pstack` is forbidden. Hosted submit of `tommy-ca/pstack` is queued. The live program spawn
+Hosted submit of unscoped `pstack` is forbidden. The live program spawn
 graph MUST NOT present unscoped `gc pack registry publish pstack` as the next
 click after sling receipts. The program MUST keep
 ids `pr-pstack-land-honesty` and `pr-pstack-panel-stamp`.
@@ -270,8 +269,8 @@ Pack tests MUST fail if any
 `provider_panel`. Presence of `openspec/specs/gascity-provider-panel/spec.md`
 MUST NOT authorize a formula stamp. The boot recipe and REQUIREMENTS MUST
 validate `openspec/changes/archive/2026-09-02-pstack-mapping-gaps` without
-`--change`. This change MUST NOT publish. This change MUST NOT restamp hashes.
-This change MUST NOT stamp panel keys.
+`--change`. This leftover MUST NOT publish. This leftover MUST NOT restamp hashes.
+This leftover MUST NOT stamp panel keys.
 
 #### Scenario: Host sling is the next operator unit
 
@@ -280,8 +279,8 @@ This change MUST NOT stamp panel keys.
 - **THEN** host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route
 - **AND** that unit is not a GitHub PR
 - **AND** the proof command is `scripts/pstack_host_sling_proof.py`
-- **AND** hosted identity is `tommy-ca/pstack` even after sling receipts of `pstack-poteto-mode` and `pstack-build`
-- **AND** Do not send a second publish request
+- **AND** hosted identity is `tommy-ca/pstack`
+- **AND** unscoped hosted submit is forbidden
 - **AND** restamp of gastownhall `registry.toml` is not the publication vehicle
 
 #### Scenario: TRACEABILITY names both sling formulas on the restamp gate
@@ -422,8 +421,7 @@ dest. Full drain of `pstack-build` is not required. The receipt MUST NOT
 be `pstack-review` then `pstack-build`. Formula show is not a receipt.
 Setup-only show is not a receipt. `pstack-poteto-mode` MUST NOT auto-sling
 the classified formula. The sling unit MUST NOT be a GitHub PR. The
-operator MUST NOT sling into a canonical city. Hosted submit of
-`tommy-ca/pstack` is queued. Do not send a second publish request.
+operator MUST NOT sling into a canonical city.
 
 #### Scenario: Cook plus route of pstack-poteto-mode then pstack-build is the sling receipt
 
@@ -458,7 +456,6 @@ operator MUST NOT sling into a canonical city. Hosted submit of
 - **AND** catalog restamp of gastownhall `registry.toml` is not the dest
 - **AND** `gc pack registry whoami` succeeds
 - **AND** unscoped hosted submit is forbidden
-- **AND** Do not send a second publish request
 - **AND** dry-run is not registry acceptance
 
 ### Requirement: Scoped pack name tommy-ca/pstack is the hosted identity

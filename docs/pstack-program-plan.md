@@ -1,6 +1,6 @@
 # PStack program plan
 
-A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. Isolation is on branch `feat/pstack-pack-honesty`. It is not landed on gastownhall main. gastownhall PR 385 is closed unmerged. Do not reopen it. Maintain remote tommy. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. Hosted identity is `tommy-ca/pstack`. Unscoped submit is forbidden. Do not send a second publish request. Operator publication dest is https://registry.gascity.com. Restamp of gastownhall registry.toml is not the publication vehicle. This change does not publish, restamp hashes, or stamp panel keys. The live graph is this file.
+A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. Isolation is on branch `feat/pstack-pack-honesty`. It is not landed on gastownhall main. gastownhall PR 385 is closed unmerged. Do not reopen it. Maintain remote tommy. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. Hosted identity is `tommy-ca/pstack`. Unscoped submit is forbidden. Operator publication dest is https://registry.gascity.com. Restamp of gastownhall registry.toml is not the publication vehicle. This change does not publish, restamp hashes, or stamp panel keys. The live graph is this file.
 
 ## How to read this
 
@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Hosted identity is tommy-ca/pstack. Unscoped submit is forbidden. Do not send a second publish request. Isolation is already on feat/pstack-pack-honesty. Done when host sling receipts exist and formulas still omit gc.provider_panel until the compiler consumer exists."
+- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Hosted identity is tommy-ca/pstack. Unscoped submit is forbidden. Isolation is already on feat/pstack-pack-honesty. Done when host sling receipts exist and formulas still omit gc.provider_panel until the compiler consumer exists."
 - [ ] Read these from trunk at program start. Re-read them at every tick.
   - [ ] `git show origin/main:.github/workflows/ci.yml`
   - [ ] `git show origin/main:registry.toml`
@@ -41,10 +41,10 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] Do not restamp registry.toml commit or hash even after sling receipts. Ghost-pin CI is not a restamp trigger.
   - [x] Hosted identity is `tommy-ca/pstack`. Unscoped submit is forbidden.
   - [ ] Restamp of gastownhall registry.toml is not the publication vehicle.
-  - [ ] After receipts, do not send a second publish request. Staff land of `prq_5WDBAqIkcpy-j7ossap3TLJ5` is outside this checkout. Unscoped submit is not the next click.
+  - [ ] Staff land of `prq_5WDBAqIkcpy-j7ossap3TLJ5` is outside this checkout. Unscoped submit is not the next click.
   - [ ] Gas City compiler consumer for `gc.provider_panel`. Outside this packs formula tree.
   - [ ] `pr-pstack-panel-stamp` after that consumer exists.
-- [ ] Hold the file boundaries. `pr-pstack-land-honesty` must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-graph-honesty` touches TRACEABILITY Gherkin, `pstack/TRACEABILITY.md`, `pstack/README.md`, pack tests, and Appendix A. It must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-publish` must not rename `pstack/pack.toml` in this honesty change. `pr-pstack-panel-stamp` touches formulas, schemas, and tests.
+- [ ] Hold the file boundaries. `pr-pstack-land-honesty` must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-graph-honesty` touches TRACEABILITY Gherkin, `pstack/TRACEABILITY.md`, `pstack/README.md`, pack tests, and Appendix A. It must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-publish` must not rename `pstack/pack.toml` again. `pr-pstack-panel-stamp` touches formulas, schemas, and tests.
 - [ ] Hold the review gate. `pr-pstack-land-honesty` changes no interaction. It is not review-gated. `pr-pstack-graph-honesty` changes no interaction. It is not review-gated. `pr-pstack-publish` talks to the hosted registry. It is review-gated. `pr-pstack-panel-stamp` changes sling behavior. It is review-gated.
 
 ### PR mechanics, for every PR
@@ -198,7 +198,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Build.**
 
-- [ ] Do not run `gc pack registry publish` in this honesty change.
+- [ ] This leftover does not run `gc pack registry publish`. Staff land is outside this checkout.
 
 **You see.**
 
@@ -236,7 +236,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Merge.**
 
-- [ ] Do not send a second publish request. Unscoped `gc pack registry publish pstack` is not this honesty tick.
+- [ ] Unscoped `gc pack registry publish pstack` is forbidden.
 - [ ] Do not merge to gastownhall.
 - [ ] Do not restamp gastownhall `registry.toml` as the publication vehicle.
 
@@ -302,7 +302,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Appendix A. Prototype evidence
 
-Isolation lives on `feat/pstack-pack-honesty`. Fork default tommy `main` fast-forwards that branch while gastownhall does not accept PRs. gastownhall PR 385 is closed unmerged. Inference-gate `--setup-only` printed `setup-only gate passed for pstack`. After `bd init`, `gc formula cook pstack-build --attach de-a5l` failed with unknown formulas v2 target `gc.run-operator` in a city that lacked roles. `scripts/pstack_host_sling_proof.py` then cooked and routed both formulas in a disposable roles city. Poteto root `fi-06k`. Build root `fi-awr`. Both `gc.routed_to` values were `fixture/gc.run-operator`. Full drain was not waited. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. `gc pack registry publish --dry-run pstack/` exited 0. Registry `https://registry.gascity.com`. Repository `https://github.com/tommy-ca/gascity-packs`. Pack path `pstack/` `0.1.0`. `gc pack registry whoami` succeeds as `@tommy-ca`. Dry-run is not registry acceptance. Unscoped hosted submit is forbidden. Do not send a second publish request. Current submit is Appendix C (`prq_5WDBAqIkcpy-j7ossap3TLJ5`). Sibling packs ship by landing on gastownhall `main` and stamping `registry.toml`. pstack cannot. Pack-release-compatibility would fetch gastownhall `tree/main/pstack` at pin `29c84db`, which is not on `origin/main`. Pin still `29c84db` / `sha256:89aee457`. Do not restamp it. Restamp of gastownhall registry.toml is not the publication vehicle. Panel stamp remains verified-unproven. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com.
+Isolation lives on `feat/pstack-pack-honesty`. Fork default tommy `main` fast-forwards that branch while gastownhall does not accept PRs. gastownhall PR 385 is closed unmerged. Inference-gate `--setup-only` printed `setup-only gate passed for pstack`. After `bd init`, `gc formula cook pstack-build --attach de-a5l` failed with unknown formulas v2 target `gc.run-operator` in a city that lacked roles. `scripts/pstack_host_sling_proof.py` then cooked and routed both formulas in a disposable roles city. Poteto root `fi-06k`. Build root `fi-awr`. Both `gc.routed_to` values were `fixture/gc.run-operator`. Full drain was not waited. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. `gc pack registry publish --dry-run pstack/` exited 0. Registry `https://registry.gascity.com`. Repository `https://github.com/tommy-ca/gascity-packs`. Pack path `pstack/` `0.1.0`. `gc pack registry whoami` succeeds as `@tommy-ca`. Dry-run is not registry acceptance. Unscoped hosted submit is forbidden. Current submit is Appendix C (`prq_5WDBAqIkcpy-j7ossap3TLJ5`). Sibling packs ship by landing on gastownhall `main` and stamping `registry.toml`. pstack cannot. Pack-release-compatibility would fetch gastownhall `tree/main/pstack` at pin `29c84db`, which is not on `origin/main`. Pin still `29c84db` / `sha256:89aee457`. Do not restamp it. Restamp of gastownhall registry.toml is not the publication vehicle. Panel stamp remains verified-unproven. Formulas omit `gc.provider_panel`. Dest is remote tommy plus registry.gascity.com.
 
 ## Appendix B. Alternatives rejected
 
