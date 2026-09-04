@@ -160,8 +160,9 @@ claim this checkout executes multi-provider fanout. It MAY describe a
 `[[provider_panels]]` cook as a target that is not executed until a compiler
 consumes `gc.provider_panel`. Root
 `README.md` MUST say pstack is not a slung production import.
-`pstack/TRACEABILITY.md` MUST forbid restamping `commit` or `hash` without a
-host sling of `pstack-poteto-mode` and `pstack-build`.
+`pstack/TRACEABILITY.md` MUST forbid restamping `commit` or `hash` even after
+host sling of `pstack-poteto-mode` and `pstack-build`. It MUST say a
+`--require-git` failure on pin `29c84db` is not a restamp trigger.
 
 #### Scenario: Pack README leads with a local clone
 
@@ -187,7 +188,8 @@ host sling of `pstack-poteto-mode` and `pstack-build`.
 - **WHEN** a reader follows the delivery boundary
 - **THEN** it names registry `0.1.0` as the first catalog pin
 - **AND** it says that pin is not a slung production release
-- **AND** it forbids restamping `commit` or `hash` without a host sling
+- **AND** it forbids restamping `commit` or `hash` even after host sling of `pstack-poteto-mode` and `pstack-build`
+- **AND** a `--require-git` failure on pin `29c84db` is not a restamp trigger
 
 ### Requirement: Playbook map excludes method skill stems
 
@@ -271,8 +273,9 @@ This change MUST NOT stamp panel keys.
 
 - **GIVEN** `pstack/TRACEABILITY.md`
 - **WHEN** a reader follows the delivery boundary
-- **THEN** it forbids restamping `commit` or `hash` without a host sling
+- **THEN** it forbids restamping `commit` or `hash` even after host sling
 - **AND** that sentence names `pstack-poteto-mode` and `pstack-build`
+- **AND** a `--require-git` failure on pin `29c84db` is not a restamp trigger
 
 #### Scenario: Panel stamp does not start on Gherkin alone
 
