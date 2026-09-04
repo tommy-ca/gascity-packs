@@ -954,7 +954,7 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "--dry-run" in receipt_block
     assert "the request is not submitted" in receipt_block
     assert "gc pack registry whoami" in receipt_block
-    assert "scoped-name unit" in receipt_block
+    assert "scoped-name unit" not in receipt_block
     assert "dry-run is not registry acceptance" in receipt_block
     assert "stay blocked until the proof is complete" not in receipt_block
     remaining = delivery_spec.split(
@@ -971,14 +971,15 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "spawn graph does not present unscoped submit as the next click" in remaining
     assert "even after those sling receipts" in remaining
     assert "without those sling receipts" not in remaining
-    assert "MUST wait on the scoped-name unit even after those sling receipts" in remaining
+    assert "MUST wait on the scoped-name unit even after those sling receipts" not in remaining
+    assert "Do not send a second publish request" in remaining
     assert "MUST wait on those receipts" not in remaining
     first_pub = delivery_spec.split(
         "### Requirement: First registry publication waits on host dogfood",
         1,
     )[1]
     first_pub = first_pub.split("### Requirement:", 1)[0]
-    assert "MUST wait on the scoped-name unit even after" in first_pub
+    assert "MUST wait on the scoped-name unit even after" not in first_pub
     assert "itself a publication go" in first_pub
     assert "MUST follow a host city that imports the checkout path and slings" not in first_pub
     assert "a `--require-git` failure on pin `29c84db` is not a restamp trigger" in remaining
@@ -998,9 +999,10 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "Host sling of `pstack-poteto-mode` and `pstack-build` remains unproven" not in program
     assert "Do not restamp registry.toml commit or hash even after sling receipts" in program
     assert "Do not restamp registry.toml commit or hash without sling receipts" not in program
-    assert "Hosted publish waits on the scoped-name unit even after sling receipts of `pstack-poteto-mode` and `pstack-build`" in program
+    assert "Hosted publish waits on the scoped-name unit even after sling receipts of `pstack-poteto-mode` and `pstack-build`" not in program
     assert "Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`" not in program
-    assert "after the scoped-name unit" in program
+    assert "after the scoped-name unit" not in program
+    assert "Do not send a second publish request" in program
     assert "Restamp of gastownhall registry.toml is not the publication vehicle" in program
     assert "Maintain remote tommy" in program
     assert "Restamp `registry.toml` 0.1.0 after sling receipts of `pstack-poteto-mode` and `pstack-build`" not in program

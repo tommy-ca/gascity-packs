@@ -131,10 +131,10 @@ Feature: pstack-delivery-evidence
 Rule: Catalog pin on gastownhall main is not the first live city
 
 The pack MUST NOT treat an unmerged registry `0.1.0` pin as a gastownhall
-`main` import. First publication MUST wait on the scoped-name unit even after
-a host city that imports the checkout path and slings `pstack-poteto-mode`
-plus `pstack-build`. Host sling of those formulas is proven and is not by
-itself a publication go. Formula catalog strings MUST NOT claim Gas City
+`main` import. First publication of `tommy-ca/pstack` is already submitted.
+Sling is not by itself a publication go. Unscoped hosted submit is forbidden.
+Do not send a second publish request. Host sling of those formulas is proven
+and is not by itself a publication go. Formula catalog strings MUST NOT claim Gas City
 expands `gc.graph_operator`. Catalog strings MUST describe the current
 sequential graphs. They MUST NOT claim this checkout cooks `gc.provider_panel`.
 
@@ -247,14 +247,17 @@ Canonical-city sling is forbidden. The program MUST NOT restamp
 `registry.toml` `commit` or `hash` even after those sling receipts.
 A clone of tommy `main` that fails `validate_registry.py --require-git` on
 unreachable pin `29c84db` MUST NOT be treated as a restamp trigger.
-Hosted publication to registry.gascity.com MUST wait on the scoped-name unit even after those sling receipts.
-It is the publication vehicle. Restamp of gastownhall `registry.toml` is not
+Hosted identity is `tommy-ca/pstack` even after those sling receipts.
+Unscoped hosted submit is forbidden. Do not send a second publish request.
+Staff land of the queued request is outside this checkout. Sling receipts are
+not a publication go. Hosted publication to registry.gascity.com is the
+publication vehicle. Restamp of gastownhall `registry.toml` is not
 the publication vehicle. `make registry-publish` is not hosted publish.
 The program MUST name `pr-pstack-publish` after sling. Publish is
 `gc pack registry publish` of pack path `pstack/` to registry.gascity.com.
-The scoped-name unit MAY set `pstack/pack.toml` `[pack] name` to `tommy-ca/pstack`.
+`[pack] name` is `tommy-ca/pstack`.
 Directory and formula stems stay `pstack`. Vendor `upstream.toml` MUST NOT name `tommy-ca/pstack`.
-Hosted submit of unscoped `pstack` is forbidden. Hosted submit of `tommy-ca/pstack` is this unit. The live program spawn
+Hosted submit of unscoped `pstack` is forbidden. Hosted submit of `tommy-ca/pstack` is queued. The live program spawn
 graph MUST NOT present unscoped `gc pack registry publish pstack` as the next
 click after sling receipts. The program MUST keep
 ids `pr-pstack-land-honesty` and `pr-pstack-panel-stamp`.
@@ -277,7 +280,8 @@ This change MUST NOT stamp panel keys.
 - **THEN** host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route
 - **AND** that unit is not a GitHub PR
 - **AND** the proof command is `scripts/pstack_host_sling_proof.py`
-- **AND** hosted publish waits on the scoped-name unit even after sling receipts of `pstack-poteto-mode` and `pstack-build`
+- **AND** hosted identity is `tommy-ca/pstack` even after sling receipts of `pstack-poteto-mode` and `pstack-build`
+- **AND** Do not send a second publish request
 - **AND** restamp of gastownhall `registry.toml` is not the publication vehicle
 
 #### Scenario: TRACEABILITY names both sling formulas on the restamp gate
@@ -410,7 +414,7 @@ and `--setup-only` logs. It MUST NOT call `launch_review_formula` or
 `launch_build_formula` for this pair. A complete proof MUST include both
 formulas with both `gc.routed_to` values. A poteto-only row MAY persist
 as a failed partial. Hosted submit of unscoped `pstack` from remote
-`tommy` waits on the later scoped-name unit. Registry whoami is present.
+`tommy` is forbidden. Registry whoami is present.
 Dry-run of `gc pack registry publish` of pack path `pstack/` from this
 branch is proven. That dry-run MUST NOT be treated as registry
 acceptance. Catalog restamp of gastownhall `registry.toml` is not that
@@ -418,8 +422,8 @@ dest. Full drain of `pstack-build` is not required. The receipt MUST NOT
 be `pstack-review` then `pstack-build`. Formula show is not a receipt.
 Setup-only show is not a receipt. `pstack-poteto-mode` MUST NOT auto-sling
 the classified formula. The sling unit MUST NOT be a GitHub PR. The
-operator MUST NOT sling into a canonical city. Submit was not sent. This
-change MUST NOT rename `pstack/pack.toml`.
+operator MUST NOT sling into a canonical city. Hosted submit of
+`tommy-ca/pstack` is queued. Do not send a second publish request.
 
 #### Scenario: Cook plus route of pstack-poteto-mode then pstack-build is the sling receipt
 
@@ -447,13 +451,14 @@ change MUST NOT rename `pstack/pack.toml`.
 - **GIVEN** a clean checkout of `feat/pstack-pack-honesty` tracking remote `tommy`
 - **WHEN** an operator runs `gc pack registry publish --dry-run pstack/`
 - **THEN** the command exits 0
-- **AND** the request names pack `pstack` version `0.1.0`
+- **AND** the request names pack path `pstack/` version `0.1.0`
 - **AND** the registry is `https://registry.gascity.com`
 - **AND** the repository is `https://github.com/tommy-ca/gascity-packs`
 - **AND** the request is not submitted
 - **AND** catalog restamp of gastownhall `registry.toml` is not the dest
 - **AND** `gc pack registry whoami` succeeds
-- **AND** unscoped hosted submit from tommy waits on the scoped-name unit
+- **AND** unscoped hosted submit is forbidden
+- **AND** Do not send a second publish request
 - **AND** dry-run is not registry acceptance
 
 ### Requirement: Scoped pack name tommy-ca/pstack is the hosted identity
@@ -462,10 +467,10 @@ Feature: pstack-delivery-evidence
 
 Rule: Registry identity is community-scoped, directory stays pstack
 
-`pstack/pack.toml` `[pack] name` MUST be `tommy-ca/pstack`. The pack directory
+`pstack/pack.toml` `[pack] name` MUST stay `tommy-ca/pstack`. The pack directory
 and formula stems MUST stay `pstack`. `vendor/pstack/upstream.toml` MUST NOT
 contain `tommy-ca/pstack`. Hosted publish is `gc pack registry publish` of pack
-path `pstack/` after that rename. Dry-run of unscoped `pstack` is not this dest.
+path `pstack/`. Dry-run of unscoped `pstack` is not this dest.
 
 #### Scenario: Pack name is community-scoped
 
