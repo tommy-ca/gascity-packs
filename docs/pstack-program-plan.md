@@ -1,6 +1,6 @@
 # PStack program plan
 
-A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. Isolation is on branch `feat/pstack-pack-honesty`. It is not landed on gastownhall main. gastownhall PR 385 is closed unmerged. Do not reopen it. Maintain remote tommy. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`. Operator publication dest is https://registry.gascity.com. Restamp of gastownhall registry.toml is not the publication vehicle. This change does not publish, restamp hashes, or stamp panel keys. The live graph is this file.
+A city operator needs pstack as a sequential Gas City factory today and N-model arena later without pack Task spawn. Isolation is on branch `feat/pstack-pack-honesty`. It is not landed on gastownhall main. gastownhall PR 385 is closed unmerged. Do not reopen it. Maintain remote tommy. Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route. Hosted publish waits on the scoped-name unit even after sling receipts of `pstack-poteto-mode` and `pstack-build`. Operator publication dest is https://registry.gascity.com. Restamp of gastownhall registry.toml is not the publication vehicle. This change does not publish, restamp hashes, or stamp panel keys. The live graph is this file.
 
 ## How to read this
 
@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. The operator publishes via gc pack registry publish after sling. Isolation is already on feat/pstack-pack-honesty. Done when host sling receipts exist, hosted publish is queued or shown, and formulas still omit gc.provider_panel until the compiler consumer exists."
+- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. The operator publishes via gc pack registry publish after the scoped-name unit. Isolation is already on feat/pstack-pack-honesty. Done when host sling receipts exist, unscoped submit stays deferred, hosted publish waits on scoped-name, and formulas still omit gc.provider_panel until the compiler consumer exists."
 - [ ] Read these from trunk at program start. Re-read them at every tick.
   - [ ] `git show origin/main:.github/workflows/ci.yml`
   - [ ] `git show origin/main:registry.toml`
@@ -39,7 +39,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [x] Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`. Not a GitHub PR.
   - [x] Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route.
   - [ ] Do not restamp registry.toml commit or hash even after sling receipts. Ghost-pin CI is not a restamp trigger.
-  - [x] Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`.
+  - [x] Hosted publish waits on the scoped-name unit even after sling receipts of `pstack-poteto-mode` and `pstack-build`.
   - [ ] Restamp of gastownhall registry.toml is not the publication vehicle.
   - [ ] After receipts, `pr-pstack-publish` waits on the scoped-name unit. Unscoped submit is not the next click.
   - [ ] Gas City compiler consumer for `gc.provider_panel`. Outside this packs formula tree.
@@ -190,7 +190,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Publish pstack to hosted Registry (`pr-pstack-publish`)
 
-**Depends on.** Host sling receipts of `pstack-poteto-mode` and `pstack-build`.
+**Depends on.** Host sling receipts of `pstack-poteto-mode` and `pstack-build`. The later scoped-name unit.
 
 **Files.**
 

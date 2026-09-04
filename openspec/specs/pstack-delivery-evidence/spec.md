@@ -177,6 +177,7 @@ say a `--require-git` failure on pin `29c84db` is not a restamp trigger.
 - **AND** the text says method formulas are not multi-provider fanout
 - **AND** the text forbids restamping even after host sling of `pstack-poteto-mode` and `pstack-build`
 - **AND** the text says a `--require-git` failure on pin `29c84db` is not a restamp trigger
+- **AND** the text does not say without a host sling of `pstack-poteto-mode` and `pstack-build`
 
 #### Scenario: README may name the unarchived panel target
 
@@ -241,7 +242,7 @@ Canonical-city sling is forbidden. The program MUST NOT restamp
 `registry.toml` `commit` or `hash` even after those sling receipts.
 A clone of tommy `main` that fails `validate_registry.py --require-git` on
 unreachable pin `29c84db` MUST NOT be treated as a restamp trigger.
-Hosted publication to registry.gascity.com MUST wait on those receipts.
+Hosted publication to registry.gascity.com MUST wait on the scoped-name unit even after those sling receipts.
 It is the publication vehicle. Restamp of gastownhall `registry.toml` is not
 the publication vehicle. `make registry-publish` is not hosted publish.
 The program MUST name `pr-pstack-publish` after sling. Publish is
@@ -270,7 +271,7 @@ This change MUST NOT stamp panel keys.
 - **THEN** host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route
 - **AND** that unit is not a GitHub PR
 - **AND** the proof command is `scripts/pstack_host_sling_proof.py`
-- **AND** hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`
+- **AND** hosted publish waits on the scoped-name unit even after sling receipts of `pstack-poteto-mode` and `pstack-build`
 - **AND** restamp of gastownhall `registry.toml` is not the publication vehicle
 
 #### Scenario: TRACEABILITY names both sling formulas on the restamp gate
