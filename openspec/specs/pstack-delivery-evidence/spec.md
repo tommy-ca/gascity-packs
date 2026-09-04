@@ -251,8 +251,9 @@ It is the publication vehicle. Restamp of gastownhall `registry.toml` is not
 the publication vehicle. `make registry-publish` is not hosted publish.
 The program MUST name `pr-pstack-publish` after sling. Publish is
 `gc pack registry publish` of pack path `pstack/` to registry.gascity.com.
-A scoped name is a later unit. This change MUST NOT rename `pstack/pack.toml`.
-Unscoped hosted submit from tommy waits on that unit. The live program spawn
+The scoped-name unit MAY set `pstack/pack.toml` `[pack] name` to `tommy-ca/pstack`.
+Directory and formula stems stay `pstack`. Vendor `upstream.toml` MUST NOT name `tommy-ca/pstack`.
+Hosted submit of unscoped `pstack` is forbidden. Hosted submit of `tommy-ca/pstack` is this unit. The live program spawn
 graph MUST NOT present unscoped `gc pack registry publish pstack` as the next
 click after sling receipts. The program MUST keep
 ids `pr-pstack-land-honesty` and `pr-pstack-panel-stamp`.
@@ -329,8 +330,8 @@ This change MUST NOT stamp panel keys.
 - **THEN** the program names `pr-pstack-publish`
 - **AND** publish is `gc pack registry publish` of pack path `pstack/`
 - **AND** the dest is registry.gascity.com
-- **AND** this change does not rename `pstack/pack.toml`
-- **AND** unscoped hosted submit waits on the scoped-name unit
+- **AND** `[pack] name` is `tommy-ca/pstack`
+- **AND** unscoped hosted submit is forbidden
 - **AND** spawn graph does not present unscoped submit as the next click
 
 #### Scenario: Fork default tracks isolation while gastownhall does not accept PRs
@@ -453,6 +454,25 @@ change MUST NOT rename `pstack/pack.toml`.
 - **AND** `gc pack registry whoami` succeeds
 - **AND** unscoped hosted submit from tommy waits on the scoped-name unit
 - **AND** dry-run is not registry acceptance
+
+### Requirement: Scoped pack name tommy-ca/pstack is the hosted identity
+
+Feature: pstack-delivery-evidence
+
+Rule: Registry identity is community-scoped, directory stays pstack
+
+`pstack/pack.toml` `[pack] name` MUST be `tommy-ca/pstack`. The pack directory
+and formula stems MUST stay `pstack`. `vendor/pstack/upstream.toml` MUST NOT
+contain `tommy-ca/pstack`. Hosted publish is `gc pack registry publish` of pack
+path `pstack/` after that rename. Dry-run of unscoped `pstack` is not this dest.
+
+#### Scenario: Pack name is community-scoped
+
+- **GIVEN** `pstack/pack.toml`
+- **WHEN** an operator reads `[pack] name`
+- **THEN** the name is `tommy-ca/pstack`
+- **AND** `vendor/pstack/upstream.toml` does not contain `tommy-ca/pstack`
+- **AND** formula catalog names still start with `pstack-`
 
 ## Non-Goals
 
