@@ -697,10 +697,9 @@ def test_readme_documents_required_gas_city_roles() -> None:
     assert "gc pack registry publish" in text
     assert "https://registry.gascity.com" in text
     assert "Hosted identity is `tommy-ca/pstack`" in text
-    assert "Unscoped hosted submit from tommy waits on" in text
-    assert "the scoped-name unit" in text
     assert "Unscoped hosted submit is forbidden" in text
     assert "Dry-run is not registry acceptance" in text
+    assert "Unscoped hosted submit from tommy waits on" not in text
     assert 'source = "../gascity-packs/pstack"' in text
     assert "not a slung production release" in text
     assert "even after host sling of" in text

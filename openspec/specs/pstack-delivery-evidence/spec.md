@@ -166,7 +166,7 @@ host sling of `pstack-poteto-mode` and `pstack-build`. It MUST say a
 `--require-git` failure on pin `29c84db` is not a restamp trigger.
 `pstack/README.md` MUST forbid restamping even after that host sling. It MUST
 say a `--require-git` failure on pin `29c84db` is not a restamp trigger.
-`pstack/README.md` MUST say unscoped hosted submit from tommy waits on the scoped-name unit. It MUST say dry-run is not registry acceptance.
+`pstack/README.md` MUST say hosted identity is `tommy-ca/pstack`. It MUST say unscoped hosted submit is forbidden. It MUST say dry-run is not registry acceptance.
 
 #### Scenario: Pack README leads with a local clone
 
@@ -180,7 +180,8 @@ say a `--require-git` failure on pin `29c84db` is not a restamp trigger.
 - **AND** the text forbids restamping even after host sling of `pstack-poteto-mode` and `pstack-build`
 - **AND** the text says a `--require-git` failure on pin `29c84db` is not a restamp trigger
 - **AND** the text does not say without a host sling of `pstack-poteto-mode` and `pstack-build`
-- **AND** the text says unscoped hosted submit from tommy waits on the scoped-name unit
+- **AND** the text says hosted identity is `tommy-ca/pstack`
+- **AND** the text says unscoped hosted submit is forbidden
 - **AND** the text says dry-run is not registry acceptance
 
 #### Scenario: README may name the unarchived panel target
