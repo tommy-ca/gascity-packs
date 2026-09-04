@@ -327,9 +327,9 @@ Gas City compiler is outside this packs tree. `pr-pstack-panel-stamp` must not s
 
 Dual corpus. `pstack/skills/arena/SKILL.md` still documents Cursor Task. Host plugin `check-plan.mjs` is the live checker. Pack vendor `check-plan.mjs` is a second corpus. Watch that in stamp lane 10.
 
-Scoped name is a later unit. `pstack/pack.toml` stays unscoped `pstack` in this honesty change.
+Hosted identity is `tommy-ca/pstack`. Unscoped submit is forbidden. Directory stays `pstack`.
 
-Hosted publish of unscoped `pstack` from tommy waits on the scoped-name unit. Registry whoami is present. Dry-run is not acceptance. HEAD is on remote `tommy`.
+Submitted publish request `prq_5WDBAqIkcpy-j7ossap3TLJ5` to https://registry.gascity.com. Pack `tommy-ca/pstack` `0.1.0`. Status `pending_review`. Hash `sha256:16b4699aae825b8554f72535d1325310e316541d2c305571797a8298559d500a`. Registry staff still land community packs. HEAD is on remote `tommy`.
 
 Orchestrate ceremony can drown host sling. Sling is not a GitHub PR. Do not spawn worktree owners to sling.
 
