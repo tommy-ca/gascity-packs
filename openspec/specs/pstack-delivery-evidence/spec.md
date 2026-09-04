@@ -234,7 +234,7 @@ It is not a gastownhall land. Host sling of `pstack-poteto-mode` then
 `pstack-build` is proven as cook plus route by
 `scripts/pstack_host_sling_proof.py`. That unit MUST NOT be a GitHub PR.
 Canonical-city sling is forbidden. The program MUST NOT restamp
-`registry.toml` `commit` or `hash` without those sling receipts.
+`registry.toml` `commit` or `hash` even after those sling receipts.
 A clone of tommy `main` that fails `validate_registry.py --require-git` on
 unreachable pin `29c84db` MUST NOT be treated as a restamp trigger.
 Hosted publication to registry.gascity.com MUST wait on those receipts.

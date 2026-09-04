@@ -38,7 +38,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [x] While gastownhall does not accept PRs, tommy `main` is a fast-forward of `feat/pstack-pack-honesty`. Not a gastownhall merge.
   - [x] Host sling of `pstack-poteto-mode` and `pstack-build` after isolation is on `feat/pstack-pack-honesty`. Not a GitHub PR.
   - [x] Host sling of `pstack-poteto-mode` and `pstack-build` is proven as cook plus route.
-  - [ ] Do not restamp registry.toml commit or hash without sling receipts.
+  - [ ] Do not restamp registry.toml commit or hash even after sling receipts. Ghost-pin CI is not a restamp trigger.
   - [x] Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`.
   - [ ] Restamp of gastownhall registry.toml is not the publication vehicle.
   - [ ] After receipts, `pr-pstack-publish` waits on the scoped-name unit. Unscoped submit is not the next click.
