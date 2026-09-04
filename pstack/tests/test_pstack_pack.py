@@ -679,7 +679,7 @@ def test_source_binding_formula_records_translation_metadata() -> None:
 def test_pack_metadata_and_import() -> None:
     data = tomllib.loads((ROOT / "pack.toml").read_text())
     assert data["pack"] == {
-        "name": "pstack",
+        "name": "tommy-ca/pstack",
         "version": "0.1.0",
         "schema": 2,
         "requires_gc": ">=0.13.0",
@@ -696,8 +696,10 @@ def test_readme_documents_required_gas_city_roles() -> None:
     assert "origin/main" in text and "does not contain `pstack/`" in text
     assert "gc pack registry publish" in text
     assert "https://registry.gascity.com" in text
+    assert "Hosted identity is `tommy-ca/pstack`" in text
     assert "Unscoped hosted submit from tommy waits on" in text
     assert "the scoped-name unit" in text
+    assert "Unscoped hosted submit is forbidden" in text
     assert "Dry-run is not registry acceptance" in text
     assert 'source = "../gascity-packs/pstack"' in text
     assert "not a slung production release" in text
