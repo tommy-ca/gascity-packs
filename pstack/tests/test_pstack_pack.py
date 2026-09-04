@@ -891,7 +891,9 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "bmad" in architecture
     assert "6fecddba65801f9b9c08b8b328d998ee5b09d290" in architecture
     assert "not a slung production release" in traceability
-    assert "without a host sling of `pstack-poteto-mode` and `pstack-build`" in traceability
+    assert "even after host sling of `pstack-poteto-mode` and `pstack-build`" in traceability
+    assert "is not a restamp trigger" in traceability
+    assert "without a host sling of `pstack-poteto-mode` and `pstack-build`" not in traceability
     assert "no compiler consumer for `gc.provider_panel`" in traceability
     packs_readme = (PACKS_ROOT / "README.md").read_text()
     assert "[pstack](./pstack)" in packs_readme
