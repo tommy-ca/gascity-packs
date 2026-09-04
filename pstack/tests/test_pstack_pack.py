@@ -969,6 +969,14 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "without those sling receipts" not in remaining
     assert "MUST wait on the scoped-name unit even after those sling receipts" in remaining
     assert "MUST wait on those receipts" not in remaining
+    first_pub = delivery_spec.split(
+        "### Requirement: First registry publication waits on host dogfood",
+        1,
+    )[1]
+    first_pub = first_pub.split("### Requirement:", 1)[0]
+    assert "MUST wait on the scoped-name unit even after" in first_pub
+    assert "itself a publication go" in first_pub
+    assert "MUST follow a host city that imports the checkout path and slings" not in first_pub
     assert "a `--require-git` failure on pin `29c84db` is not a restamp trigger" in remaining
     three_ids = (
         "`pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`"
