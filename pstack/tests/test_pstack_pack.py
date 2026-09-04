@@ -956,6 +956,9 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "gc pack registry whoami" in receipt_block
     assert "scoped-name unit" not in receipt_block
     assert "dry-run is not registry acceptance" in receipt_block
+    assert "is queued" not in receipt_block
+    assert "pending_review" not in receipt_block
+    assert "Do not send a second publish request" not in receipt_block
     assert "stay blocked until the proof is complete" not in receipt_block
     remaining = delivery_spec.split(
         "### Requirement: Remaining program units stay host sling then compiler then panel stamp",
@@ -972,7 +975,14 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "even after those sling receipts" in remaining
     assert "without those sling receipts" not in remaining
     assert "MUST wait on the scoped-name unit even after those sling receipts" not in remaining
-    assert "Do not send a second publish request" in remaining
+    assert "Do not send a second publish request" not in remaining
+    assert (
+        "Hosted identity is `tommy-ca/pstack` even after those sling receipts"
+        not in remaining
+    )
+    assert "is queued" not in remaining
+    assert "pending_review" not in remaining
+    assert "Staff land is outside this checkout" in remaining
     assert "MUST wait on those receipts" not in remaining
     first_pub = delivery_spec.split(
         "### Requirement: First registry publication waits on host dogfood",
@@ -981,6 +991,9 @@ def test_delivery_checks_cover_pstack() -> None:
     first_pub = first_pub.split("### Requirement:", 1)[0]
     assert "MUST wait on the scoped-name unit even after" not in first_pub
     assert "itself a publication go" in first_pub
+    assert "already submitted" not in first_pub
+    assert "pending_review" not in first_pub
+    assert "Do not send a second publish request" not in first_pub
     assert "MUST follow a host city that imports the checkout path and slings" not in first_pub
     assert "a `--require-git` failure on pin `29c84db` is not a restamp trigger" in remaining
     three_ids = (
@@ -1002,7 +1015,7 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "Hosted publish waits on the scoped-name unit even after sling receipts of `pstack-poteto-mode` and `pstack-build`" not in program
     assert "Hosted publish waits on sling receipts of `pstack-poteto-mode` and `pstack-build`" not in program
     assert "after the scoped-name unit" not in program
-    assert "Do not send a second publish request" in program
+    assert "Do not send a second publish request" not in program
     assert "Restamp of gastownhall registry.toml is not the publication vehicle" in program
     assert "Maintain remote tommy" in program
     assert "Restamp `registry.toml` 0.1.0 after sling receipts of `pstack-poteto-mode` and `pstack-build`" not in program
