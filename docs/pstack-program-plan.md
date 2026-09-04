@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Hosted identity is tommy-ca/pstack. Unscoped submit is forbidden. Do not send a second publish request. Isolation is already on feat/pstack-pack-honesty. Done when host sling receipts exist, unscoped submit stays deferred, and formulas still omit gc.provider_panel until the compiler consumer exists."
+- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Hosted identity is tommy-ca/pstack. Unscoped submit is forbidden. Do not send a second publish request. Isolation is already on feat/pstack-pack-honesty. Done when host sling receipts exist and formulas still omit gc.provider_panel until the compiler consumer exists."
 - [ ] Read these from trunk at program start. Re-read them at every tick.
   - [ ] `git show origin/main:.github/workflows/ci.yml`
   - [ ] `git show origin/main:registry.toml`
