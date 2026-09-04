@@ -163,6 +163,8 @@ consumes `gc.provider_panel`. Root
 `pstack/TRACEABILITY.md` MUST forbid restamping `commit` or `hash` even after
 host sling of `pstack-poteto-mode` and `pstack-build`. It MUST say a
 `--require-git` failure on pin `29c84db` is not a restamp trigger.
+`pstack/README.md` MUST forbid restamping even after that host sling. It MUST
+say a `--require-git` failure on pin `29c84db` is not a restamp trigger.
 
 #### Scenario: Pack README leads with a local clone
 
@@ -173,6 +175,8 @@ host sling of `pstack-poteto-mode` and `pstack-build`. It MUST say a
 - **AND** the text says the URL works only when the imported git ref contains `pstack/`
 - **AND** the text says registry `0.1.0` is not a slung production release
 - **AND** the text says method formulas are not multi-provider fanout
+- **AND** the text forbids restamping even after host sling of `pstack-poteto-mode` and `pstack-build`
+- **AND** the text says a `--require-git` failure on pin `29c84db` is not a restamp trigger
 
 #### Scenario: README may name the unarchived panel target
 
