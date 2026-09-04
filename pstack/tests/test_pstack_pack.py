@@ -698,6 +698,8 @@ def test_readme_documents_required_gas_city_roles() -> None:
     assert "https://registry.gascity.com" in text
     assert 'source = "../gascity-packs/pstack"' in text
     assert "not a slung production release" in text
+    assert "even after host sling of" in text
+    assert "`29c84db` is not a restamp trigger" in text
     assert "does not expand `gc.graph_operator`" in text
     assert "sequential Gas City graphs" in text or "sequential annotated steps" in text
     assert "not multi-provider fanout" in text
