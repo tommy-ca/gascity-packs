@@ -75,21 +75,17 @@ SLICES: tuple[tuple[str, str, tuple[str, ...], tuple[str, ...]], ...] = (
 )
 
 
-def repo_root(explicit: Path | None) -> Path:
-    if explicit is not None:
-        return explicit.resolve()
+def default_root() -> Path:
     return Path(__file__).resolve().parents[1]
 
 
-def resolve_spec(root: Path, spec: Path | None) -> Path:
+def resolve_spec(spec: Path | None) -> Path:
     relative = Path("openspec/specs/pstack-delivery-evidence/spec.md")
-    path = spec if spec is not None else relative
-    if path.is_absolute():
-        return path
-    cwd_path = Path.cwd() / path
-    if cwd_path.is_file() or spec is not None:
-        return cwd_path.resolve()
-    return (root / path).resolve()
+    if spec is None:
+        return default_root() / relative
+    if spec.is_absolute():
+        return spec
+    return (Path.cwd() / spec).resolve()
 
 
 def requirement_slice(text: str, header: str) -> str | None:
@@ -118,20 +114,13 @@ def check(text: str) -> str | None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--root",
-        type=Path,
-        default=None,
-        help="repository root. Default: parent of scripts/",
-    )
-    parser.add_argument(
         "--spec",
         type=Path,
         default=None,
         help="dest spec path. Default: openspec/specs/pstack-delivery-evidence/spec.md",
     )
     args = parser.parse_args()
-    root = repo_root(args.root)
-    spec = resolve_spec(root, args.spec)
+    spec = resolve_spec(args.spec)
     if not spec.is_file():
         print(f"slice remaining-units: missing {spec}", file=sys.stderr)
         return 1

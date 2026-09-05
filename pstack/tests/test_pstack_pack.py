@@ -1021,6 +1021,7 @@ def test_dest_standing_check_fails_closed(tmp_path: pathlib.Path) -> None:
     )
     proc_second = run(poisoned_second)
     assert proc_second.returncode != 0
+    assert "Do not send a second publish request" in proc_second.stderr
     assert "scripts/check_pstack_dest_standing.py" in (ROOT / "REQUIREMENTS.md").read_text()
     assert "scripts/check_pstack_dest_standing.py" in (ROOT / "TRACEABILITY.md").read_text()
 
