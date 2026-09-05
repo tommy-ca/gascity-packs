@@ -908,6 +908,7 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "Not a slung production import" in packs_readme
     design = (ROOT / "DESIGN.md").read_text().lower()
     assert "dest-env" not in design
+    assert "pstack.arena-runner" not in design
     specs = PACKS_ROOT / "openspec" / "specs"
     for relative in (
         "pstack-gascity-pack/spec.md",

@@ -233,8 +233,11 @@ The pack MUST represent `how`, `why`, `architect`, `swarm`, `arena`, and
 annotate intended fanout, fanin, gate, or selector behavior with
 `gc.graph_operator` or `pstack.graph_operator` metadata. This checkout MUST NOT
 treat those keys as an executed child-graph primitive. This checkout MUST NOT
-stamp `gc.provider_panel` until Gas City consumes that key. After
-that consumer exists, `pstack-arena` and `pstack-interrogate` MUST delegate
+stamp `gc.provider_panel` until Gas City consumes that key. Four identities
+stay distinct: session provider, 1:1 role patch, catalog id, and model slug.
+`how`, `why`, and `architect` stay sequential investigator formulas. Method
+formulas MUST NOT name `pstack.arena-runner`. Persona expansion is not N-model.
+After that consumer exists, `pstack-arena` and `pstack-interrogate` MUST delegate
 N-model children to a city provider panel and MUST declare isolated
 `{child_id}` artifact paths. Feature, refactor,
 bug-fix, perf, prototype, investigation, hillclimb, runtime-forensics,
@@ -327,6 +330,12 @@ validator.
 - **AND** they forbid pack-owned provider id strings
 - **AND** they forbid stamping `gc.provider_panel` before a Gas City consumer exists
 - **AND** `pstack-arena.formula.toml` still omits `gc.provider_panel`
+- **AND** four identities stay distinct
+- **AND** `how`, `why`, and `architect` stay sequential investigator formulas
+- **AND** those files MUST NOT name `pstack.arena-runner`
+- **AND** persona expansion is not N-model
+- **AND** arena candidates stay `pstack.architect`
+- **AND** interrogate review stays `pstack.reviewer`
 
 #### Scenario: Analysis remains read-mostly
 
