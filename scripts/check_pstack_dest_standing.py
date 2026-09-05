@@ -20,6 +20,7 @@ SLICES: tuple[tuple[str, str, tuple[str, ...], tuple[str, ...]], ...] = (
             "Staff land is outside this checkout",
             "a `--require-git` failure on pin `29c84db` is not a restamp trigger",
             "scripts/check_pstack_dest_standing.py",
+            "scripts/check_pstack_delivery_evidence.py",
         ),
         (
             "This change MUST NOT sling",

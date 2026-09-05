@@ -66,7 +66,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 Each live lane runs in its own `isolation: "worktree"` child at the PR head. Drive the real surface (running app, CLI, tests, or Grok browser tools).
 
 - [ ] `git fetch origin <head-branch> && git checkout <head SHA>`.
-- [ ] Use the repo CLI. `uv run --with pytest --with pyyaml pytest -q pstack/tests/test_pstack_pack.py`. `python scripts/check_pstack_dest_standing.py`. `python pstack/scripts/apply_intent_change.py --source openspec/changes/archive/2026-09-02-pstack-mapping-gaps --validate-only`.
+- [ ] Use the repo CLI. `uv run --with pytest --with pyyaml pytest -q pstack/tests/test_pstack_pack.py`. `python scripts/check_pstack_delivery_evidence.py`. That runner subprocesses dest standing, schemas, and `python pstack/scripts/apply_intent_change.py --source openspec/changes/archive/2026-09-02-pstack-mapping-gaps --validate-only`.
 - [ ] Save every screenshot to `/tmp/swarm-<pr-id>/worker-<n>/<slug>.png` and return the paths with the report.
 
 ## Land isolation and OpenSpec (`pr-pstack-land-honesty`)

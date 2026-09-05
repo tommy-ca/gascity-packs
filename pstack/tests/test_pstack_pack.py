@@ -936,13 +936,15 @@ def test_delivery_checks_cover_pstack() -> None:
     )
     assert receipt_req in delivery_spec
     proc = subprocess.run(
-        [sys.executable, str(PACKS_ROOT / "scripts/check_pstack_dest_standing.py")],
+        [sys.executable, str(PACKS_ROOT / "scripts/check_pstack_delivery_evidence.py")],
         cwd=PACKS_ROOT,
         capture_output=True,
         text=True,
     )
     assert proc.returncode == 0, proc.stderr
-    assert "ok dest standing" in proc.stdout
+    assert "ok delivery evidence" in proc.stdout
+    assert "scripts/check_pstack_delivery_evidence.py" in (ROOT / "REQUIREMENTS.md").read_text()
+    assert "scripts/check_pstack_delivery_evidence.py" in (ROOT / "TRACEABILITY.md").read_text()
     assert "scripts/check_pstack_dest_standing.py" in (ROOT / "REQUIREMENTS.md").read_text()
     assert "scripts/check_pstack_dest_standing.py" in (ROOT / "TRACEABILITY.md").read_text()
     three_ids = (
@@ -1024,6 +1026,45 @@ def test_dest_standing_check_fails_closed(tmp_path: pathlib.Path) -> None:
     assert "Do not send a second publish request" in proc_second.stderr
     assert "scripts/check_pstack_dest_standing.py" in (ROOT / "REQUIREMENTS.md").read_text()
     assert "scripts/check_pstack_dest_standing.py" in (ROOT / "TRACEABILITY.md").read_text()
+
+
+def test_delivery_evidence_runner_fails_closed(tmp_path: pathlib.Path) -> None:
+    script = PACKS_ROOT / "scripts/check_pstack_delivery_evidence.py"
+
+    def tree(*, name: str, pin: bool, extra: str | None) -> pathlib.Path:
+        root = tmp_path / f"{name}-{pin}-{extra}"
+        (root / "pstack").mkdir(parents=True)
+        (root / "pstack/pack.toml").write_text(f'[pack]\nname = "{name}"\n')
+        pin_text = ""
+        if pin:
+            pin_text = (
+                "29c84db50f4d0d97ee548b3570094643e53973bf\nsha256:89aee457\n"
+            )
+        (root / "registry.toml").write_text(pin_text)
+        (root / "openspec/changes/archive").mkdir(parents=True)
+        if extra is not None:
+            (root / "openspec/changes" / extra).mkdir()
+        return root
+
+    def run(root: pathlib.Path) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, str(script), "--root", str(root)],
+            cwd=PACKS_ROOT,
+            capture_output=True,
+            text=True,
+        )
+
+    wrong_name = run(tree(name="pstack", pin=True, extra=None))
+    assert wrong_name.returncode != 0
+    assert "pack-name" in wrong_name.stderr
+    missing_pin = run(tree(name="tommy-ca/pstack", pin=False, extra=None))
+    assert missing_pin.returncode != 0
+    assert "pin" in missing_pin.stderr
+    live_change = run(
+        tree(name="tommy-ca/pstack", pin=True, extra="live-change")
+    )
+    assert live_change.returncode != 0
+    assert "openspec-archive" in live_change.stderr
 
 
 def test_method_formulas_keep_unconsumed_graph_operator_metadata() -> None:

@@ -275,6 +275,13 @@ Pack tests MUST run `scripts/check_pstack_dest_standing.py`.
 That script MUST encode dest standing as a must/must-not table over dest
 slices remaining-units, first-pub, and receipt. It MUST exit 1 on fail.
 It MUST NOT scan Appendix C. It MUST NOT restamp pin `29c84db`.
+Pack tests MUST run `scripts/check_pstack_delivery_evidence.py`.
+That script MUST subprocess dest standing, schema inventory, and mapping-gaps
+validate-only. It MUST check `[pack] name` is `tommy-ca/pstack`.
+It MUST read pin `29c84db` / `sha256:89aee457` from `registry.toml` and MUST NOT restamp.
+It MUST fail if `openspec/changes/` is not archive-only.
+It MUST NOT wrap sling, inference-gate, or publish.
+It MUST NOT scan Appendix C.
 
 #### Scenario: Host sling is the next operator unit
 
@@ -359,6 +366,15 @@ It MUST NOT scan Appendix C. It MUST NOT restamp pin `29c84db`.
 - **AND** it exits 1 on a dest-slice miss or forbidden string
 - **AND** pack tests subprocess that script
 - **AND** Appendix C MAY still record event-state
+
+#### Scenario: Delivery evidence runner fails closed
+
+- **GIVEN** dest remaining-units and the cheap evidence levers
+- **WHEN** `python scripts/check_pstack_delivery_evidence.py` runs
+- **THEN** it exits 0 on standing dest
+- **AND** it exits 1 on a wrong pack name, a restamped pin, or a live OpenSpec change dir
+- **AND** pack tests subprocess that script
+- **AND** it does not wrap sling, inference-gate, or publish
 
 ### Requirement: PStack setup formulas compile in the inference-gate city
 
