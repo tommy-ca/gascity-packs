@@ -266,11 +266,13 @@ The program MUST say `pr-pstack-panel-stamp` must not start on Gherkin alone.
 Pack tests MUST fail if any
 `pstack/formulas/*.formula.toml` contains `gc.provider_panel` or
 `gc.child_artifact_path_template`. Pack tests MUST fail if `gascity/` contains
-`provider_panel`. Presence of `openspec/specs/gascity-provider-panel/spec.md`
-MUST NOT authorize a formula stamp. The boot recipe and REQUIREMENTS MUST
+`provider_panel`. Presence of `openspec/specs/gascity-provider-panel/spec.md` MUST NOT authorize a formula stamp. The boot recipe and REQUIREMENTS MUST
 validate `openspec/changes/archive/2026-09-02-pstack-mapping-gaps` without
 `--change`. This leftover MUST NOT publish. This leftover MUST NOT restamp hashes.
 This leftover MUST NOT stamp panel keys.
+Four identities stay distinct. Arena candidates stay `pstack.architect`.
+Interrogate review stays `pstack.reviewer`. Persona expansion is not N-model.
+Delivery evidence MUST fail closed if formulas grow those keys.
 Pack tests MUST run `scripts/check_pstack_dest_standing.py`.
 That script MUST encode dest standing as a must/must-not table over dest
 slices remaining-units, first-pub, and receipt. It MUST exit 1 on fail.
@@ -280,6 +282,7 @@ That script MUST subprocess dest standing, schema inventory, and mapping-gaps
 validate-only. It MUST check `[pack] name` is `tommy-ca/pstack`.
 It MUST read pin `29c84db` / `sha256:89aee457` from `registry.toml` and MUST NOT restamp.
 It MUST fail if `openspec/changes/` is not archive-only.
+`--root` MUST NOT relocate formula greps.
 It MUST NOT wrap sling, inference-gate, or publish.
 It MUST NOT scan Appendix C.
 
@@ -375,6 +378,8 @@ It MUST NOT scan Appendix C.
 - **AND** it exits 1 on a wrong pack name, a restamped pin, or a live OpenSpec change dir
 - **AND** pack tests subprocess that script
 - **AND** it does not wrap sling, inference-gate, or publish
+- **AND** it fails closed if formulas grow `gc.provider_panel` or `gc.child_artifact_path_template`
+- **AND** `--root` does not relocate those greps
 
 ### Requirement: PStack setup formulas compile in the inference-gate city
 

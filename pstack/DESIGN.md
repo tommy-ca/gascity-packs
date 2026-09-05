@@ -132,11 +132,10 @@ This TOML is operator `city.toml`, not pack formula text. A typical Formula map 
 
 `herdr` must not appear in `members`. Model slugs such as `composer-2.5` must not appear in `members`. Listing `cursor-grok` twice does not yield two models. A second Grok pin needs a second catalog id. Missing panel or a one-member panel is sequential fallback on the same sling name. Two members that share the same frozen `--model` are two beads and one model. That is a city misconfig, not pack diversity.
 
-Panel children keep the step's `gc.run_target`. Cook binds each child to one member id and overrides that role's 1:1 patch for those beads only. `{child_id}` is an opaque slot assigned at cook. It is not the provider id, so artifact paths do not leak catalog names. Interrogate `select` still picks review dimensions. The panel fans the `review` node, not a second axis of personas.
+Panel children keep the step's existing `gc.run_target`. Arena candidates stay `pstack.architect`. Interrogate review stays `pstack.reviewer`. Do not add a new agent. Cook binds each child to one member id and overrides that role's 1:1 patch for those beads only. `{child_id}` is an opaque slot assigned at cook. It is not the provider id, so artifact paths do not leak catalog names. Interrogate `select` still picks review dimensions. The panel fans the `review` node, not a second axis of personas.
 
 **What the pack will stamp (not in this checkout's formulas).**
 
-- `gc.run_target = "pstack.arena-runner"` or `pstack.reviewer`
 - `gc.provider_panel = "pstack-arena"` or `pstack-interrogate`
 - `gc.child_artifact_path_template` with `{child_id}` so N writers never share `.gc/pstack/arena-candidate.md`
 
@@ -144,7 +143,7 @@ Judge and judgment stay sequential after those artifacts. Interrogate does not c
 
 **What already fans out today.** Sibling methodology packs (`bmad`, `superpowers`, `gstack`, `compound-engineering`) and `build-basic-review` use `type = "expansion"` with named persona lanes. Distinct `gc.run_target`s are review personas on the city's patched provider. They are not N-model. `pstack-build-review` is the same primitive with two lanes that share `pstack.reviewer`, so they share one provider. Do not reuse that as arena.
 
-**Interim if a city needs N providers before the panel consumer.** Distinct `gc.run_target` names plus distinct `[[rigs.patches]]` rows. That freezes N in pack TOML. This repository OpenSpec prefers the panel so N lives in the city.
+**Rejected for pack formulas.** Distinct `gc.run_target` names plus distinct `[[rigs.patches]]` rows freeze N in pack TOML. That overlay belongs in city config only. Pack formulas MUST NOT freeze N that way.
 
 Build variants compose these formulas:
 

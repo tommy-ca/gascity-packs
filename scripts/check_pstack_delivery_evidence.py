@@ -24,6 +24,7 @@ class Cmd(NamedTuple):
 class FilePred(NamedTuple):
     name: str
     check: Callable[[Path], str | None]
+    live: bool = False
 
 
 def default_root() -> Path:
@@ -60,6 +61,32 @@ def check_pin(root: Path) -> str | None:
     return None
 
 
+def check_omit_panel(root: Path) -> str | None:
+    formulas = root / "pstack/formulas"
+    if not formulas.is_dir():
+        return "omit-panel: missing pstack/formulas"
+    for path in sorted(formulas.glob("*.formula.toml")):
+        text = path.read_text(encoding="utf-8")
+        if "gc.provider_panel" in text:
+            return f"omit-panel: {path.name} contains gc.provider_panel"
+        if "gc.child_artifact_path_template" in text:
+            return f"omit-panel: {path.name} contains gc.child_artifact_path_template"
+    gascity = root / "gascity"
+    if not gascity.is_dir():
+        return "omit-panel: missing gascity/"
+    for path in gascity.rglob("*"):
+        if not path.is_file() or path.suffix == ".pyc" or "__pycache__" in path.parts:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        if "provider_panel" in text:
+            rel = path.relative_to(gascity)
+            return f"omit-panel: gascity/{rel} contains provider_panel"
+    return None
+
+
 def check_openspec_archive(root: Path) -> str | None:
     changes = root / "openspec/changes"
     if not changes.is_dir():
@@ -92,6 +119,7 @@ def steps(live: Path) -> tuple[Cmd | FilePred, ...]:
         FilePred("pack-name", check_pack_name),
         FilePred("pin", check_pin),
         FilePred("openspec-archive", check_openspec_archive),
+        FilePred("omit-panel", check_omit_panel, True),
     )
 
 
@@ -111,7 +139,7 @@ def main() -> int:
         "--root",
         type=Path,
         default=None,
-        help="tree root for pack.toml, registry.toml, and openspec/changes",
+        help="tree root for pack.toml, registry.toml, and openspec/changes. Formula greps stay on the live repo.",
     )
     args = parser.parse_args()
     live = default_root()
@@ -120,7 +148,7 @@ def main() -> int:
         if isinstance(step, Cmd):
             miss = run_cmd(step.name, step.argv, live)
         else:
-            miss = step.check(files)
+            miss = step.check(live if step.live else files)
         if miss is not None:
             print(miss, file=sys.stderr, flush=True)
             return 1
