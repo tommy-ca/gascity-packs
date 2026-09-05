@@ -271,6 +271,10 @@ MUST NOT authorize a formula stamp. The boot recipe and REQUIREMENTS MUST
 validate `openspec/changes/archive/2026-09-02-pstack-mapping-gaps` without
 `--change`. This leftover MUST NOT publish. This leftover MUST NOT restamp hashes.
 This leftover MUST NOT stamp panel keys.
+Pack tests MUST run `scripts/check_pstack_dest_standing.py`.
+That script MUST encode dest standing as a must/must-not table over dest
+slices remaining-units, first-pub, and receipt. It MUST exit 1 on fail.
+It MUST NOT scan Appendix C. It MUST NOT restamp pin `29c84db`.
 
 #### Scenario: Host sling is the next operator unit
 
@@ -346,6 +350,15 @@ This leftover MUST NOT stamp panel keys.
 - **AND** that update is not a gastownhall merge
 - **AND** 385 is not reopened
 - **AND** a `--require-git` failure on pin `29c84db` is not a restamp trigger
+
+#### Scenario: Dest standing check fails closed
+
+- **GIVEN** dest remaining-units, first-pub, and receipt
+- **WHEN** `python scripts/check_pstack_dest_standing.py` runs
+- **THEN** it exits 0 on standing dest
+- **AND** it exits 1 on a dest-slice miss or forbidden string
+- **AND** pack tests subprocess that script
+- **AND** Appendix C MAY still record event-state
 
 ### Requirement: PStack setup formulas compile in the inference-gate city
 

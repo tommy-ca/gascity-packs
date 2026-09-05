@@ -935,67 +935,16 @@ def test_delivery_checks_cover_pstack() -> None:
         "Host sling receipts of pstack-poteto-mode then pstack-build are cook plus route"
     )
     assert receipt_req in delivery_spec
-    receipt_block = delivery_spec.split("### Requirement: " + receipt_req, 1)[1]
-    receipt_block = receipt_block.split("### Requirement:", 1)[0]
-    assert "pstack-poteto-mode" in receipt_block
-    assert "pstack-build" in receipt_block
-    assert "gc.routed_to" in receipt_block
-    assert "sling JSON" in receipt_block
-    assert "full drain of `pstack-build` is not required" in receipt_block
-    assert (
-        "MUST NOT treat `pstack-review` then `pstack-build` as the remaining-units sling"
-        in receipt_block
+    proc = subprocess.run(
+        [sys.executable, str(PACKS_ROOT / "scripts/check_pstack_dest_standing.py")],
+        cwd=PACKS_ROOT,
+        capture_output=True,
+        text=True,
     )
-    assert "parse_host_sling_root" in receipt_block
-    assert "extract_sling_root_id" in receipt_block
-    assert "failed partial" in receipt_block
-    assert "This change MUST NOT sling" not in receipt_block
-    assert "gc pack registry publish" in receipt_block
-    assert "--dry-run" in receipt_block
-    assert "the request is not submitted" in receipt_block
-    assert "gc pack registry whoami" in receipt_block
-    assert "scoped-name unit" not in receipt_block
-    assert "dry-run is not registry acceptance" in receipt_block
-    assert "is queued" not in receipt_block
-    assert "pending_review" not in receipt_block
-    assert "Do not send a second publish request" not in receipt_block
-    assert "stay blocked until the proof is complete" not in receipt_block
-    remaining = delivery_spec.split(
-        "### Requirement: Remaining program units stay host sling then compiler then panel stamp",
-        1,
-    )[1]
-    remaining = remaining.split("### Requirement:", 1)[0]
-    assert "This change MUST NOT sling" not in remaining
-    assert "scripts/pstack_host_sling_proof.py" in remaining
-    assert "is proven as cook plus route" in remaining
-    assert "fast-forward of `feat/pstack-pack-honesty`" in remaining
-    assert "It is not a gastownhall land" in remaining
-    assert "Fork default tracks isolation while gastownhall does not accept PRs" in remaining
-    assert "spawn graph does not present unscoped submit as the next click" in remaining
-    assert "even after those sling receipts" in remaining
-    assert "without those sling receipts" not in remaining
-    assert "MUST wait on the scoped-name unit even after those sling receipts" not in remaining
-    assert "Do not send a second publish request" not in remaining
-    assert (
-        "Hosted identity is `tommy-ca/pstack` even after those sling receipts"
-        not in remaining
-    )
-    assert "is queued" not in remaining
-    assert "pending_review" not in remaining
-    assert "Staff land is outside this checkout" in remaining
-    assert "MUST wait on those receipts" not in remaining
-    first_pub = delivery_spec.split(
-        "### Requirement: First registry publication waits on host dogfood",
-        1,
-    )[1]
-    first_pub = first_pub.split("### Requirement:", 1)[0]
-    assert "MUST wait on the scoped-name unit even after" not in first_pub
-    assert "itself a publication go" in first_pub
-    assert "already submitted" not in first_pub
-    assert "pending_review" not in first_pub
-    assert "Do not send a second publish request" not in first_pub
-    assert "MUST follow a host city that imports the checkout path and slings" not in first_pub
-    assert "a `--require-git` failure on pin `29c84db` is not a restamp trigger" in remaining
+    assert proc.returncode == 0, proc.stderr
+    assert "ok dest standing" in proc.stdout
+    assert "scripts/check_pstack_dest_standing.py" in (ROOT / "REQUIREMENTS.md").read_text()
+    assert "scripts/check_pstack_dest_standing.py" in (ROOT / "TRACEABILITY.md").read_text()
     three_ids = (
         "`pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`"
     )
@@ -1044,6 +993,36 @@ def test_delivery_checks_cover_pstack() -> None:
             text=True,
         )
         assert proc.returncode == 0, rel
+
+
+def test_dest_standing_check_fails_closed(tmp_path: pathlib.Path) -> None:
+    dest = (PACKS_ROOT / "openspec/specs/pstack-delivery-evidence/spec.md").read_text()
+    header = (
+        "### Requirement: Remaining program units stay host sling then compiler then panel stamp"
+    )
+    script = PACKS_ROOT / "scripts/check_pstack_dest_standing.py"
+
+    def run(text: str) -> subprocess.CompletedProcess[str]:
+        path = tmp_path / "dest.md"
+        path.write_text(text)
+        return subprocess.run(
+            [sys.executable, str(script), "--spec", str(path)],
+            cwd=PACKS_ROOT,
+            capture_output=True,
+            text=True,
+        )
+
+    poisoned = dest.replace(header, header + "\npending_review\n", 1)
+    proc = run(poisoned)
+    assert proc.returncode != 0
+    assert "pending_review" in proc.stderr
+    poisoned_second = dest.replace(
+        header, header + "\nDo not send a second publish request\n", 1
+    )
+    proc_second = run(poisoned_second)
+    assert proc_second.returncode != 0
+    assert "scripts/check_pstack_dest_standing.py" in (ROOT / "REQUIREMENTS.md").read_text()
+    assert "scripts/check_pstack_dest_standing.py" in (ROOT / "TRACEABILITY.md").read_text()
 
 
 def test_method_formulas_keep_unconsumed_graph_operator_metadata() -> None:
