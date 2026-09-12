@@ -34,6 +34,14 @@ jobs:
       - name: Install Python test dependencies
         run: python3 -m pip install PyYAML pytest jsonschema
 
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "20"
+
+      - name: Install OpenSpec CLI
+        run: npm install -g @fission-ai/openspec@1.12.0
+
       - name: Validate registry
         # --require-git: without git, no commit or content-hash verification runs at
         # all, so a missing worktree must fail rather than silently downgrade this to
