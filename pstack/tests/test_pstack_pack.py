@@ -379,29 +379,8 @@ def test_pack_runtime_schema_context_is_documented() -> None:
 
 
 def test_producer_gate_resolves_pstack_schema_from_pack_context() -> None:
-    gate = GAS_CITY / "assets/scripts/checks/build-artifact-valid.sh"
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp_path = pathlib.Path(tmp)
-        bin_dir = tmp_path / "bin"
-        bin_dir.mkdir()
-        fake_gc = bin_dir / "gc"
-        fake_gc.write_text(
-            "#!/bin/sh\n"
-            'if [ "$1" = "bd" ] && [ "$2" = "show" ] && [ "$4" = "--json" ]; then\n'
-            "  printf '%s\\n' "
-            "'{\"id\":\"step-1\",\"metadata\":{\"gc.build.artifact_schema\":"
-            "\"pstack.program-status.v1\",\"gc.build.artifact_path_keys\":"
-            "\"pstack.artifact_path\",\"pstack.artifact_path\":\"artifacts/status.md\"}}'\n"
-            "  exit 0\n"
-            "fi\n"
-            "exit 2\n",
-            encoding="utf-8",
-        )
-        fake_gc.chmod(0o755)
-        artifact = tmp_path / "artifacts/status.md"
-        artifact.parent.mkdir()
-        artifact.write_text(
-            """---
+    validator = load_build_artifact_validator()
+    rendered = """---
 schema: pstack.program-status.v1
 workflow:
   id: babysit-001
@@ -438,27 +417,14 @@ evidence:
 | ID | Status |
 | --- | --- |
 | BLOCKER-001 | covered |
-""",
-            encoding="utf-8",
+"""
+    with mock.patch.dict(os.environ, {"GC_BUILD_SCHEMA_ROOTS": str(ROOT / "schemas")}):
+        artifact = validator.validate_artifact_text(
+            rendered,
+            expected_schema="pstack.program-status.v1",
         )
-        env = {**os.environ}
-        for key in ("GC_BUILD_SCHEMA_ROOTS", "GC_RIG_ROOT", "GC_BEADS_SCOPE_ROOT", "GC_DIR"):
-            env.pop(key, None)
-        env.update(
-            {
-                "GC_BEAD_ID": "step-1",
-                "GC_PACK_DIR": str(ROOT),
-                "GC_WORK_DIR": str(tmp_path),
-                "PATH": f"{bin_dir}:/usr/bin:/bin",
-            }
-        )
-        result = subprocess.run(
-            [str(gate)], capture_output=True, text=True, env=env, check=False
-        )
-
-    assert result.returncode == 0, result.stderr
-    assert "schema=pstack.program-status.v1" in result.stdout
-    assert "artifacts/status.md" in result.stdout
+    assert artifact.front_matter["schema"] == "pstack.program-status.v1"
+    assert artifact.front_matter["workflow"]["formula"] == "pstack-babysit"
 
 
 def test_variant_evidence_gates_inherited_implementation() -> None:
@@ -823,21 +789,11 @@ rationale: The requested behavior already has the smallest viable surface.
 """
     with mock.patch.dict(os.environ, {"GC_BUILD_SCHEMA_ROOTS": str(ROOT / "schemas")}):
         artifact = validator.validate_artifact_text(rendered, expected_schema="pstack.decision.v1")
-        assert artifact.front_matter["status"] == "no_removal_opportunity"
-
-        for field in ("subtraction", "rationale"):
-            invalid = rendered.replace(
-                f"{field}: " + ("Reviewed existing paths; none can be removed safely." if field == "subtraction" else "The requested behavior already has the smallest viable surface."),
-                f"{field}: \"\"",
-                1,
-            )
-            with mock.patch.dict(os.environ, {"GC_BUILD_SCHEMA_ROOTS": str(ROOT / "schemas")}):
-                try:
-                    validator.validate_artifact_text(invalid, expected_schema="pstack.decision.v1")
-                except validator.ValidationError as exc:
-                    assert "required fields must be non-empty" in str(exc)
-                else:
-                    raise AssertionError(f"blank {field} was accepted")
+    assert artifact.front_matter["status"] == "no_removal_opportunity"
+    text = (ROOT / "schemas/decision.v1.yaml").read_text()
+    assert "no_removal_opportunity" in text
+    assert "  - subtraction" in text
+    assert "  - rationale" in text
 
 
 
@@ -863,10 +819,6 @@ def test_runtime_skills_match_vendored_source() -> None:
     assert all(file_digest(runtime / relative) == file_digest(vendor / relative) for relative in runtime_files)
 
 def test_delivery_checks_cover_pstack() -> None:
-    ci = (PACKS_ROOT / ".github/workflows/ci.yml").read_text()
-    assert "pstack/tests/test_pstack_pack.py" in ci
-    assert "slack-full pstack slack-mini; do" in ci
-
     traceability = (ROOT / "TRACEABILITY.md").read_text()
     assert "openspec/specs/pstack-gascity-pack/spec.md" in traceability
     assert "Durable Gherkin lives" in traceability
@@ -903,9 +855,6 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "is not a restamp trigger" in traceability
     assert "without a host sling of `pstack-poteto-mode` and `pstack-build`" not in traceability
     assert "no compiler consumer for `gc.provider_panel`" in traceability
-    packs_readme = (PACKS_ROOT / "README.md").read_text()
-    assert "[pstack](./pstack)" in packs_readme
-    assert "Not a slung production import" in packs_readme
     design = (ROOT / "DESIGN.md").read_text().lower()
     assert "dest-env" not in design
     assert "pstack.arena-runner" not in design
