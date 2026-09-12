@@ -42,11 +42,9 @@ def validate_artifact_text(text: str, *, expected_schema: str = "") -> BuildArti
     schema_id, front_matter, body = parse_front_matter(text)
     if expected_schema and schema_id != expected_schema:
         raise ValidationError(f"schema must be {expected_schema!r}, got {schema_id!r}")
-    schema = load_schema(schema_id)
 
+    schema = load_schema(schema_id)
     validate_required_front_matter(front_matter, schema)
-    validate_required_fields(front_matter, schema)
-    validate_allowed_enforcements(front_matter, schema)
     validate_status(front_matter, schema)
     trace = validate_trace(front_matter)
     upstream = validate_upstream(trace)
@@ -117,25 +115,6 @@ def validate_schema_definition(schema: dict[str, Any]) -> None:
                 f"schema {schema_id}: base schemas must not require owner, stage-owner, persona, or role fields, got {field!r}"
             )
 
-    if "required_fields" in schema:
-        required_fields = schema["required_fields"]
-        if not isinstance(required_fields, list) or not required_fields or not all(
-            isinstance(item, str) and item.strip() for item in required_fields
-        ):
-            raise ValidationError(
-                f"schema {schema_id}: required_fields must be a non-empty list of non-empty strings"
-            )
-
-    allowed_enforcements = schema.get("allowed_enforcements")
-    if allowed_enforcements is not None and (
-        not isinstance(allowed_enforcements, list)
-        or not allowed_enforcements
-        or not all(isinstance(item, str) and item.strip() for item in allowed_enforcements)
-        or len(set(allowed_enforcements)) != len(allowed_enforcements)
-    ):
-        raise ValidationError(
-            f"schema {schema_id}: allowed_enforcements must be unique non-empty strings"
-        )
 
 def validate_required_front_matter(front_matter: dict[str, Any], schema: dict[str, Any]) -> None:
     fields = schema.get("required_front_matter", [])
@@ -152,41 +131,6 @@ def validate_required_front_matter(front_matter: dict[str, Any], schema: dict[st
     if not isinstance(attempt, int) or attempt < 1:
         raise ValidationError("producer.attempt must be a positive integer")
 
-
-
-def _is_empty_required_value(value: Any) -> bool:
-    return value is None or (
-        isinstance(value, str) and not value.strip()
-    ) or (
-        isinstance(value, (list, dict, set, tuple)) and not value
-    )
-
-
-def validate_required_fields(front_matter: dict[str, Any], schema: dict[str, Any]) -> None:
-    if "required_fields" not in schema:
-        return
-    fields = schema["required_fields"]
-    if not isinstance(fields, list) or not fields or not all(
-        isinstance(item, str) and item.strip() for item in fields
-    ):
-        raise ValidationError(
-            f"schema {schema.get('schema_id', '<unknown>')}: required_fields must be a non-empty list of non-empty strings"
-        )
-    missing = [field for field in fields if get_path(front_matter, field) is None]
-    if missing:
-        raise ValidationError(f"required fields missing: {missing}")
-    blank = [field for field in fields if _is_empty_required_value(get_path(front_matter, field))]
-    if blank:
-        raise ValidationError(f"required fields must be non-empty: {blank}")
-
-
-def validate_allowed_enforcements(front_matter: dict[str, Any], schema: dict[str, Any]) -> None:
-    allowed = schema.get("allowed_enforcements")
-    if allowed is None:
-        return
-    enforcement = get_path(front_matter, "enforcement")
-    if enforcement not in allowed:
-        raise ValidationError(f"enforcement must be one of {sorted(allowed)}, got {enforcement!r}")
 
 def validate_status(front_matter: dict[str, Any], schema: dict[str, Any]) -> None:
     status = required_string(front_matter, "status")
@@ -223,10 +167,9 @@ def validate_upstream(trace: dict[str, Any]) -> list[dict[str, Any]]:
         if ":" not in hash_value:
             raise ValidationError(f"trace.upstream[{index}].hash must include a hash or revision scheme")
         ids = raw.get("ids")
-        if ids is not None and (
-            not isinstance(ids, list) or not all(isinstance(item, str) and item.strip() for item in ids)
-        ):
-            raise ValidationError(f"trace.upstream[{index}].ids must be a list of non-empty strings")
+        if ids is not None:
+            if not isinstance(ids, list) or not all(isinstance(item, str) and item.strip() for item in ids):
+                raise ValidationError(f"trace.upstream[{index}].ids must be a list of non-empty strings")
         upstream.append(raw)
     return upstream
 

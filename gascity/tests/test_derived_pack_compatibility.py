@@ -1,7 +1,7 @@
 """Derived-pack compatibility evidence for GC-METH-012.
 
-Each test inspects all five concrete derived packs (compound-engineering,
-superpowers, bmad, gstack, pstack) and asserts one face of the external implementation
+Each test inspects all four concrete derived packs (compound-engineering,
+superpowers, bmad, gstack) and asserts one face of the external implementation
 compatibility contract: import-as-`gc`, anchored `build-base` extension,
 methodology metadata vocabulary, selector defaults, drain or convoy-step
 strategy, providerless route targets, the shared claim protocol, the absence
@@ -134,16 +134,6 @@ def pack_methodology_metadata(pack_name: str, expected: dict) -> dict:
 
 class DerivedPackCompatibilityTests(unittest.TestCase):
     maxDiff = None
-
-    def test_base_requirements_header_lists_every_derived_pack(self) -> None:
-        header = ""
-        for line in (GASCITY_ROOT / "REQUIREMENTS.md").read_text(encoding="utf-8").splitlines():
-            if line.startswith("| Implementations to validate later"):
-                header = line
-                break
-        self.assertTrue(header, "missing Implementations to validate later row")
-        for pack_name in DERIVED_PACKS:
-            self.assertIn(f"`{pack_name}`", header)
 
     def test_packs_import_gascity_base_as_gc(self) -> None:
         for pack_name, expected in DERIVED_PACKS.items():

@@ -318,6 +318,7 @@ THIRD_PARTY_BUILD_PACKS = {
             "review": "compound-code-review",
             "finalize": "compound-resolution",
         },
+        "review_expansion": "compound-code-review",
         "gap_analysis_target": "compound-engineering.ce-coherence-reviewer",
         "review_fix_asset": "assets/workflows/compound-code-review/{target}.apply-review-findings.md",
         "persona_assets": {
@@ -371,6 +372,7 @@ THIRD_PARTY_BUILD_PACKS = {
             "plan-review": "superpowers-plan-review",
             "review": "superpowers-code-review",
         },
+        "review_expansion": "superpowers-code-review",
         "code_review_entry_expand_vars": {
             "artifact_path_keys": "gc.build.code_review_report_path,gc.build.review_report_path,gc.var.report_path",
         },
@@ -414,6 +416,7 @@ THIRD_PARTY_BUILD_PACKS = {
         "expansions": {
             "review": "bmad-code-review-flow",
         },
+        "review_expansion": "bmad-code-review-flow",
         "gap_analysis_target": "bmad.story-self-checker",
         "review_fix_asset": "assets/workflows/bmad-code-review-flow/{target}.apply-bmad-review-findings.md",
     },
@@ -447,6 +450,7 @@ THIRD_PARTY_BUILD_PACKS = {
             "qa": "gstack-qa-review",
             "release-readiness": "gstack-release-readiness",
         },
+        "review_expansion": "gstack-code-review",
         "review_expand_vars": {
             "review_mode": "{{review_mode}}",
         },
@@ -462,39 +466,6 @@ THIRD_PARTY_BUILD_PACKS = {
             "skills/investigate/SKILL.md",
             "skills/spec/SKILL.md",
         },
-    },
-    "pstack": {
-        "formula": "pstack-build",
-        "base_import_binding": "gc",
-        "base_import_source": "../gascity",
-        "vendor": "pstack",
-        "upstream": "https://github.com/cursor/plugins",
-        "commit": "6fecddba65801f9b9c08b8b328d998ee5b09d290",
-        "implementation_target": "pstack.implementation-worker",
-        "planning_formula": "pstack-planning",
-        "decomposition_formula": "pstack-decomposition",
-        "implementation_entry_formula": "pstack-implementation",
-        "implementation_formula": "pstack-work",
-        "implementation_item_formula": "pstack-work-item",
-        "code_review_entry_formula": "pstack-review",
-        "review_fix_formula": "pstack-fix-loop",
-        "skills": {
-            "requirements": "principle-experience-first",
-            "plan": "architect",
-            "decompose": "principle-build-the-lever",
-            "implement": "poteto-mode",
-            "review": "interrogate",
-            "finalize": "principle-encode-lessons-in-structure",
-        },
-        "extra_steps": ["principle-selection", "subtract-assessment", "foundation", "lever-decision"],
-        "expansions": {
-            "review": "pstack-build-review",
-        },
-        "code_review_entry_expand_vars": {
-            "artifact_path_keys": "gc.build.review_report_path,gc.var.report_path",
-        },
-        "gap_analysis_target": "pstack.reviewer",
-        "review_fix_asset": "assets/workflows/pstack-build-review/{target}.apply-review-findings.md",
     },
 }
 
@@ -2337,7 +2308,7 @@ class FormulaAssetTests(unittest.TestCase):
                 self.assertTrue(step_by_id["implement-same-session"]["drain"]["item"]["single_lane"])
                 review_step = step_by_id["review"]
                 self.assertEqual(review_step["needs"], ["summarize-implementation"])
-                self.assertEqual(review_step["expand"], expected["expansions"]["review"])
+                self.assertEqual(review_step["expand"], expected["review_expansion"])
                 expected_review_expand_vars = {
                     "implementation_target": "{{implementation_target}}",
                     "review_mode": "{{review_mode}}",
@@ -2407,11 +2378,7 @@ class FormulaAssetTests(unittest.TestCase):
                     expansion = load_formula(pack_root, expansion_name)
                     self.assertEqual(expansion["formula"], expansion_name)
                     self.assertEqual(expansion["type"], "expansion")
-                    if pack_name == "pstack":
-                        self.assertNotIn("contract", expansion)
-                        self.assertEqual(expansion["requires"]["formula_compiler"], ">=2.0.0")
-                    else:
-                        self.assertEqual(expansion["contract"], "graph.v2")
+                    self.assertEqual(expansion["contract"], "graph.v2")
 
                     nodes = formula_nodes(expansion)
                     self.assertGreaterEqual(len(nodes), 4)
@@ -2438,11 +2405,7 @@ class FormulaAssetTests(unittest.TestCase):
             item_formula = load_formula(pack_root, expected["implementation_formula"])
             with self.subTest(pack=pack_name, item_formula=expected["implementation_formula"]):
                 self.assertEqual(item_formula["formula"], expected["implementation_formula"])
-                if pack_name == "pstack":
-                    self.assertNotIn("contract", item_formula)
-                    self.assertEqual(item_formula["requires"]["formula_compiler"], ">=2.0.0")
-                else:
-                    self.assertEqual(item_formula["contract"], "graph.v2")
+                self.assertEqual(item_formula["contract"], "graph.v2")
                 self.assertEqual(item_formula["extends"], ["do-work"])
                 self.assertNotEqual(item_formula.get("type"), "expansion")
                 self.assertTrue(item_formula["target_required"])
@@ -2518,11 +2481,7 @@ class FormulaAssetTests(unittest.TestCase):
             shared_item_formula = load_formula(pack_root, expected["implementation_item_formula"])
             with self.subTest(pack=pack_name, item_formula=expected["implementation_item_formula"]):
                 self.assertEqual(shared_item_formula["formula"], expected["implementation_item_formula"])
-                if pack_name == "pstack":
-                    self.assertNotIn("contract", shared_item_formula)
-                    self.assertEqual(shared_item_formula["requires"]["formula_compiler"], ">=2.0.0")
-                else:
-                    self.assertEqual(shared_item_formula["contract"], "graph.v2")
+                self.assertEqual(shared_item_formula["contract"], "graph.v2")
                 self.assertEqual(shared_item_formula["extends"], ["do-work-item"])
                 self.assertNotEqual(shared_item_formula.get("type"), "expansion")
                 self.assertTrue(shared_item_formula["target_required"])
@@ -2592,8 +2551,8 @@ class FormulaAssetTests(unittest.TestCase):
                         )
                     )
 
-            review_expansion = load_formula(pack_root, expected["expansions"]["review"])
-            with self.subTest(pack=pack_name, expansion=expected["expansions"]["review"], route="review-fix"):
+            review_expansion = load_formula(pack_root, expected["review_expansion"])
+            with self.subTest(pack=pack_name, expansion=expected["review_expansion"], route="review-fix"):
                 self.assertEqual(
                     review_expansion["vars"]["implementation_target"]["default"],
                     expected["implementation_target"],
@@ -2640,8 +2599,6 @@ class FormulaAssetTests(unittest.TestCase):
                 self.assertIn("decompose", [step["id"] for step in resolved["steps"]])
                 if pack_name == "bmad":
                     self.assertIn("implementation-readiness", [step["id"] for step in resolved["steps"]])
-                if pack_name == "pstack":
-                    self.assertIn("lever-decision", [step["id"] for step in resolved["steps"]])
 
             implementation = load_formula(pack_root, expected["implementation_entry_formula"])
             with self.subTest(pack=pack_name, formula=expected["implementation_entry_formula"]):
@@ -2670,7 +2627,7 @@ class FormulaAssetTests(unittest.TestCase):
                     expected["implementation_target"],
                 )
                 write_report = next(step for step in review["steps"] if step["id"] == "write-report")
-                self.assertEqual(write_report["expand"], expected["expansions"]["review"])
+                self.assertEqual(write_report["expand"], expected["review_expansion"])
                 expected_review_expand_vars = {
                     "implementation_target": "{{implementation_target}}",
                     "review_mode": "{{review_mode}}",
@@ -4202,34 +4159,6 @@ description = "Override sink that writes the base triage report contract."
             self.assertNotIn("/data/projects", text)
             self.assertNotIn("gascity-packs-worktrees", text)
 
-    def test_pstack_schema_producers_have_shared_validator_gates(self) -> None:
-        root = pathlib.Path(__file__).resolve().parents[1]
-        pstack_root = root.parent / "pstack"
-        for formula_path in sorted((pstack_root / "formulas").glob("*.formula.toml")):
-            formula_name = formula_path.name.removesuffix(".formula.toml")
-            formula = load_formula(pstack_root, formula_name)
-            nodes = formula.get("steps") or formula.get("template") or []
-            for step in nodes:
-                schema = step.get("metadata", {}).get("pstack.artifact_schema", "")
-                if not schema.startswith("pstack."):
-                    continue
-                with self.subTest(formula=formula_name, step=step["id"]):
-                    metadata = step["metadata"]
-                    self.assertEqual(metadata["gc.build.artifact_schema"], schema)
-                    path_keys = metadata["gc.build.artifact_path_keys"]
-                    self.assertIn("pstack.artifact_path", path_keys.split(","))
-                    self.assertTrue(metadata["pstack.artifact_path"])
-                    self.assertEqual(metadata["pstack.artifact_schema"], schema)
-                    self.assertEqual(step["check"]["max_attempts"], BUILD_ARTIFACT_GATE_MAX_ATTEMPTS)
-                    self.assertEqual(
-                        step["check"]["check"],
-                        {
-                            "mode": "exec",
-                            "path": BUILD_ARTIFACT_CHECK_SCRIPT,
-                            "timeout": "5m",
-                        },
-                    )
-
     def test_producer_stages_gate_artifacts_with_bounded_repair(self) -> None:
         root = pathlib.Path(__file__).resolve().parents[1]
 
@@ -4261,56 +4190,6 @@ description = "Override sink that writes the base triage report contract."
                 )
                 self.assertEqual(step["metadata"]["gc.build.artifact_schema"], schema)
                 self.assertEqual(step["metadata"]["gc.build.artifact_path_keys"], path_keys)
-
-    def test_build_artifact_check_loads_pack_schema_and_step_path(self) -> None:
-        with tempfile.TemporaryDirectory() as td:
-            tmp = pathlib.Path(td)
-            pack_root = tmp / "pstack"
-            schema_root = pack_root / "schemas"
-            schema_root.mkdir(parents=True)
-            (schema_root / "custom.v1.yaml").write_text(
-                "schema_id: pstack.custom.v1\n"
-                "required_front_matter: [schema, status, trace]\n"
-                "allowed_statuses: [approved]\n"
-                "coverage_statuses: [covered]\n"
-                "required_sections: []\n"
-                "required_fields: [subject.kind]\n",
-                encoding="utf-8",
-            )
-            artifact = tmp / "custom.md"
-            artifact.write_text(
-                "---\n"
-                "schema: pstack.custom.v1\n"
-                "producer:\n"
-                "  formula: pstack-test\n"
-                "  stage: custom\n"
-                "  attempt: 1\n"
-                "status: approved\n"
-                "trace:\n"
-                "  upstream: []\n"
-                "  coverage: []\n"
-                "subject:\n"
-                "  kind: commit\n"
-                "---\n",
-                encoding="utf-8",
-            )
-            control = (
-                '[{"id": "step", "metadata": {'
-                '"gc.root_bead_id": "root", '
-                '"gc.build.artifact_schema": "pstack.custom.v1", '
-                '"gc.build.artifact_path_keys": "pstack.artifact_path", '
-                f'"pstack.artifact_path": "{artifact}"'
-                "}}]"
-            )
-            root_bead = '[{"id": "root", "metadata": {}}]'
-            result = self._run_build_artifact_check(
-                {"step": control, "root": root_bead},
-                "step",
-                extra_env={"GC_PACK_DIR": str(pack_root)},
-            )
-
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("schema=pstack.custom.v1", result.stdout)
 
     def _run_build_artifact_check(
         self,

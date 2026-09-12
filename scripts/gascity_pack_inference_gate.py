@@ -38,7 +38,7 @@ SMOKE_GATE = "smoke"
 ALL_GATE = "all"
 GASCITY_PACK = "gascity"
 GASTOWN_PACK = "gastown"
-MODEL_SMOKE_PACKS = ("superpowers", "compound-engineering", "gstack", "bmad", "pstack", GASTOWN_PACK)
+MODEL_SMOKE_PACKS = ("superpowers", "compound-engineering", "gstack", "bmad", GASTOWN_PACK)
 GASCITY_REMOTE_SOURCE = "https://github.com/gastownhall/gascity.git"
 BEADS_MODULE = "github.com/steveyegge/beads"
 REVIEW_SUBJECT_PATH = Path(".gc/inference-gate/review-subject.diff")
@@ -774,30 +774,6 @@ def make_pack_specs() -> dict[str, PackSpec]:
             ),
             smoke_agent="bmad.prd-writer",
         ),
-        "pstack": PackSpec(
-            name="pstack",
-            binding="pstack",
-            source=REPO_ROOT / "pstack",
-            roles_source=roles_source,
-            validator_source=validator_source,
-            review_formula="pstack-review",
-            build_formula="pstack-build",
-            default_gates=(REVIEW_GATE, BUILD_GATE),
-            setup_formulas=("pstack-review", "pstack-build"),
-            required_review_routes=(
-                "pstack.reviewer",
-                "pstack.review-synthesizer",
-            ),
-            required_build_routes=(
-                "pstack.architect",
-                "pstack.coordinator",
-                "pstack.investigator",
-                "pstack.implementation-worker",
-                "pstack.reviewer",
-                "pstack.review-synthesizer",
-            ),
-            smoke_agent="pstack.investigator",
-        ),
         GASTOWN_PACK: PackSpec(
             name=GASTOWN_PACK,
             binding=GASTOWN_PACK,
@@ -823,7 +799,7 @@ def make_pack_specs() -> dict[str, PackSpec]:
 
 
 PACK_SPECS = make_pack_specs()
-METHODOLOGY_PACKS = ("superpowers", "compound-engineering", "gstack", "bmad", "pstack")
+METHODOLOGY_PACKS = ("superpowers", "compound-engineering", "gstack", "bmad")
 SUPPORTED_PACK_CHOICES = (*PACK_SPECS.keys(), "methodology", "model-smoke", "all-supported")
 
 
@@ -1193,8 +1169,6 @@ def build_gate_env(
     env["XDG_RUNTIME_DIR"] = str(workspace.runtime_dir)
     env["DOLT_ROOT_PATH"] = str(workspace.gc_home)
     env["CLAUDE_CONFIG_DIR"] = str(workspace.claude_config_dir)
-    env["GIT_CONFIG_GLOBAL"] = str(workspace.gc_home / "gitconfig")
-    env["GIT_CONFIG_NOSYSTEM"] = "1"
     pythonpath = pythonpath_with_host_modules(source.get("PYTHONPATH"), ("pytest",))
     if pythonpath:
         env["PYTHONPATH"] = pythonpath
@@ -1317,36 +1291,25 @@ def write_dolt_global_config(gc_home: Path) -> None:
 
 
 def seed_claude_project_state(*, home: Path, config_dir: Path, project_paths: Sequence[Path]) -> None:
-    wrote = False
-    errors: list[str] = []
     for state_path in claude_state_paths(home, config_dir):
-        try:
-            state = load_json_object(state_path)
-            state["hasCompletedOnboarding"] = True
-            if not str(state.get("theme") or "").strip():
-                state["theme"] = "light"
-            projects = state.get("projects")
-            if not isinstance(projects, dict):
-                projects = {}
-                state["projects"] = projects
-            for project_path in project_paths:
-                key = str(project_path.resolve())
-                entry = projects.get(key)
-                if not isinstance(entry, dict):
-                    entry = {}
-                entry["hasCompletedProjectOnboarding"] = True
-                entry["hasTrustDialogAccepted"] = True
-                entry.setdefault("projectOnboardingSeenCount", 1)
-                projects[key] = entry
-            save_json_object(state_path, state)
-            wrote = True
-        except OSError as exc:
-            errors.append(f"{state_path}: {exc}")
-    if not wrote:
-        raise GateError(
-            "could not write Claude project state; "
-            + "; ".join(errors)
-        )
+        state = load_json_object(state_path)
+        state["hasCompletedOnboarding"] = True
+        if not str(state.get("theme") or "").strip():
+            state["theme"] = "light"
+        projects = state.get("projects")
+        if not isinstance(projects, dict):
+            projects = {}
+            state["projects"] = projects
+        for project_path in project_paths:
+            key = str(project_path.resolve())
+            entry = projects.get(key)
+            if not isinstance(entry, dict):
+                entry = {}
+            entry["hasCompletedProjectOnboarding"] = True
+            entry["hasTrustDialogAccepted"] = True
+            entry.setdefault("projectOnboardingSeenCount", 1)
+            projects[key] = entry
+        save_json_object(state_path, state)
 
 
 def claude_state_paths(home: Path, config_dir: Path) -> list[Path]:
@@ -1765,33 +1728,6 @@ def extract_sling_root_id(output: str) -> str | None:
     if payload is None:
         return None
     return find_first_key(payload, ("root_bead_id", "workflow_id", "root_id", "bead_id", "id"))
-
-
-HOST_SLING_ROOT_KEYS = ("root_bead_id", "workflow_id", "root_id", "bead_id")
-
-
-def parse_host_sling_root(output: str) -> str:
-    if "setup-only gate passed" in output:
-        raise GateError("setup-only logs are not host sling receipts")
-    payload = extract_json_payload(output)
-    if payload is None:
-        raise GateError("sling JSON missing")
-    if find_first_key(payload, HOST_SLING_ROOT_KEYS) is None:
-        raise GateError("formula show and setup-only logs are not host sling receipts")
-    root = extract_sling_root_id(output)
-    if root is None:
-        raise GateError("sling JSON root id missing")
-    return root
-
-
-def parse_host_sling_routed_to(bead: Mapping[str, Any]) -> str:
-    metadata = bead.get("metadata")
-    if not isinstance(metadata, dict):
-        raise GateError("bead metadata missing gc.routed_to")
-    routed = metadata.get("gc.routed_to")
-    if not isinstance(routed, str) or not routed.strip():
-        raise GateError("bead metadata missing gc.routed_to")
-    return routed.strip()
 
 
 def find_first_key(value: Any, keys: Sequence[str]) -> str | None:

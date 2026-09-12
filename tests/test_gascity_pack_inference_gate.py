@@ -251,8 +251,6 @@ def test_build_gate_env_uses_nightly_ollama_auth_shape(tmp_path) -> None:
     assert "GC_BEADS" not in env
     assert "GC_DOLT" not in env
     assert env["DOLT_ROOT_PATH"] == str(workspace.gc_home)
-    assert env["GIT_CONFIG_GLOBAL"] == str(workspace.gc_home / "gitconfig")
-    assert env["GIT_CONFIG_NOSYSTEM"] == "1"
     dolt_config = json.loads((workspace.gc_home / ".dolt" / "config_global.json").read_text(encoding="utf-8"))
     assert dolt_config["user.email"] == "gascity-pack-gate@example.invalid"
 
@@ -408,7 +406,7 @@ def test_supported_pack_nightly_workflow_uses_manifold_shape_and_pack_matrix() -
     assert "if: steps.subset.outputs.run_gate == 'true'" in workflow
     assert "if: always() && steps.subset.outputs.run_gate == 'true'" in workflow
     assert "model-smoke)" in workflow
-    assert "superpowers|compound-engineering|gstack|bmad|pstack)" in workflow
+    assert "superpowers|compound-engineering|gstack|bmad)" in workflow
     assert "max-parallel: 2" in workflow
     assert "runs-on: blacksmith-2vcpu-ubuntu-2404" in workflow
     assert "runs-on: blacksmith-32vcpu-ubuntu-2404" in workflow
@@ -441,7 +439,7 @@ def test_supported_pack_nightly_workflow_uses_manifold_shape_and_pack_matrix() -
     assert re.search(r"(?m)^\s*gate: build$", gascity)
     assert re.search(r"(?m)^\s*timeout_minutes: 30$", gascity)
     assert re.search(r"(?m)^\s*gate_timeout: 30m$", gascity)
-    for pack in ("superpowers", "compound-engineering", "gstack", "bmad", "pstack", "gastown"):
+    for pack in ("superpowers", "compound-engineering", "gstack", "bmad", "gastown"):
         entry = matrix_entry(pack)
         assert re.search(r"(?m)^\s*gate: smoke$", entry)
         assert re.search(r"(?m)^\s*timeout_minutes: 25$", entry)
@@ -529,32 +527,6 @@ def test_build_gate_env_exposes_host_pytest_to_isolated_runtime(tmp_path) -> Non
     assert str(pytest_root) in pythonpath_parts
 
 
-def test_seed_claude_project_state_keeps_config_dir_when_home_is_unwritable(
-    tmp_path,
-) -> None:
-    home = tmp_path / "home"
-    home.mkdir()
-    home.chmod(0o500)
-    config_dir = tmp_path / "claude-config"
-    city_dir = tmp_path / "city"
-    rig_dir = tmp_path / "rig"
-    city_dir.mkdir()
-    rig_dir.mkdir()
-
-    try:
-        gascity_pack_inference_gate.seed_claude_project_state(
-            home=home,
-            config_dir=config_dir,
-            project_paths=[city_dir, rig_dir],
-        )
-        assert not (home / ".claude.json").exists()
-        data = json.loads((config_dir / ".claude.json").read_text(encoding="utf-8"))
-        assert data["hasCompletedOnboarding"] is True
-        assert data["projects"][str(city_dir.resolve())]["hasTrustDialogAccepted"] is True
-    finally:
-        home.chmod(0o700)
-
-
 def test_seed_claude_project_state_writes_home_and_config_state(tmp_path) -> None:
     home = tmp_path / "home"
     config_dir = tmp_path / "claude-config"
@@ -599,42 +571,6 @@ def test_extract_sling_root_id_searches_nested_json() -> None:
 
     assert gascity_pack_inference_gate.extract_sling_root_id(output) == "rv-123"
     assert gascity_pack_inference_gate.extract_sling_root_id("not json") is None
-
-
-def test_parse_host_sling_root_reuses_extract_then_rejects_show() -> None:
-    sling = '{"root_bead_id": "de-fr9", "id": "noise"}'
-    show = '{"id": "show-1", "steps": []}'
-    setup = "setup-only gate passed for pstack\n{\"id\": \"setup-1\"}"
-
-    assert gascity_pack_inference_gate.parse_host_sling_root(sling) == "de-fr9"
-    with pytest.raises(gascity_pack_inference_gate.GateError, match="formula show"):
-        gascity_pack_inference_gate.parse_host_sling_root(show)
-    with pytest.raises(gascity_pack_inference_gate.GateError, match="setup-only"):
-        gascity_pack_inference_gate.parse_host_sling_root(setup)
-
-    live = json.dumps(
-        {
-            "bead_id": "fi-06k",
-            "dry_run": False,
-            "formula": "pstack-poteto-mode",
-            "method": "formula",
-            "ok": True,
-            "queued": False,
-            "routed": True,
-            "schema_version": "1",
-            "success": True,
-            "target": "fixture/gc.run-operator",
-            "workflow_id": "fi-06k",
-        }
-    )
-    assert gascity_pack_inference_gate.parse_host_sling_root(live) == "fi-06k"
-
-
-def test_parse_host_sling_routed_to_requires_metadata() -> None:
-    bead = {"id": "de-fr9", "metadata": {"gc.routed_to": "demo/claude"}}
-    assert gascity_pack_inference_gate.parse_host_sling_routed_to(bead) == "demo/claude"
-    with pytest.raises(gascity_pack_inference_gate.GateError, match="gc.routed_to"):
-        gascity_pack_inference_gate.parse_host_sling_routed_to({"id": "de-fr9"})
 
 
 def test_list_beads_uses_gc_bd_list_when_file_store_absent(tmp_path) -> None:
@@ -933,7 +869,6 @@ def test_model_smoke_selection_covers_the_five_non_canary_packs() -> None:
         "compound-engineering",
         "gstack",
         "bmad",
-        "pstack",
         "gastown",
     ]
 

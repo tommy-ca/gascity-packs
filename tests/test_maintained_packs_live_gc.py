@@ -1,6 +1,6 @@
 """Every pack we maintain, stood up in a city and asked about by a real `gc`.
 
-These six are the packs users actually install, and the ones we have committed
+These five are the packs users actually install, and the ones we have committed
 to keeping working. Each is imported on its own here, because each is imported
 on its own by a user -- nobody installs "the maintained set". The whole point of
 running them separately is that a break in one is attributed to that one.
@@ -26,6 +26,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+
 from gc_live_city import (
     CANARY_BINDING,
     CANARY_CHECK,
@@ -38,10 +39,10 @@ from gc_live_city import (
     discover_formulas,
     gc_output,
     gc_test_bin,  # noqa: F401 -- pytest fixture, used by name
-    run_gc,
     write_canary_pack,
     write_city,
 )
+
 
 # The packs this city owns the maintenance of. Adding a pack here is the whole
 # cost of bringing it under live-gc coverage; everything below derives from the
@@ -52,7 +53,6 @@ MAINTAINED_PACKS = (
     "slack-channel",
     "slack-full",
     "slack-mini",
-    "pstack",
 )
 
 # Doctor findings each pack is currently expected to add to a city, with the
@@ -73,7 +73,6 @@ EXPECTED_DOCTOR_DELTA: dict[str, frozenset[str]] = {
     # empty rather than matching.
     "slack-full": frozenset({"slack-full:binaries", "slack-full:env"}),
     "slack-mini": frozenset(),
-    "pstack": frozenset(),
 }
 
 # Findings whose presence is a property of the machine, not of the pack. These
@@ -221,26 +220,6 @@ def test_pack_formulas_resolve_through_a_city(
         f"formulas {pack} ships did not resolve in a city that imports it: "
         + ", ".join(sorted(missing))
     )
-
-
-@pytest.mark.parametrize("pack", MAINTAINED_PACKS)
-def test_pack_formulas_show_through_a_city(
-    pack: str, tmp_path: Path, gc_test_bin: Path  # noqa: F811
-) -> None:
-    expected = discover_formulas(pack_dir(pack))
-    if not expected:
-        pytest.skip(f"{pack} ships no formulas")
-
-    imports, rig_imports = wiring(pack)
-    workspace = write_city(tmp_path, imports, rig_imports)
-
-    for name in sorted(expected):
-        result = run_gc(gc_test_bin, workspace, "formula", "show", name)
-        output = result.stdout + result.stderr
-        assert result.returncode == 0, (
-            f"{pack} formula {name} failed gc formula show "
-            f"(exit {result.returncode}). Output:\n{output}"
-        )
 
 
 @pytest.mark.parametrize("pack", MAINTAINED_PACKS)

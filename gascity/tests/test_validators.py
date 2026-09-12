@@ -1,19 +1,18 @@
 from __future__ import annotations
 
-import io
 import os
 import pathlib
 import sys
 import tempfile
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
-from typing import ClassVar
 from unittest import mock
+from contextlib import redirect_stderr, redirect_stdout
+import io
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "assets" / "scripts"))
 
-import validate_build_artifact as build_artifact_validator
 import validate_context_bundle as context_validator
+import validate_build_artifact as build_artifact_validator
 import validate_verdict_report as verdict_validator
 
 
@@ -209,7 +208,7 @@ class ContextBundleValidatorTests(unittest.TestCase):
 
 
 class BuildArtifactValidatorTests(unittest.TestCase):
-    SCHEMA_SECTIONS: ClassVar[dict[str, list[str]]] = {
+    SCHEMA_SECTIONS = {
         "gc.build.requirements.v1": [
             "Problem Statement",
             "W6H",
@@ -253,7 +252,7 @@ class BuildArtifactValidatorTests(unittest.TestCase):
             "Remaining Risks",
         ],
     }
-    SCHEMA_STATUS: ClassVar[dict[str, str]] = {
+    SCHEMA_STATUS = {
         "gc.build.requirements.v1": "approved",
         "gc.build.plan.v1": "approved",
         "gc.build.decomposition.v1": "approved",
@@ -261,7 +260,7 @@ class BuildArtifactValidatorTests(unittest.TestCase):
         "gc.build.review.v1": "approved",
         "gc.build.final-report.v1": "approved",
     }
-    SCHEMA_FILES: ClassVar[dict[str, str]] = {
+    SCHEMA_FILES = {
         "gc.build.requirements.v1": "requirements.v1.yaml",
         "gc.build.plan.v1": "plan.v1.yaml",
         "gc.build.decomposition.v1": "decomposition.v1.yaml",
@@ -324,22 +323,6 @@ trace:
                 self.assertEqual(artifact.schema_id, schema)
                 self.assertEqual([entry["id"] for entry in artifact.coverage], ["GC-METH-001", "GC-METH-012"])
 
-    def test_build_artifact_required_sections_preserve_order_without_pairwise(self) -> None:
-        source = self.VALIDATOR_SCRIPT.read_text(encoding="utf-8")
-        self.assertNotIn("from itertools import pairwise", source)
-        self.assertIn("zip(positions, positions[1:])", source)
-
-        ordered = self.valid_artifact()
-        build_artifact_validator.validate_artifact_text(ordered, expected_schema="gc.build.requirements.v1")
-
-        reordered = ordered.replace(
-            "## Problem Statement\n\nProblem Statement content.\n\n## W6H\n\nW6H content.",
-            "## W6H\n\nW6H content.\n\n## Problem Statement\n\nProblem Statement content.",
-            1,
-        )
-        with self.assertRaisesRegex(build_artifact_validator.ValidationError, "must appear before"):
-            build_artifact_validator.validate_artifact_text(reordered, expected_schema="gc.build.requirements.v1")
-
     def test_build_artifact_rejects_missing_front_matter_and_wrong_schema(self) -> None:
         with self.assertRaisesRegex(build_artifact_validator.ValidationError, "front matter"):
             build_artifact_validator.validate_artifact_text("# Missing front matter\n", expected_schema="gc.build.requirements.v1")
@@ -390,13 +373,11 @@ trace:
 
     def test_build_artifact_rejects_schema_requiring_role_fields(self) -> None:
         for field in ("owner", "stage-owner", "persona", "producer.role"):
-            with self.subTest(field=field), self.assertRaisesRegex(
-                build_artifact_validator.ValidationError,
-                "must not require",
-            ):
-                build_artifact_validator.validate_schema_definition(
-                    {"schema_id": "gc.build.requirements.v1", "required_front_matter": ["schema", field]}
-                )
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(build_artifact_validator.ValidationError, "must not require"):
+                    build_artifact_validator.validate_schema_definition(
+                        {"schema_id": "gc.build.requirements.v1", "required_front_matter": ["schema", field]}
+                    )
 
     def test_build_artifact_statuses_follow_base_approval_states(self) -> None:
         review_questions = self.valid_artifact("gc.build.review.v1").replace(
@@ -601,67 +582,6 @@ class BuildArtifactSchemaRootsTests(unittest.TestCase):
             # Base-first ordering: the published base definition wins; the
             # shadow attempt in the extra root is never consulted.
             self.assertIn("workflow.id", schema.get("required_front_matter", []))
-
-    def test_custom_schema_required_fields_are_enforced(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = pathlib.Path(tmp)
-            self._write_schema(root, "custom.v1.yaml", "acme.build.custom.v1")
-            (root / "custom.v1.yaml").write_text(
-                (root / "custom.v1.yaml").read_text(encoding="utf-8")
-                + "required_fields: [subject.kind]\n",
-                encoding="utf-8",
-            )
-            with mock.patch.dict(os.environ, {"GC_BUILD_SCHEMA_ROOTS": str(root)}), self.assertRaisesRegex(
-                build_artifact_validator.ValidationError,
-                "required fields",
-            ):
-                build_artifact_validator.validate_artifact_text(
-                    "---\n"
-                    "schema: acme.build.custom.v1\n"
-                    "producer:\n"
-                    "  formula: test\n"
-                    "  stage: test\n"
-                    "  attempt: 1\n"
-                    "status: approved\n"
-                    "trace:\n"
-                    "  upstream: []\n"
-                    "  coverage: []\n"
-                    "---\n",
-                    expected_schema="acme.build.custom.v1",
-                )
-
-    def test_required_fields_schema_definition_rejects_explicit_empty_list(self) -> None:
-        with self.assertRaisesRegex(build_artifact_validator.ValidationError, "required_fields"):
-            build_artifact_validator.validate_schema_definition(
-                {
-                    "schema_id": "acme.build.custom.v1",
-                    "required_front_matter": ["schema", "status", "trace"],
-                    "required_fields": [],
-                }
-            )
-
-    def test_required_fields_reject_empty_containers_but_allow_domain_owner(self) -> None:
-        schema = {"schema_id": "pstack.frontier.v1", "required_fields": ["owner"]}
-        for value in (" ", [], {}):
-            with self.subTest(value=value), self.assertRaisesRegex(
-                build_artifact_validator.ValidationError,
-                "non-empty",
-            ):
-                build_artifact_validator.validate_required_fields({"owner": value}, schema)
-
-        build_artifact_validator.validate_required_fields({"owner": "operator"}, schema)
-
-    def test_allowed_enforcements_reject_unknown_values(self) -> None:
-        schema = {
-            "schema_id": "pstack.principle-application.v1",
-            "allowed_enforcements": ["artifact", "review"],
-        }
-        with self.assertRaisesRegex(build_artifact_validator.ValidationError, "enforcement"):
-            build_artifact_validator.validate_allowed_enforcements(
-                {"enforcement": "prompt"},
-                schema,
-            )
-        build_artifact_validator.validate_allowed_enforcements({"enforcement": "artifact"}, schema)
 
     def test_unset_env_is_byte_identical_base_behavior(self) -> None:
         env = {k: v for k, v in os.environ.items() if k != "GC_BUILD_SCHEMA_ROOTS"}

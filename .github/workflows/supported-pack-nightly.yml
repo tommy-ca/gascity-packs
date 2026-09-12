@@ -43,7 +43,6 @@ on:
           - compound-engineering
           - gstack
           - bmad
-          - pstack
           - gastown
         default: all-supported
 
@@ -111,10 +110,6 @@ jobs:
             gate: smoke
             timeout_minutes: 25
             gate_timeout: 25m
-          - pack: pstack
-            gate: smoke
-            timeout_minutes: 25
-            gate_timeout: 25m
           - pack: gastown
             gate: smoke
             timeout_minutes: 25
@@ -153,7 +148,7 @@ jobs:
                 ;;
               methodology)
                 case "$MATRIX_PACK" in
-                  superpowers|compound-engineering|gstack|bmad|pstack)
+                  superpowers|compound-engineering|gstack|bmad)
                     pack_match=true
                     ;;
                   *)

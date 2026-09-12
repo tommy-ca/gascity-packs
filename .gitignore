@@ -18,6 +18,3 @@
 # Python test/runtime artifacts
 __pycache__/
 *.py[cod]
-
-.work/
-.audit/

@@ -8,7 +8,7 @@ Schema: `gc.build-methodology-base.requirements.v1`
 | Scope | Normative base formula contract and default Gas City implementation for build methodology packs |
 | Formula ledger | `formulas/REQUIREMENTS.md` |
 | Reference implementation | `build-basic` |
-| Implementations to validate later | `compound-engineering`, `superpowers`, `bmad`, `gstack`, `pstack` |
+| Implementations to validate later | `compound-engineering`, `superpowers`, `bmad`, `gstack` |
 
 This ledger is the compatibility contract for the Gas City build methodology
 family. It is not just documentation for the current base formulas. Every
@@ -70,7 +70,7 @@ For every base-pack formula, prompt asset, adapter, or public override change:
 - **Interaction mode** - `interaction_mode`; controls whether the workflow may
   ask humans questions or request approval.
 - **Methodology implementation** - A pack such as Compound Engineering,
-  Superpowers, BMAD, gstack, or pstack that imports this pack as `gc` and implements
+  Superpowers, BMAD, or gstack that imports this pack as `gc` and implements
   the base contract with its own formulas and prompt assets.
 - **Path-shadow override** - A stable file path that `build-basic` users can
   shadow in a city/local pack to customize prompts without learning formula
@@ -832,7 +832,7 @@ Proof expectation: validation requires `workflow.formula`, `producer.formula`,
 | GC-METH-009 | Drain and convoy-step compatibility | Derived packs may declare supported drain policies or replace drains with a convoy-step implementation while preserving convoy evidence. | this ledger; derived pack formula metadata |
 | GC-METH-010 | Build-basic path-shadow overrides | `build-basic` exposes stable major prompt override paths and one override file per review lane. | this ledger; future override-registry tests |
 | GC-METH-011 | Methodology metadata | Top-level build formulas declare `[metadata.gc.methodology]`; GitHub adapters validate selected formula compatibility. | this ledger; `formulas/build-base.formula.toml`; `README.md`; `tests/test_formula_assets.py::FormulaAssetTests::test_entrypoint_adapters_expose_methodology_formula_vars` |
-| GC-METH-012 | External implementation compatibility | Compound Engineering, Superpowers, BMAD, gstack, and pstack import this pack as `gc`, extend `build-base`, replace raw subagent dispatch with Gas City formulas/fanouts, and preserve base artifact/mode contracts. | `compound-engineering/REQUIREMENTS.md`; `superpowers/REQUIREMENTS.md`; `bmad/REQUIREMENTS.md`; `gstack/REQUIREMENTS.md`; `pstack/REQUIREMENTS.md`; `tests/test_derived_pack_compatibility.py::DerivedPackCompatibilityTests`; `docs/design/build-methodology-framework-audit.md` |
+| GC-METH-012 | External implementation compatibility | Compound Engineering, Superpowers, BMAD, and gstack import this pack as `gc`, extend `build-base`, replace raw subagent dispatch with Gas City formulas/fanouts, and preserve base artifact/mode contracts. | `compound-engineering/REQUIREMENTS.md`; `superpowers/REQUIREMENTS.md`; `bmad/REQUIREMENTS.md`; `gstack/REQUIREMENTS.md`; `tests/test_derived_pack_compatibility.py::DerivedPackCompatibilityTests`; `docs/design/build-methodology-framework-audit.md` |
 | GC-METH-013 | Shared artifact validation | Formula-specific check steps invoke one shared validator after producer stages and route failed validation back for bounded repair. | this ledger; future schema/gate tests |
 | GC-METH-014 | Coverage matrix consistency | YAML coverage is authoritative, markdown coverage mirrors IDs/statuses, and all non-covered statuses include rationale. | this ledger; future schema/gate tests |
 | GC-METH-015 | Neutral artifact metadata | Artifacts record workflow, methodology, and producer metadata without owner or role fields. | this ledger; future schema/gate tests |
@@ -842,7 +842,7 @@ Proof expectation: validation requires `workflow.formula`, `producer.formula`,
 
 | ID | Status | Follow-up condition |
 | --- | --- | --- |
-| GC-METH-012 | covered | Concrete implementation ledgers exist for `compound-engineering`, `superpowers`, `bmad`, `gstack`, and `pstack`, and `tests/test_derived_pack_compatibility.py` proves import-as-`gc`, anchored `build-base` extension with base anchors in order, methodology metadata vocabulary, selector defaults, drain or convoy-step strategy, providerless route targets, the shared claim protocol, the absence of provider-native subagent dispatch, and the pack-local ledgers for all five packs. |
+| GC-METH-012 | covered | Concrete implementation ledgers exist for `compound-engineering`, `superpowers`, `bmad`, and `gstack`, and `tests/test_derived_pack_compatibility.py` proves import-as-`gc`, anchored `build-base` extension with base anchors in order, methodology metadata vocabulary, selector defaults, drain or convoy-step strategy, providerless route targets, the shared claim protocol, the absence of provider-native subagent dispatch, and the pack-local ledgers for all four packs. |
 
 ## Evidence Index
 
