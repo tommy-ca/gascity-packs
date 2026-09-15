@@ -87,8 +87,8 @@ retaining the required subtraction and rationale fields.
 - **GIVEN** a PStack build has no removable complexity before construction
 - **WHEN** the subtraction stage writes its decision artifact
 - **THEN** it may use `status: no_removal_opportunity`
-- **AND** the artifact still requires a non-empty `subtraction` value and rationale
-- **AND** the shared validator accepts the artifact
+- **AND** the pack schema still lists `subtraction` and `rationale` in `required_fields`
+- **AND** the shared validator accepts the filled artifact
 
 ### Requirement: Pack tests enforce parity, ordering, and evidence
 

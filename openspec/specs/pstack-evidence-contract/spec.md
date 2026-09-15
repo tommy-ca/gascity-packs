@@ -54,7 +54,7 @@ The PStack decision artifact contract MUST allow a trivial subtraction assessmen
 to use `status: no_removal_opportunity`. The pack schema MUST still declare
 `subtraction` and `rationale` in `required_fields`. Those keys MUST NOT move
 into `required_front_matter`. The shared validator MUST NOT fail closed on
-empty `subtraction` this turn.
+empty `subtraction`.
 
 #### Scenario: No-removal decision validates
 

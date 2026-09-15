@@ -871,11 +871,19 @@ rationale: The requested behavior already has the smallest viable surface.
 """
     with mock.patch.dict(os.environ, {"GC_BUILD_SCHEMA_ROOTS": str(ROOT / "schemas")}):
         artifact = validator.validate_artifact_text(rendered, expected_schema="pstack.decision.v1")
+        empty = rendered.replace(
+            "subtraction: Reviewed existing paths; none can be removed safely.",
+            'subtraction: ""',
+        )
+        validator.validate_artifact_text(empty, expected_schema="pstack.decision.v1")
     assert artifact.front_matter["status"] == "no_removal_opportunity"
     text = (ROOT / "schemas/decision.v1.yaml").read_text()
     assert "no_removal_opportunity" in text
     assert "  - subtraction" in text
     assert "  - rationale" in text
+    front, _sep, rest = text.partition("required_fields:")
+    assert "  - subtraction" not in front
+    assert "  - subtraction" in rest
 
 
 
