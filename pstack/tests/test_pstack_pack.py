@@ -760,6 +760,79 @@ def test_every_pstack_formula_declares_formula_compiler_requirement() -> None:
         assert data.get("requires", {}).get("formula_compiler") == ">=2.0.0", path
 
 
+def test_how_write_stamps_explanation_schema_and_rejects_empty_overview() -> None:
+    formula = load_formula("pstack-how")
+    by_id = {step["id"]: step for step in formula["steps"]}
+    collect = by_id["collect"]
+    write = by_id["write"]
+    assert list(by_id) == ["collect", "write"]
+    assert write["needs"] == ["collect"]
+    assert collect["metadata"]["gc.run_target"] == "pstack.investigator"
+    assert write["metadata"]["gc.run_target"] == "pstack.investigator"
+    assert collect["metadata"]["pstack.playbook"] == "how"
+    assert write["metadata"]["pstack.playbook"] == "how"
+    assert write["metadata"]["gc.build.artifact_schema"] == "pstack.explanation.v1"
+    assert write["metadata"]["pstack.artifact_schema"] == "pstack.explanation.v1"
+    assert write["metadata"]["gc.build.artifact_path_keys"] == "pstack.artifact_path"
+    assert write["check"]["check"]["path"] == ".gc/scripts/checks/build-artifact-valid.sh"
+    validator = load_build_artifact_validator()
+    rendered = """---
+schema: pstack.explanation.v1
+workflow:
+  id: how-001
+  formula: pstack-how
+producer:
+  formula: pstack-how
+  stage: write
+  attempt: 1
+status: draft
+trace:
+  upstream:
+    - path: pstack/formulas/pstack-how.formula.toml
+      hash: git:how-revision
+  coverage:
+    - id: HOW-001
+      status: covered
+subject: pstack-how sequential collect then write
+overview: How write dual-stamps pstack.explanation.v1.
+flow: Collect bounded evidence, then write the explanation artifact.
+locations: pstack/formulas/pstack-how.formula.toml and pstack/schemas/explanation.v1.yaml
+caveats: Explanation does not record subtraction.
+evidence:
+  source_revision: git:how-revision
+  source_path: pstack/formulas/pstack-how.formula.toml
+  claim_refs:
+    - bead:gc-how
+  verification_status: observed
+---
+
+## Explanation
+
+| ID | Status |
+| --- | --- |
+| HOW-001 | covered |
+"""
+    with mock.patch.dict(os.environ, {"GC_BUILD_SCHEMA_ROOTS": str(ROOT / "schemas")}):
+        artifact = validator.validate_artifact_text(
+            rendered,
+            expected_schema="pstack.explanation.v1",
+        )
+        assert "subtraction" not in artifact.front_matter
+        assert artifact.front_matter["overview"] == "How write dual-stamps pstack.explanation.v1."
+        try:
+            validator.validate_artifact_text(
+                rendered.replace(
+                    "overview: How write dual-stamps pstack.explanation.v1.",
+                    "overview: \"\"",
+                ),
+                expected_schema="pstack.explanation.v1",
+            )
+        except validator.ValidationError as exc:
+            assert "overview" in str(exc)
+        else:
+            raise AssertionError("empty overview was accepted")
+
+
 def test_decision_schema_accepts_no_removal_status_and_rejects_empty_fields() -> None:
     validator = load_build_artifact_validator()
     rendered = """---
@@ -1311,6 +1384,7 @@ def test_pstack_specific_schemas_are_declared_and_referenced() -> None:
         "standing-orders",
         "program-status",
         "route",
+        "explanation",
     }
     spec = importlib.util.spec_from_file_location(
         "pstack_validate_schemas",

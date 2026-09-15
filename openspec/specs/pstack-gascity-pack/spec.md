@@ -373,7 +373,7 @@ completion. Migration formulas MUST declare sequential `callers`, `lever`,
 ### Requirement: Principle-specific artifacts use stable schemas
 
 The pack MUST define namespaced schemas only for genuinely PStack-specific semantic objects and MUST validate them at producer graph nodes.
-Required schemas are `pstack.source-binding.v1`, `pstack.principle-application.v1`, `pstack.foundation.v1`, `pstack.lever-decision.v1`, `pstack.reproduction.v1`, `pstack.root-cause.v1`, `pstack.verification.v1`, `pstack.arena-candidate.v1`, `pstack.arena-synthesis.v1`, `pstack.swarm-result.v1`, `pstack.decision.v1`, `pstack.frontier.v1`, `pstack.standing-orders.v1`, and `pstack.program-status.v1`.
+Required schemas are `pstack.source-binding.v1`, `pstack.principle-application.v1`, `pstack.foundation.v1`, `pstack.lever-decision.v1`, `pstack.reproduction.v1`, `pstack.root-cause.v1`, `pstack.verification.v1`, `pstack.arena-candidate.v1`, `pstack.arena-synthesis.v1`, `pstack.swarm-result.v1`, `pstack.decision.v1`, `pstack.frontier.v1`, `pstack.standing-orders.v1`, `pstack.program-status.v1`, and `pstack.explanation.v1`.
 Schemas MUST derive shared identifiers and revision fields from existing Gas City/Beads contracts rather than inventing duplicate generic build objects. Every PStack schema MUST declare the shared coverage-status vocabulary and `producer.attempt` so pack-local artifacts remain valid inputs to the shared validator. The `pstack.decision.v1` schema MUST accept `status: no_removal_opportunity` while retaining non-empty `subtraction` and `rationale` requirements.
 
 #### Scenario: Source binding records a translation
@@ -396,6 +396,16 @@ Schemas MUST derive shared identifiers and revision fields from existing Gas Cit
 - **WHEN** PStack verification completes
 - **THEN** `pstack.verification.v1` records subject kind/id, revision, checks, evidence references, and a verdict of `verified`, `failed`, `blocked`, or `insufficient`
 - **AND** static or metadata evidence cannot claim runtime/provider execution
+
+#### Scenario: How write stamps explanation schema
+
+- **GIVEN** the resolved `pstack-how` formula
+- **WHEN** its `write` step is inspected
+- **THEN** `gc.build.artifact_schema` is `pstack.explanation.v1`
+- **AND** `pstack.artifact_schema` is `pstack.explanation.v1`
+- **AND** path keys stay `pstack.artifact_path`
+- **AND** collect then write stay sequential `pstack.investigator` steps with `pstack.playbook` `how`
+- **AND** the explanation schema does not require subtraction
 
 ### Requirement: Optional pack composition remains decoupled
 

@@ -72,13 +72,14 @@ PStack adds only method evidence not represented by `gc.build.*`:
 | `pstack.standing-orders.v1` | order, trigger, scope, expiry, evidence target |
 | `pstack.program-status.v1` | goal, phase, predicate, blockers, restart token, evidence |
 | `pstack.route.v1` | playbook, formula, class, reason, evidence |
+| `pstack.explanation.v1` | subject, overview, flow, locations, caveats |
 
 Every PStack artifact carries stable work/claim references and evidence status. Every PStack schema declares the shared coverage-status vocabulary and `producer.attempt` so the shared validator can validate nonempty trace coverage. Static or metadata evidence is never labeled runtime evidence.
 
 ## Formula graph
 
 - `pstack-poteto-mode`: classify then write `pstack.route.v1`. No auto-sling.
-- `pstack-how`, `pstack-why`, and `pstack-investigation`: read-mostly sequence → evidence artifact.
+- `pstack-how`: sequential investigator collect then write `pstack.explanation.v1`. `pstack-why` and `pstack-investigation`: read-mostly sequence → evidence artifact.
 - `pstack-swarm`: sequential frame, fanout, and fanin steps writing `pstack.swarm-result.v1`. `gc.graph_operator` is inert annotation. This checkout has no consumer.
 - `pstack-arena`: sequential trigger, candidates, judge, and verify steps. This checkout writes one `pstack.arena-candidate.v1` path. Target fanout is a Gas City provider panel, not a pack-local Task spawn and not a `graph_operator` interpreter. See **Provider panel fanout**.
 - `pstack-interrogate`: sequential select, review, and judgment steps. This checkout does not expand reviewer children. Target fanout is the same provider panel, with N review artifacts then one judgment and no apply step.
