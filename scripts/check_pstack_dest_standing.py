@@ -8,7 +8,7 @@ from pathlib import Path
 SLICES: tuple[tuple[str, str, tuple[str, ...], tuple[str, ...]], ...] = (
     (
         "remaining-units",
-        "### Requirement: Remaining program units stay host sling then compiler then panel stamp",
+        "### Requirement: Remaining program units stay host sling then panel consumer then panel stamp",
         (
             "scripts/pstack_host_sling_proof.py",
             "is proven as cook plus route",
@@ -22,6 +22,7 @@ SLICES: tuple[tuple[str, str, tuple[str, ...], tuple[str, ...]], ...] = (
             "scripts/check_pstack_dest_standing.py",
             "scripts/check_pstack_delivery_evidence.py",
             "`pr-pstack-panel-stamp` must not start on Gherkin alone",
+            "a Gas City consumer of `gc.provider_panel` is outside this packs tree",
             "Presence of `openspec/specs/gascity-provider-panel/spec.md` MUST NOT authorize a formula stamp",
             "This leftover MUST NOT stamp panel keys",
             "gc.provider_panel",

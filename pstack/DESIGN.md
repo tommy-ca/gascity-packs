@@ -97,7 +97,7 @@ Four layers stay distinct.
 3. **Provider catalog.** `[providers.<id>]` is a frozen harness plus `args`. Gas City Formula daemons pick the model in those args (`--model`). One id does not accept a second model on Formula-managed daemon work. One-shot `--model` is not a `gc sling` target.
 4. **Provider panel (target).** A city table `[[provider_panels]]` will list catalog ids from `[providers.<id>]`, not model slugs. After Gas City consumes the key, cook will create N child beads, isolate workspaces, and bind each child to one member. Diversity is N provider ids, each with its own frozen `--model`. The pack will stamp a panel id and a per-child path template. It will not name `cursor-grok`, `antigravity`, `composer-2.5`, or any other provider or model string.
 
-This checkout does not stamp `gc.provider_panel`. Stamping a key with no compiler consumer repeats the `gc.graph_operator` honesty gap. Pack formulas stay sequential until Gas City consumes the panel key (expected `formula_compiler` floor above `2.0.0`). Durable Gherkin lives in this repository under `openspec/`.
+This checkout does not stamp `gc.provider_panel`. Stamping a key with no Gas City consumer of `gc.provider_panel` repeats the `gc.graph_operator` honesty gap. Pack formulas stay sequential until a Gas City consumer of `gc.provider_panel` exists. Sequential packing already requires `formula_compiler >= 2.0.0`. Durable Gherkin lives in this repository under `openspec/`.
 
 **What a city operator does when the consumer exists.**
 

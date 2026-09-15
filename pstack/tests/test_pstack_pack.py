@@ -932,7 +932,7 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "even after host sling of `pstack-poteto-mode` and `pstack-build`" in traceability
     assert "is not a restamp trigger" in traceability
     assert "without a host sling of `pstack-poteto-mode` and `pstack-build`" not in traceability
-    assert "no compiler consumer for `gc.provider_panel`" in traceability
+    assert "no Gas City consumer for `gc.provider_panel`" in traceability
     design = (ROOT / "DESIGN.md").read_text().lower()
     assert "dest-env" not in design
     assert "pstack.arena-runner" not in design
@@ -1002,7 +1002,7 @@ def test_delivery_checks_cover_pstack() -> None:
     assert "registry.gascity.com" in program
     assert "is on 385" not in program
     assert "on the same PR" not in program
-    assert "Gas City compiler is outside this packs tree" in program
+    assert "A Gas City consumer of `gc.provider_panel` is outside this packs tree" in program
     assert "must not start on Gherkin alone" in program
     assert "dest-env" not in program
     assert ".audit/" not in program
@@ -1028,7 +1028,7 @@ def test_delivery_checks_cover_pstack() -> None:
 def test_dest_standing_check_fails_closed(tmp_path: pathlib.Path) -> None:
     dest = (PACKS_ROOT / "openspec/specs/pstack-delivery-evidence/spec.md").read_text()
     header = (
-        "### Requirement: Remaining program units stay host sling then compiler then panel stamp"
+        "### Requirement: Remaining program units stay host sling then panel consumer then panel stamp"
     )
     script = PACKS_ROOT / "scripts/check_pstack_dest_standing.py"
 

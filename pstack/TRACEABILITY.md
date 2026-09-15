@@ -61,9 +61,9 @@ that gives those fields executable fanout semantics. The
 current pack deliberately does not invent a second scheduler or provider
 dispatch path. Do not interpret `graph_operator`. Swarm stays work-unit
 annotation. The target for arena and interrogate N-model fanout is a city
-`[[provider_panels]]` table plus a Gas City compiler that expands
+`[[provider_panels]]` table plus a Gas City consumer of
 `gc.provider_panel`. N-model membership will live in city `[[provider_panels]]`
 catalog ids. This checkout does not stamp. There is no `pstack.arena-runner`.
 Durable specs live at `openspec/specs/`. Pack formulas
 must not stamp `gc.provider_panel` until that consumer exists. This checkout
-has no compiler consumer for `gc.provider_panel`.
+has no Gas City consumer for `gc.provider_panel`.

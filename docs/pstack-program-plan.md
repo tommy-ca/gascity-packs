@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Hosted identity is tommy-ca/pstack. Unscoped submit is forbidden. Isolation is already on feat/pstack-pack-honesty. Done when host sling receipts exist and formulas still omit gc.provider_panel until the compiler consumer exists."
+- [ ] On her go, persist the plan path on disk with this exact text. "docs/pstack-program-plan.md. PR ids pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Hosted identity is tommy-ca/pstack. Unscoped submit is forbidden. Isolation is already on feat/pstack-pack-honesty. Done when host sling receipts exist and formulas still omit gc.provider_panel until a Gas City consumer of gc.provider_panel exists."
 - [ ] Read these from trunk at program start. Re-read them at every tick.
   - [ ] `git show origin/main:.github/workflows/ci.yml`
   - [ ] `git show origin/main:registry.toml`
@@ -42,7 +42,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [x] Hosted identity is `tommy-ca/pstack`. Unscoped submit is forbidden.
   - [ ] Restamp of gastownhall registry.toml is not the publication vehicle.
   - [ ] Staff land of `prq_5WDBAqIkcpy-j7ossap3TLJ5` is outside this checkout. Unscoped submit is not the next click.
-  - [ ] Gas City compiler consumer for `gc.provider_panel`. Outside this packs formula tree.
+  - [ ] Gas City consumer of `gc.provider_panel`. Outside this packs formula tree.
   - [ ] `pr-pstack-panel-stamp` after that consumer exists.
 - [ ] Hold the file boundaries. `pr-pstack-land-honesty` must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-graph-honesty` touches TRACEABILITY Gherkin, `pstack/TRACEABILITY.md`, `pstack/README.md`, pack tests, and Appendix A. It must not touch `pstack/formulas`, `pstack/schemas`, or `registry.toml`. `pr-pstack-publish` must not rename `pstack/pack.toml` again. `pr-pstack-panel-stamp` touches formulas, schemas, and tests.
 - [ ] Hold the review gate. `pr-pstack-land-honesty` changes no interaction. It is not review-gated. `pr-pstack-graph-honesty` changes no interaction. It is not review-gated. `pr-pstack-publish` talks to the hosted registry. It is review-gated. `pr-pstack-panel-stamp` changes sling behavior. It is review-gated.
@@ -242,7 +242,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Stamp panel keys after the consumer (`pr-pstack-panel-stamp`)
 
-**Depends on.** `pr-pstack-publish`. Gas City compiler consumer for `gc.provider_panel`.
+**Depends on.** `pr-pstack-publish`. Gas City consumer of `gc.provider_panel`.
 
 **Files.**
 
@@ -253,7 +253,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Build.**
 
-- [ ] Stamp `gc.provider_panel` and `{child_id}` paths only after Gas City documents a compiler consumer. Delete the shared `.gc/pstack/arena-candidate.md` binding in the same wave.
+- [ ] Stamp `gc.provider_panel` and `{child_id}` paths only after a Gas City consumer of `gc.provider_panel` exists. Delete the shared `.gc/pstack/arena-candidate.md` binding in the same wave.
 
 **You see.**
 
@@ -292,7 +292,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 **Merge.**
 
 - [ ] Do not merge to gastownhall.
-- [ ] Stamp only after the compiler consumer exists.
+- [ ] Stamp only after a Gas City consumer of `gc.provider_panel` exists.
 - [ ] Formulas stay unstamped until that consumer exists.
 
 ## Close the program
@@ -312,7 +312,7 @@ Catalog restamp of gastownhall `registry.toml` as the publication vehicle. Lost.
 
 A third GitHub PR for restamp. Already lost.
 
-A new remaining-units delta just to write sling again. Lost. Remaining-units already names sling, publish, compiler, and panel stamp.
+A new remaining-units delta just to write sling again. Lost. Remaining-units already names sling, publish, panel consumer, and panel stamp.
 
 Treat inference-gate `pstack-review` then `pstack-build` launch as remaining-units sling. Lost. Arena base is cook plus route of `pstack-poteto-mode` then `pstack-build`.
 
@@ -322,7 +322,7 @@ Rewrite the live checker to pack-vendor `grok-4.6-fast-xhigh`. Lost. Host plugin
 
 `origin/main` still lacks `pstack/`. Arm boxes read files that exist on trunk today. Watch pstack landing in `pr-pstack-land-honesty`.
 
-Gas City compiler is outside this packs tree. `pr-pstack-panel-stamp` must not start on Gherkin alone.
+A Gas City consumer of `gc.provider_panel` is outside this packs tree. `pr-pstack-panel-stamp` must not start on Gherkin alone.
 
 Dual corpus. `pstack/skills/arena/SKILL.md` still documents Cursor Task. Host plugin `check-plan.mjs` is the live checker. Pack vendor `check-plan.mjs` is a second corpus. Watch that in stamp lane 10.
 

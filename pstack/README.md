@@ -114,7 +114,7 @@ One catalog id cannot serve two models on Formula daemon work. A second
 model needs a second `[providers.<id>]`. After Gas City consumes the key,
 it will cook one child bead per member, isolate workspaces, and bind each
 bead at dispatch. The pack will stamp `gc.provider_panel` and a
-`{child_id}` artifact path only after that compiler exists.
+`{child_id}` artifact path only after a Gas City consumer of `gc.provider_panel` exists.
 `[session].provider` is the city session backend. It is not a panel member.
 Sibling packs fan review personas, not models.
 

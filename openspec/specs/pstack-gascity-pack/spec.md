@@ -320,7 +320,7 @@ validator.
 - **AND** the formulas do not dispatch through a provider-native durable API
 - **AND** TRACEABILITY names swarm as work-unit annotation
 - **AND** TRACEABILITY names a city provider panel as the arena and interrogate N-model target
-- **AND** TRACEABILITY records that this checkout has no compiler consumer for `gc.provider_panel`
+- **AND** TRACEABILITY records that this checkout has no Gas City consumer for `gc.provider_panel`
 
 #### Scenario: Pack docs describe city provider panels without stamping them
 

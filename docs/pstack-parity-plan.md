@@ -1,6 +1,6 @@
 # PStack Cursor parity plan
 
-City operators get Gas City slings that match Cursor pstack methods without a second runtime. The pack stays a mapping pack. It does not stamp `gc.provider_panel` until Gas City ships a compiler. PR order is how-schema, method-report, how-expand, panel-stamp.
+City operators get Gas City slings that match Cursor pstack methods without a second runtime. The pack stays a mapping pack. It does not stamp `gc.provider_panel` until a Gas City consumer of `gc.provider_panel` exists. PR order is how-schema, method-report, how-expand, panel-stamp.
 
 ## How to read this
 
@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md, PR ids how-schema method-report how-expand panel-stamp, verification rule, operator lands, done when dest levers stay green and panel keys stay omitted until a compiler exists."
+- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md, PR ids how-schema method-report how-expand panel-stamp, verification rule, operator lands, done when dest levers stay green and panel keys stay omitted until a Gas City consumer of gc.provider_panel exists."
 - [ ] Read these from the installed plugin at program start. Re-read them at every tick.
   - [ ] `git show origin/main:skills/poteto-mode/playbooks/autopilot-stack.md`
   - [ ] `git show origin/main:skills/swarm/SKILL.md`
@@ -32,7 +32,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] Follow this dependency graph. Start dependent work only after its parent merges, or base it on the parent branch when the execution playbook stacks.
   - [ ] how-schema and method-report are independent and first. Both branch from `feat/pstack-pack-honesty`.
   - [ ] how-expand after how-schema.
-  - [ ] panel-stamp after how-schema. It waits on an out-of-tree compiler before formula keys.
+  - [ ] panel-stamp after how-schema. It waits on a Gas City consumer of `gc.provider_panel` before formula keys.
 - [ ] Hold the file boundaries. All PR ids touch only `pstack/`, `docs/pstack-*`, `openspec/specs/pstack-*`, `scripts/check_pstack_*`, `scripts/pstack_*`, and `tests/test_pstack_*`. They do not edit `.github/` or `gascity/`.
 - [ ] Hold the review gate. how-expand and panel-stamp change an interaction. They wait for the operator's review in chat with screenshots and a video before merge.
 
@@ -221,7 +221,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
 - [ ] The root appends it to the base-branch stack and the operator lands it bottom-up.
 
-## Stamp provider panel after compiler (panel-stamp)
+## Stamp provider panel after panel consumer (panel-stamp)
 
 **Depends on.** how-schema
 
@@ -235,11 +235,11 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Build.**
 
-- [ ] Stamp `gc.provider_panel` and `gc.child_artifact_path_template` only after a documented Gas City compiler consumes those keys. Delete shared `.gc/pstack/arena-candidate.md` in the same wave.
+- [ ] Stamp `gc.provider_panel` and `gc.child_artifact_path_template` only after a Gas City consumer of `gc.provider_panel` exists. Delete shared `.gc/pstack/arena-candidate.md` in the same wave.
 
 **You see.**
 
-- [ ] Arena children write distinct paths and dest omit-panel is inverted only after the compiler exists.
+- [ ] Arena children write distinct paths and dest omit-panel is inverted only after a Gas City consumer of `gc.provider_panel` exists.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
@@ -247,12 +247,12 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
 
-- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk omits panel, record that and gate compiler evidence plus dest standing. Save `panel-stamp-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk omits panel, record that and gate consumer evidence plus dest standing. Save `panel-stamp-l1.png`. Pass when dest standing prints ok dest standing.
 - [ ] Lane 2. Delivery evidence. Save `panel-stamp-l2.png`. Pass when ok delivery evidence.
-- [ ] Lane 3. Compiler consumer documented. Save `panel-stamp-l3.png`. Pass when the PR body names the Gas City SHA that consumes the key.
+- [ ] Lane 3. Gas City consumer of `gc.provider_panel` documented. Save `panel-stamp-l3.png`. Pass when the PR body names the Gas City SHA that consumes the key.
 - [ ] Lane 4. Shared arena-candidate.md gone. Save `panel-stamp-l4.png`. Pass when that path is not in formulas.
 - [ ] Lane 5. child_artifact_path_template present. Save `panel-stamp-l5.png`. Pass when rg hits arena formula.
-- [ ] Lane 6. gascity/ still has no panel unless the compiler landed there out of tree. Save `panel-stamp-l6.png`. Pass when this packs tree matches dest.
+- [ ] Lane 6. gascity/ still has no panel unless a Gas City consumer of `gc.provider_panel` landed there out of tree. Save `panel-stamp-l6.png`. Pass when this packs tree matches dest.
 - [ ] Lane 7. Pack name. Save `panel-stamp-l7.png`. Pass when ok pack-name.
 - [ ] Lane 8. Pin unchanged. Save `panel-stamp-l8.png`. Pass when ok pin.
 - [ ] Lane 9. No restamp. Save `panel-stamp-l9.png`. Pass when registry pin is 29c84db.
@@ -267,7 +267,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Review gate.** The operator reviews before merge.
 
-- [ ] Copy lane 3 screenshots into `/tmp/media/panel-stamp-review-compiler.png`.
+- [ ] Copy lane 3 screenshots into `/tmp/media/panel-stamp-review-consumer.png`.
 - [ ] Record a 30 to 60 second video of the change on the worktree child's real surface. Save it as `/tmp/media/panel-stamp-review.mp4`.
 - [ ] Post the screenshots and the video in chat. Stop at merge-ready. Wait for the operator's click.
 
@@ -285,7 +285,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Appendix A. Prototype evidence
 
-No new prototype ran in this leftover. Prior arena on PR #1 scored sequential collapse 15, expansion fidelity 15, thinner wrap 14. Lead pick for HEAD dest is sequential mapping. how-expand is the later leftover. Panel stamp stays blocked until a compiler exists. Unproven is a live Gas City cook of `gc.provider_panel`.
+No new prototype ran in this leftover. Prior arena on PR #1 scored sequential collapse 15, expansion fidelity 15, thinner wrap 14. Lead pick for HEAD dest is sequential mapping. how-expand is the later leftover. Panel stamp stays blocked until a Gas City consumer of `gc.provider_panel` exists. Unproven is a live Gas City cook of `gc.provider_panel`.
 
 ## Appendix B. Alternatives rejected
 

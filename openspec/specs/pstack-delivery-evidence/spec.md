@@ -157,8 +157,8 @@ that URL works only when the imported git ref contains `pstack/`. It MUST say
 registry `0.1.0` is a catalog pin, not a slung production release. It MUST say
 method formulas in this checkout are sequential annotated steps and MUST NOT
 claim this checkout executes multi-provider fanout. It MAY describe a
-`[[provider_panels]]` cook as a target that is not executed until a compiler
-consumes `gc.provider_panel`. Root
+`[[provider_panels]]` cook as a target that is not executed until a Gas City
+consumer of `gc.provider_panel` exists. Root
 `README.md` MUST say pstack is not a slung production import.
 `pstack/TRACEABILITY.md` MUST forbid restamping `commit` or `hash` even after
 host sling of `pstack-poteto-mode` and `pstack-build`. It MUST say a
@@ -188,7 +188,7 @@ say a `--require-git` failure on pin `29c84db` is not a restamp trigger.
 - **GIVEN** `pstack/README.md` How N-model fanout will work
 - **WHEN** an operator reads the target
 - **THEN** the text names `[[provider_panels]]` as city configuration
-- **AND** the text says the pack stamps `gc.provider_panel` only after the compiler consumes that key
+- **AND** the text says the pack stamps `gc.provider_panel` only after a Gas City consumer of `gc.provider_panel` exists
 - **AND** the text still says this checkout runs sequential graphs
 
 #### Scenario: TRACEABILITY forbids restamp without a host sling
@@ -227,7 +227,7 @@ MUST NOT have sling formulas.
 - **THEN** `[corpus].skills` names every vendor skill directory that is not a principle, not `poteto-mode`, and not backed by a `pstack-<name>` formula
 - **AND** none of those corpus skills have a sling formula
 
-### Requirement: Remaining program units stay host sling then compiler then panel stamp
+### Requirement: Remaining program units stay host sling then panel consumer then panel stamp
 
 Feature: pstack-delivery-evidence
 
@@ -309,7 +309,7 @@ It MUST NOT scan Appendix C.
 
 - **GIVEN** `docs/pstack-program-plan.md` and `openspec/specs/gascity-provider-panel/spec.md`
 - **WHEN** an operator considers `pr-pstack-panel-stamp`
-- **THEN** the program says the compiler is outside this packs tree
+- **THEN** the program says a Gas City consumer of `gc.provider_panel` is outside this packs tree
 - **AND** it says `pr-pstack-panel-stamp` must not start on Gherkin alone
 - **AND** pack formulas still omit `gc.provider_panel`
 
