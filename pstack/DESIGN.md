@@ -153,7 +153,7 @@ Build variants compose these formulas:
 - refactor/migration: subtraction, foundation, callers, lever/pilot, migration waves, legacy absence;
 - perf: baseline, bounded experiment, and revision-bound verification;
 - prototype: experience target, smallest verifiable slice, explicit expiry;
-- shipping: catalog alias of `pstack-build`;
+- shipping: playbook stem mapped to `pstack-build`;
 - babysit/autopilot: extend `pstack-build`, so they inherit implement and publish until a later formula-design change detaches them.
 
 ## Role and code flow
