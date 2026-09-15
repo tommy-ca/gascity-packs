@@ -831,6 +831,11 @@ evidence:
             assert "overview" in str(exc)
         else:
             raise AssertionError("empty overview was accepted")
+    text = (ROOT / "schemas/explanation.v1.yaml").read_text()
+    assert "no_removal_opportunity" not in text
+    assert "  - subtraction" not in text
+    for field in ("subject", "overview", "flow", "locations", "caveats"):
+        assert f"  - {field}" in text
 
 
 def test_decision_schema_accepts_no_removal_status_and_rejects_empty_fields() -> None:
