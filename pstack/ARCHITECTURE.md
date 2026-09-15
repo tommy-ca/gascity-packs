@@ -93,4 +93,4 @@ Target cook path. City `[[provider_panels]]` members are `[providers.<id>]` cata
 - No archive of `refresh-pstack-pack-source-and-formula-requirements` as written.
 - No babysit or orchestrate detach from `pstack-build` in this change.
 - No `graph_operator` interpreter.
-- No pack-local provider panel compiler. The host formula compiler already ships. The missing object is a Gas City consumer of `gc.provider_panel`.
+- No pack-local provider panel cook. The host formula compiler already ships. The missing object is a Gas City consumer of `gc.provider_panel`.

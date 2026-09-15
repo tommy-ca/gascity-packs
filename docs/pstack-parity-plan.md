@@ -65,19 +65,19 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Files.**
 
-- [ ] Create `pstack/schemas/explanation.v1.yaml`.
-- [ ] Edit `pstack/formulas/pstack-how.formula.toml`.
-- [ ] Edit `openspec/specs/pstack-gascity-pack/spec.md`.
-- [ ] Edit `pstack/tests/test_pstack_pack.py`.
+- [x] Create `pstack/schemas/explanation.v1.yaml`.
+- [x] Edit `pstack/formulas/pstack-how.formula.toml`.
+- [x] Edit `openspec/specs/pstack-gascity-pack/spec.md`.
+- [x] Edit `pstack/tests/test_pstack_pack.py`.
 - [ ] Edit `scripts/check_pstack_dest_standing.py` if dest remaining-units names the schema.
 
 **Build.**
 
-- [ ] Stamp `pstack-how` write as `pstack.explanation.v1` in `pstack/formulas/pstack-how.formula.toml`.
+- [x] Stamp `pstack-how` write as `pstack.explanation.v1` in `pstack/formulas/pstack-how.formula.toml`.
 
 **You see.**
 
-- [ ] `pstack-how` write metadata names `pstack.explanation.v1` and not `pstack.decision.v1`.
+- [x] `pstack-how` write metadata names `pstack.explanation.v1` and not `pstack.decision.v1`.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
