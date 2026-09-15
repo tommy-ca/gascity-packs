@@ -223,17 +223,17 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Files.**
 
-- [ ] Edit `pstack/formulas/pstack-why.formula.toml`.
-- [ ] Edit dest Gherkin that names why write schema if dest locks it.
-- [ ] Edit `pstack/tests/test_pstack_pack.py`.
+- [x] Edit `pstack/formulas/pstack-why.formula.toml`.
+- [x] Edit dest Gherkin that names why write schema if dest locks it.
+- [x] Edit `pstack/tests/test_pstack_pack.py`.
 
 **Build.**
 
-- [ ] Stamp `pstack-why` write as `pstack.explanation.v1` in `pstack/formulas/pstack-why.formula.toml`. Keep sequential investigator collect and write until how-expand.
+- [x] Stamp `pstack-why` write as `pstack.explanation.v1` in `pstack/formulas/pstack-why.formula.toml`. Keep sequential investigator collect and write until how-expand.
 
 **You see.**
 
-- [ ] `pstack-why` write metadata names `pstack.explanation.v1` and not `pstack.decision.v1`.
+- [x] `pstack-why` write metadata names `pstack.explanation.v1` and not `pstack.decision.v1`.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 

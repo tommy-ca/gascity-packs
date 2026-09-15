@@ -842,6 +842,84 @@ evidence:
         assert f"  - {field}" in text
 
 
+def test_why_write_stamps_explanation_schema_and_rejects_empty_overview() -> None:
+    formula = load_formula("pstack-why")
+    by_id = {step["id"]: step for step in formula["steps"]}
+    collect = by_id["collect"]
+    write = by_id["write"]
+    assert list(by_id) == ["collect", "write"]
+    assert write["needs"] == ["collect"]
+    assert collect["metadata"]["gc.run_target"] == "pstack.investigator"
+    assert write["metadata"]["gc.run_target"] == "pstack.investigator"
+    assert collect["metadata"]["pstack.playbook"] == "why"
+    assert write["metadata"]["pstack.playbook"] == "why"
+    assert write["metadata"]["gc.build.artifact_schema"] == "pstack.explanation.v1"
+    assert write["metadata"]["pstack.artifact_schema"] == "pstack.explanation.v1"
+    assert write["metadata"]["gc.build.artifact_path_keys"] == "pstack.artifact_path"
+    assert write["check"]["check"]["path"] == ".gc/scripts/checks/build-artifact-valid.sh"
+    validator = load_build_artifact_validator()
+    rendered = """---
+schema: pstack.explanation.v1
+workflow:
+  id: why-001
+  formula: pstack-why
+producer:
+  formula: pstack-why
+  stage: write
+  attempt: 1
+status: draft
+trace:
+  upstream:
+    - path: pstack/formulas/pstack-why.formula.toml
+      hash: git:why-revision
+  coverage:
+    - id: WHY-001
+      status: covered
+subject: pstack-why sequential collect then write
+overview: Why write dual-stamps pstack.explanation.v1.
+flow: Collect bounded evidence, then write the explanation artifact.
+locations: pstack/formulas/pstack-why.formula.toml and pstack/schemas/explanation.v1.yaml
+caveats: Explanation does not record subtraction.
+evidence:
+  source_revision: git:why-revision
+  source_path: pstack/formulas/pstack-why.formula.toml
+  claim_refs:
+    - bead:gc-why
+  verification_status: observed
+---
+
+## Explanation
+
+| ID | Status |
+| --- | --- |
+| WHY-001 | covered |
+"""
+    with mock.patch.dict(os.environ, {"GC_BUILD_SCHEMA_ROOTS": str(ROOT / "schemas")}):
+        artifact = validator.validate_artifact_text(
+            rendered,
+            expected_schema="pstack.explanation.v1",
+        )
+        assert "subtraction" not in artifact.front_matter
+        assert artifact.front_matter["overview"] == "Why write dual-stamps pstack.explanation.v1."
+        try:
+            validator.validate_artifact_text(
+                rendered.replace(
+                    "overview: Why write dual-stamps pstack.explanation.v1.",
+                    "overview: \"\"",
+                ),
+                expected_schema="pstack.explanation.v1",
+            )
+        except validator.ValidationError as exc:
+            assert "overview" in str(exc)
+        else:
+            raise AssertionError("empty overview was accepted")
+    text = (ROOT / "schemas/explanation.v1.yaml").read_text()
+    assert "no_removal_opportunity" not in text
+    assert "  - subtraction" not in text
+    for field in ("subject", "overview", "flow", "locations", "caveats"):
+        assert f"  - {field}" in text
+
+
 def test_decision_schema_accepts_no_removal_status_and_rejects_empty_fields() -> None:
     validator = load_build_artifact_validator()
     rendered = """---

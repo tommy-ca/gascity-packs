@@ -407,6 +407,16 @@ Schemas MUST derive shared identifiers and revision fields from existing Gas Cit
 - **AND** collect then write stay sequential `pstack.investigator` steps with `pstack.playbook` `how`
 - **AND** the explanation schema does not require subtraction
 
+#### Scenario: Why write stamps explanation schema
+
+- **GIVEN** the resolved `pstack-why` formula
+- **WHEN** its `write` step is inspected
+- **THEN** `gc.build.artifact_schema` is `pstack.explanation.v1`
+- **AND** `pstack.artifact_schema` is `pstack.explanation.v1`
+- **AND** path keys stay `pstack.artifact_path`
+- **AND** collect then write stay sequential `pstack.investigator` steps with `pstack.playbook` `why`
+- **AND** the explanation schema does not require subtraction
+
 ### Requirement: Optional pack composition remains decoupled
 
 Feature: pstack-gascity-pack
