@@ -1,6 +1,6 @@
 # PStack Cursor parity plan
 
-City operators get Gas City slings that match Cursor pstack methods without a second runtime. The pack stays a mapping pack. It does not stamp `gc.provider_panel` until a Gas City consumer of `gc.provider_panel` exists. PR order is how-schema, method-report, how-expand, panel-stamp.
+City operators get Gas City slings that match Cursor pstack methods without a second runtime. The pack stays a mapping pack. It does not stamp `gc.provider_panel` until a Gas City consumer of `gc.provider_panel` exists. PR order is how-schema, method-report, evidence-contract, why-schema, how-expand, panel-stamp.
 
 ## How to read this
 
@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md, PR ids how-schema method-report how-expand panel-stamp, verification rule, operator lands, done when dest levers stay green and panel keys stay omitted until a Gas City consumer of gc.provider_panel exists."
+- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md, PR ids how-schema method-report evidence-contract why-schema how-expand panel-stamp, verification rule, operator lands, done when dest levers stay green and panel keys stay omitted until a Gas City consumer of gc.provider_panel exists."
 - [ ] Read these from the installed plugin at program start. Re-read them at every tick.
   - [ ] `git show origin/main:skills/poteto-mode/playbooks/autopilot-stack.md`
   - [ ] `git show origin/main:skills/swarm/SKILL.md`
@@ -31,6 +31,8 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] From this parent session, spawn one owner per PR with `spawn_subagent` (`isolation: "worktree"`). Depth is 1. Owners do not spawn.
 - [ ] Follow this dependency graph. Start dependent work only after its parent merges, or base it on the parent branch when the execution playbook stacks.
   - [ ] how-schema and method-report are independent and first. Both branch from `feat/pstack-pack-honesty`.
+  - [ ] evidence-contract after method-report. It is independent and branches from `feat/pstack-pack-honesty`.
+  - [ ] why-schema after how-schema. It is before how-expand.
   - [ ] how-expand after how-schema.
   - [ ] panel-stamp after how-schema. It waits on a Gas City consumer of `gc.provider_panel` before formula keys.
 - [ ] Hold the file boundaries. All PR ids touch only `pstack/`, `docs/pstack-*`, `openspec/specs/pstack-*`, `scripts/check_pstack_*`, `scripts/pstack_*`, and `tests/test_pstack_*`. They do not edit `.github/` or `gascity/`.
@@ -154,6 +156,108 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 - [ ] Probe. pytest -q pstack/tests/test_pstack_pack.py at trunk and head, interleaved. Both sides must produce the metric.
 - [ ] Baseline. Record the trunk seconds first.
 - [ ] Rule. Head under 2x trunk.
+
+**Review gate.** None.
+
+**Merge.**
+
+- [ ] Root's clean verdict at the exact head SHA.
+- [ ] Bugbot triage done.
+- [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
+- [ ] The root appends it to the base-branch stack and the operator lands it bottom-up.
+
+## Retarget dest required_fields actor (evidence-contract)
+
+**Depends on.** None.
+
+**Files.**
+
+- [x] Edit `openspec/specs/pstack-evidence-contract/spec.md`.
+- [x] Edit `pstack/tests/test_pstack_pack.py`.
+- [x] Edit `docs/pstack-parity-plan.md` spawn graph.
+
+**Build.**
+
+- [x] Name pack schema load as the `required_fields` list-shape owner.
+
+**You see.**
+
+- [x] Dest Gherkin names `pstack/scripts/validate_pstack_schemas.py` for empty `required_fields` YAML.
+
+**Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+
+- [ ] `pstack/tests/test_pstack_pack.py` locks empty `required_fields` YAML through `pstack/scripts/validate_pstack_schemas.py`. Run `mise exec npm:@fission-ai/openspec@1.12.0 -- uv run --with pytest --with pyyaml pytest -q pstack/tests/test_pstack_pack.py`.
+
+**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
+
+- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk still names the shared validator as the `required_fields` owner, record that and gate dest Gherkin plus dest standing still ok. Save `evidence-contract-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 2. Delivery evidence at head. Save `evidence-contract-l2.png`. Pass when output includes ok delivery evidence.
+- [ ] Lane 3. Empty `required_fields` YAML fails through pack schema load. Save `evidence-contract-l3.png`. Pass when `validate_pstack_schemas.py` exits non-zero on `required_fields: []`.
+- [ ] Lane 4. Dest names pack schema validator. Save `evidence-contract-l4.png`. Pass when dest Gherkin names `pstack/scripts/validate_pstack_schemas.py`.
+- [ ] Lane 5. Shared validator owns empty strings. Save `evidence-contract-l5.png`. Pass when dest Gherkin names `gascity/assets/scripts/validate_build_artifact.py` for `required_front_matter`.
+- [ ] Lane 6. Gas City has no `required_fields` hit. Save `evidence-contract-l6.png`. Pass when rg is empty.
+- [ ] Lane 7. Omit-panel still holds. Save `evidence-contract-l7.png`. Pass when delivery evidence prints ok omit-panel.
+- [ ] Lane 8. Pack name still tommy-ca/pstack. Save `evidence-contract-l8.png`. Pass when delivery evidence prints ok pack-name.
+- [ ] Lane 9. Pin still 29c84db. Save `evidence-contract-l9.png`. Pass when delivery evidence prints ok pin.
+- [ ] Lane 10. Pack tests 52 or more pass. Save `evidence-contract-l10.png`. Pass when pytest reports passed.
+
+**Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+
+- [ ] Metric. Wall time of dest standing plus delivery evidence at trunk and head.
+- [ ] Probe. `/usr/bin/time -f %e python scripts/check_pstack_dest_standing.py` then delivery evidence, run at trunk and at the head, interleaved. Both sides must produce the metric.
+- [ ] Baseline. Record the trunk seconds first.
+- [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if dest standing exceeds 5s.
+
+**Review gate.** None.
+
+**Merge.**
+
+- [ ] Root's clean verdict at the exact head SHA.
+- [ ] Bugbot triage done.
+- [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
+- [ ] The root appends it to the base-branch stack and the operator lands it bottom-up.
+
+## Retarget pstack-why off decision.v1 (why-schema)
+
+**Depends on.** how-schema
+
+**Files.**
+
+- [ ] Edit `pstack/formulas/pstack-why.formula.toml`.
+- [ ] Edit dest Gherkin that names why write schema if dest locks it.
+- [ ] Edit `pstack/tests/test_pstack_pack.py`.
+
+**Build.**
+
+- [ ] Stamp `pstack-why` write as `pstack.explanation.v1` in `pstack/formulas/pstack-why.formula.toml`. Keep sequential investigator collect and write until how-expand.
+
+**You see.**
+
+- [ ] `pstack-why` write metadata names `pstack.explanation.v1` and not `pstack.decision.v1`.
+
+**Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+
+- [ ] `pstack/tests/test_pstack_pack.py` locks why schema. Run `mise exec npm:@fission-ai/openspec@1.12.0 -- uv run --with pytest --with pyyaml pytest -q pstack/tests/test_pstack_pack.py`.
+
+**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
+
+- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk still writes decision.v1, record that and gate why formula schema plus dest standing still ok. Save `why-schema-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 2. Delivery evidence at head. Save `why-schema-l2.png`. Pass when output includes ok delivery evidence.
+- [ ] Lane 3. Grep why formula for decision.v1. Save `why-schema-l3.png`. Pass when grep is empty.
+- [ ] Lane 4. Grep why formula for explanation.v1. Save `why-schema-l4.png`. Pass when grep hits write metadata.
+- [ ] Lane 5. Omit-panel still holds. Save `why-schema-l5.png`. Pass when delivery evidence prints ok omit-panel.
+- [ ] Lane 6. Pack name still tommy-ca/pstack. Save `why-schema-l6.png`. Pass when delivery evidence prints ok pack-name.
+- [ ] Lane 7. Pin still 29c84db. Save `why-schema-l7.png`. Pass when delivery evidence prints ok pin.
+- [ ] Lane 8. OpenSpec validate specs. Save `why-schema-l8.png`. Pass when validate --specs --strict exits 0.
+- [ ] Lane 9. No gc.provider_panel in formulas. Save `why-schema-l9.png`. Pass when rg is empty.
+- [ ] Lane 10. Pack tests 52 or more pass. Save `why-schema-l10.png`. Pass when pytest reports passed.
+
+**Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+
+- [ ] Metric. Wall time of dest standing plus delivery evidence at trunk and head.
+- [ ] Probe. `/usr/bin/time -f %e python scripts/check_pstack_dest_standing.py` then delivery evidence, run at trunk and at the head, interleaved. Both sides must produce the metric.
+- [ ] Baseline. Record the trunk seconds first.
+- [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if dest standing exceeds 5s.
 
 **Review gate.** None.
 
@@ -297,4 +401,4 @@ Identity split (pack name tommy-ca/pstack vs catalog pstack) stays dest. Check m
 
 ## Appendix D. Links and reading list
 
-Read `pstack/ARCHITECTURE.md`, `openspec/specs/gascity-provider-panel/spec.md`, `openspec/specs/pstack-gascity-pack/spec.md`, `docs/pstack-program-plan.md`. how-expand and panel-stamp get `skills/how/SKILL.md` and `skills/interrogate/SKILL.md`. Trail is local `.audit/pstack-parity.tsv` per `skills/show-me-your-work/SKILL.md`. Issue https://github.com/tommy-ca/gascity-packs/issues/10 is why-schema honesty after how-schema. It is not a fifth program PR.
+Read `pstack/ARCHITECTURE.md`, `openspec/specs/gascity-provider-panel/spec.md`, `openspec/specs/pstack-gascity-pack/spec.md`, `docs/pstack-program-plan.md`. how-expand and panel-stamp get `skills/how/SKILL.md` and `skills/interrogate/SKILL.md`. Trail is local `.audit/pstack-parity.tsv` per `skills/show-me-your-work/SKILL.md`. Issue https://github.com/tommy-ca/gascity-packs/issues/11 is evidence-contract dest honesty. Issue https://github.com/tommy-ca/gascity-packs/issues/10 is why-schema after how-schema. Both are program PR ids.

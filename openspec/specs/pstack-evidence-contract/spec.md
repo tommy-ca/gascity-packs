@@ -8,29 +8,42 @@ Define canonical principle-enforcement declarations and fail-closed evidence val
 
 ### Requirement: Required artifact declarations fail closed
 
-The shared build-artifact validator MUST treat an explicitly present
+The pack schema validator MUST treat an explicitly present
 `required_fields` schema declaration as a non-empty list of non-empty field
-paths. For every declared required field, the artifact MUST provide a
-non-empty scalar or container value. The validator MUST retain the
-execution-metadata guard for forbidden owner/persona/role leaves in
-`required_front_matter`; namespaced domain fields in `required_fields` remain
+paths. `pstack/scripts/validate_pstack_schemas.py` owns that list-shape check
+through `require_string_list`. The shared build-artifact validator MUST NOT
+own `required_fields`. The shared validator MUST fail closed for empty
+strings on keys listed in `required_front_matter`.
+`gascity/assets/scripts/validate_build_artifact.py` owns that non-empty
+string check. The shared validator MUST retain the execution-metadata guard
+for forbidden owner, persona, or role leaves in `required_front_matter`.
+Namespaced domain fields that appear only in `required_fields` remain
 domain data and are not subject to that execution-metadata blacklist.
+Decision domain keys MUST stay in `required_fields` and MUST NOT be added
+to `required_front_matter`.
 
 #### Scenario: Empty required-field schema declarations are rejected
 
 - **GIVEN** a custom schema that explicitly declares `required_fields: []`, a non-list value, or a list containing a blank/non-string field path
-- **WHEN** the schema is loaded by the shared validator
-- **THEN** validation fails with a schema-definition error
+- **WHEN** the schema is loaded by `pstack/scripts/validate_pstack_schemas.py`
+- **THEN** validation fails with a schema-definition error that `required_fields` must be a non-empty list of non-empty strings
 
-#### Scenario: Empty required-field values are rejected
+#### Scenario: Empty required_front_matter values are rejected
 
-- **GIVEN** a valid schema with a required field
-- **WHEN** an artifact supplies that field as whitespace, an empty list, or an empty mapping
-- **THEN** validation fails with a required-field non-empty error
+- **GIVEN** a valid `pstack.explanation.v1` schema whose `overview` key is listed in `required_front_matter`
+- **WHEN** an artifact supplies `overview` as whitespace
+- **THEN** the shared build-artifact validator fails with a front-matter non-empty error
+
+#### Scenario: Empty required_fields values that are not front matter stay accepted
+
+- **GIVEN** a valid `pstack.decision.v1` schema whose `subtraction` key is listed only in `required_fields`
+- **WHEN** an artifact supplies empty `subtraction`
+- **THEN** the shared build-artifact validator accepts the artifact
+- **AND** the pack schema validator still requires `subtraction` in the `required_fields` list
 
 #### Scenario: Domain owner fields remain valid
 
-- **GIVEN** a namespaced PStack schema that requires the domain field `owner`
+- **GIVEN** a namespaced PStack schema that requires the domain field `owner` only in `required_fields`
 - **WHEN** the artifact supplies a non-empty owner value
 - **THEN** the shared validator accepts the field
 - **AND** the execution-metadata blacklist still rejects a forbidden `required_front_matter` leaf such as `producer.role`
@@ -38,22 +51,24 @@ domain data and are not subject to that execution-metadata blacklist.
 ### Requirement: Decision artifacts record explicit subtraction outcomes
 
 The PStack decision artifact contract MUST allow a trivial subtraction assessment
-to use `status: no_removal_opportunity`. The artifact MUST still contain a
-non-empty `subtraction` field and a non-empty `rationale`, and the shared
-validator MUST fail closed for missing or empty values.
+to use `status: no_removal_opportunity`. The pack schema MUST still declare
+`subtraction` and `rationale` in `required_fields`. Those keys MUST NOT move
+into `required_front_matter`. The shared validator MUST NOT fail closed on
+empty `subtraction` this turn.
 
 #### Scenario: No-removal decision validates
 
 - **GIVEN** a valid `pstack.decision.v1` artifact whose subtraction found no removable complexity
 - **WHEN** the shared validator checks the artifact
 - **THEN** `status: no_removal_opportunity` is accepted
-- **AND** non-empty `subtraction` and `rationale` values are required
+- **AND** empty `subtraction` does not fail as a `required_front_matter` non-empty string
 
-#### Scenario: Invalid no-removal decision fails closed
+#### Scenario: Empty subtraction stays a pack-schema list entry
 
-- **GIVEN** a `pstack.decision.v1` artifact with the no-removal status and an empty subtraction or rationale
+- **GIVEN** a `pstack.decision.v1` artifact with the no-removal status and empty `subtraction`
 - **WHEN** the shared validator checks the artifact
-- **THEN** validation fails with the required-field diagnostic
+- **THEN** validation succeeds
+- **AND** `pstack/schemas/decision.v1.yaml` still lists `subtraction` under `required_fields`
 
 ### Requirement: Validator portability is preserved
 

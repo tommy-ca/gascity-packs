@@ -1464,6 +1464,27 @@ evidence_fields:
         assert missing.returncode != 0
         assert "producer.attempt" in missing.stderr
         (schemas / "fixture.v1.yaml").write_text(valid, encoding="utf-8")
+        empty_fields = valid.replace(
+            "required_fields:\n  - playbook\n",
+            "required_fields: []\n",
+        )
+        (schemas / "fixture.v1.yaml").write_text(empty_fields, encoding="utf-8")
+        empty = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts/validate_pstack_schemas.py"),
+                "--schemas",
+                str(schemas),
+                "--formulas",
+                str(formulas),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert empty.returncode != 0
+        assert "required_fields must be a non-empty list of non-empty strings" in empty.stderr
+        (schemas / "fixture.v1.yaml").write_text(valid, encoding="utf-8")
         (formulas / "bad.formula.toml").write_text(
             """formula = "bad"
 version = 1
