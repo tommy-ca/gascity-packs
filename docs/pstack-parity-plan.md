@@ -30,9 +30,9 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 - [ ] From this parent session, spawn one owner per PR with `spawn_subagent` (`isolation: "worktree"`). Depth is 1. Owners do not spawn.
 - [ ] Follow this dependency graph. Start dependent work only after its parent merges, or base it on the parent branch when the execution playbook stacks.
-  - [ ] how-schema and method-report are independent and first. Both branch from `feat/pstack-pack-honesty`.
-  - [ ] evidence-contract after method-report. It is independent and branches from `feat/pstack-pack-honesty`.
-  - [ ] why-schema after how-schema. It is before how-expand.
+  - [ ] how-schema landed on feat. method-report alias cut landed on feat. Both were independent first units from `feat/pstack-pack-honesty`.
+  - [ ] evidence-contract landed on feat after method-report alias cut. It is independent and stays on `feat/pstack-pack-honesty`.
+  - [ ] why-schema landed on feat after how-schema. It is before how-expand.
   - [ ] how-expand after how-schema.
   - [ ] panel-stamp after how-schema. It waits on a Gas City consumer of `gc.provider_panel` before formula keys.
 - [ ] Hold the file boundaries. All PR ids touch only `pstack/`, `docs/pstack-*`, `openspec/specs/pstack-*`, `scripts/check_pstack_*`, `scripts/pstack_*`, and `tests/test_pstack_*`. They do not edit `.github/` or `gascity/`.
@@ -127,7 +127,8 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Build.**
 
-- [ ] Delete empty aliases `pstack-perf-issue`, `pstack-refactoring`, and `pstack-shipping`. Fold remaining collect/write reports into `pstack-method-report` keyed by `pstack.playbook`.
+- [x] Delete empty aliases `pstack-perf-issue`, `pstack-refactoring`, and `pstack-shipping`.
+- [ ] Fold remaining collect/write reports into `pstack-method-report` keyed by `pstack.playbook`.
 
 **You see.**
 
