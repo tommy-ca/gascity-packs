@@ -128,7 +128,7 @@ CURSOR_PLAYBOOK_FORMULAS = {
     "authoring-a-skill": "pstack-authoring-a-skill",
     "eval": "pstack-eval",
     "babysit": "pstack-babysit",
-    "shipping": "pstack-shipping",
+    "shipping": "pstack-build",
     "autonomous-run": "pstack-autonomous-run",
     "orchestrate": "pstack-orchestrate",
     "autopilot-full": "pstack-autopilot-full",
@@ -149,8 +149,9 @@ def test_cursor_playbooks_have_formulas_or_are_named_unsupported() -> None:
     assert playbooks == set(CURSOR_PLAYBOOK_FORMULAS) | CURSOR_PLAYBOOKS_UNSUPPORTED
     for formula in CURSOR_PLAYBOOK_FORMULAS.values():
         assert (ROOT / "formulas" / f"{formula}.formula.toml").is_file()
-    assert (ROOT / "formulas/pstack-perf-issue.formula.toml").is_file()
-    assert (ROOT / "formulas/pstack-refactoring.formula.toml").is_file()
+    assert not (ROOT / "formulas/pstack-perf-issue.formula.toml").is_file()
+    assert not (ROOT / "formulas/pstack-refactoring.formula.toml").is_file()
+    assert not (ROOT / "formulas/pstack-shipping.formula.toml").is_file()
     architecture = (ROOT / "ARCHITECTURE.md").read_text(encoding="utf-8")
     for name in CURSOR_PLAYBOOKS_UNSUPPORTED:
         assert f"`{name}`" in architecture
@@ -461,7 +462,7 @@ def test_variant_prompt_bindings_and_shipping_publish_route() -> None:
         assert step["description_file"] == description_file
         assert "description_file" not in step.get("check", {}).get("check", {})
 
-    shipping = {step["id"]: step for step in resolve_formula("pstack-shipping")["steps"]}
+    shipping = {step["id"]: step for step in resolve_formula("pstack-build")["steps"]}
     assert shipping["review"]["expand"] == "pstack-build-review"
     assert shipping["finalize"]["metadata"]["gc.run_target"] == "gc.run-operator"
     assert shipping["publish"]["metadata"]["gc.run_target"] == "gc.publisher"

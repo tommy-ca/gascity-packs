@@ -119,9 +119,9 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 **Files.**
 
 - [ ] Edit `pstack/formulas/` method-report clones.
-- [ ] Edit `pstack/mappings/playbooks.toml`.
-- [ ] Edit `pstack/tests/test_pstack_pack.py`.
-- [ ] Keep formula count at or above 28.
+- [x] Edit `pstack/mappings/playbooks.toml`.
+- [x] Edit `pstack/tests/test_pstack_pack.py`.
+- [x] Keep formula count at or above 28.
 
 **Build.**
 
@@ -129,7 +129,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **You see.**
 
-- [ ] `ls pstack/formulas/*.formula.toml | wc -l` stays at or above 28 and the alias files are gone.
+- [x] `ls pstack/formulas/*.formula.toml | wc -l` stays at or above 28 and the alias files are gone.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 

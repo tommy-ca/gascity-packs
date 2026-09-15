@@ -72,9 +72,8 @@ gc rig add .
      --var drain_policy=separate
    ```
 
-Run `pstack-feature`, `pstack-bug-fix`, `pstack-refactor` (alias
-`pstack-refactoring`), `pstack-migration`, `pstack-perf` (alias
-`pstack-perf-issue`), or `pstack-prototype` for explicit change shapes.
+Run `pstack-feature`, `pstack-bug-fix`, `pstack-refactor`,
+`pstack-migration`, `pstack-perf`, or `pstack-prototype` for explicit change shapes.
 Method formulas `pstack-investigation`, `pstack-hillclimb`,
 `pstack-runtime-forensics`, `pstack-trace-forensics`, `pstack-eval`,
 `pstack-authoring-a-skill`, `pstack-session-pickup`,

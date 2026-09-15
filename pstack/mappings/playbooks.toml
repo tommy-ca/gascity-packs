@@ -53,7 +53,7 @@ formula = "pstack-babysit"
 class = "build-factory"
 
 [playbooks.shipping]
-formula = "pstack-shipping"
+formula = "pstack-build"
 class = "build-factory"
 
 [playbooks.autonomous-run]
