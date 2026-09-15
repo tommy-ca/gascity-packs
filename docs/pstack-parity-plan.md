@@ -1,6 +1,6 @@
 # PStack Cursor parity plan
 
-City operators get Gas City slings that match Cursor pstack methods without a second runtime. The pack stays a mapping pack. It does not stamp `gc.provider_panel` until a Gas City consumer of `gc.provider_panel` exists. PR order is how-schema, method-report, evidence-contract, why-schema, how-expand, panel-stamp.
+City operators get Gas City slings that match Cursor pstack methods without a second runtime. The pack stays a mapping pack. Dest remaining-units stay on `docs/pstack-program-plan.md` as `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`. This parity plan keeps six PR ids. how-schema, method-report alias-cut, evidence-contract, and why-schema landed on feat. Remaining method-report fold, how-expand, and panel-stamp stay dest-wait. Spawn none of those ids this leftover. The pack does not stamp `gc.provider_panel` until a Gas City consumer of `gc.provider_panel` exists.
 
 ## How to read this
 
@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md, PR ids how-schema method-report evidence-contract why-schema how-expand panel-stamp, verification rule, operator lands, done when dest levers stay green and panel keys stay omitted until a Gas City consumer of gc.provider_panel exists."
+- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md. Spawn none of the six parity PR ids this leftover. Spawn none of dest remaining-units ids this leftover. PR ids how-schema method-report evidence-contract why-schema how-expand panel-stamp stay the skeleton. how-schema, method-report alias-cut, evidence-contract, and why-schema landed on feat. Remaining method-report collect/write fold waits dest sequential pstack-how, pstack-why, and pstack-architect. how-expand and panel-stamp stay dest-wait. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Operator lands. Done when dest levers stay green and panel keys stay omitted until a Gas City consumer of gc.provider_panel exists."
 - [ ] Read these from the installed plugin at program start. Re-read them at every tick.
   - [ ] `git show origin/main:skills/poteto-mode/playbooks/autopilot-stack.md`
   - [ ] `git show origin/main:skills/swarm/SKILL.md`
@@ -23,18 +23,19 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] `git show origin/main:skills/poteto-mode/playbooks/opening-a-pr.md`
   - [ ] `git show origin/main:skills/how/SKILL.md`
 - [ ] Arm the 30-minute audit tick with `scheduler_create` (`interval: "30m"`, `fire_immediately: true`) and `monitor` for event wakes. Never leave the cadence to memory.
-- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from trunk and the persisted plan. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by side effects only. Stand down a stuck lane and dispatch its replacement now. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
+- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from trunk and the persisted plan. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by side effects only. Do not dispatch replacements for landed-on-feat or dest-wait ids. Stand down a stuck live lane and dispatch its replacement now. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
 - [ ] On the operator's hold or stand-down, send every owner a zero-writes order at once.
 
 ### Spawn owners
 
-- [ ] From this parent session, spawn one owner per PR with `spawn_subagent` (`isolation: "worktree"`). Depth is 1. Owners do not spawn.
-- [ ] Follow this dependency graph. Start dependent work only after its parent merges, or base it on the parent branch when the execution playbook stacks.
-  - [ ] how-schema landed on feat. method-report alias cut landed on feat. Both were independent first units from `feat/pstack-pack-honesty`.
-  - [ ] evidence-contract landed on feat after method-report alias cut. It is independent and stays on `feat/pstack-pack-honesty`.
-  - [ ] why-schema landed on feat after how-schema. It is before how-expand.
-  - [ ] how-expand after how-schema.
-  - [ ] panel-stamp after how-schema. It waits on a Gas City consumer of `gc.provider_panel` before formula keys.
+- [ ] From this parent session, spawn none of the six parity PR ids this leftover. Spawn none of dest remaining-units ids this leftover. Depth is 1. Owners do not spawn. Unchecked Verify and Merge boxes on landed PR sections wait on PR 1 evidence. They are not a Build spawn.
+- [ ] Follow this dependency graph. Do not start dest-wait units. Dest remaining-units stay on `docs/pstack-program-plan.md` as `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`. This leftover does not publish and does not spawn those ids.
+  - [x] how-schema landed on feat. Do not spawn. Write is `pstack.explanation.v1`. Sequential collect then write stays.
+  - [x] method-report alias cut landed on feat. Do not spawn. Empty aliases gone. Formula count is 37. Floor 28 holds. Remaining collect/write fold stays dest-wait inside this PR section.
+  - [x] evidence-contract landed on feat. Do not spawn. Pack schema load owns `required_fields` list shape.
+  - [x] why-schema landed on feat. Do not spawn. Write is `pstack.explanation.v1`. Sequential collect then write stays.
+  - [ ] how-expand after how-schema. Dest-wait. Dest still locks sequential investigator collect then write. Do not start.
+  - [ ] panel-stamp after how-schema. Dest-wait on a Gas City consumer of `gc.provider_panel` before formula keys. Dest remaining-units next after proven sling is `pr-pstack-publish`. Do not start.
 - [ ] Hold the file boundaries. All PR ids touch only `pstack/`, `docs/pstack-*`, `openspec/specs/pstack-*`, `scripts/check_pstack_*`, `scripts/pstack_*`, and `tests/test_pstack_*`. They do not edit `.github/` or `gascity/`.
 - [ ] Hold the review gate. how-expand and panel-stamp change an interaction. They wait for the operator's review in chat with screenshots and a video before merge.
 
@@ -120,7 +121,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Files.**
 
-- [ ] Edit `pstack/formulas/` method-report clones.
+- [ ] WAIT. Do not edit dest-named sequential `pstack-how`, `pstack-why`, or `pstack-architect`, and do not create `pstack/formulas/pstack-method-report.formula.toml` while dest still names those three as sequential investigator formulas.
 - [x] Edit `pstack/mappings/playbooks.toml`.
 - [x] Edit `pstack/tests/test_pstack_pack.py`.
 - [x] Keep formula count at or above 28.
@@ -128,7 +129,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 **Build.**
 
 - [x] Delete empty aliases `pstack-perf-issue`, `pstack-refactoring`, and `pstack-shipping`.
-- [ ] Fold remaining collect/write reports into `pstack-method-report` keyed by `pstack.playbook`.
+- [ ] WAIT. Do not fold remaining collect/write reports into `pstack-method-report` keyed by `pstack.playbook` while dest still names sequential `pstack-how`, `pstack-why`, and `pstack-architect`. Alias-cut lanes are not this proof. Fold stays blocked while `openspec/specs/pstack-gascity-pack/spec.md` still says how, why, and architect stay sequential investigator formulas, and pack tests still lock collect then write on how, why, and architect. Do not create `pstack/formulas/pstack-method-report.formula.toml`. Dest standing must still print `ok dest standing` on any later fold tree. That green line is an invariant, not the wait.
 
 **You see.**
 
@@ -271,19 +272,19 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Expand how and why as personas (how-expand)
 
-**Depends on.** how-schema
+**Depends on.** how-schema. Dest sequential investigator lock on how and why. Do not start this leftover.
 
 **Files.**
 
-- [ ] Edit `pstack/formulas/pstack-how.formula.toml`.
-- [ ] Edit `pstack/formulas/pstack-why.formula.toml`.
-- [ ] Create expansion assets under `pstack/assets/workflows/`.
-- [ ] Edit dest Gherkin that today locks sequential investigator collect/write.
-- [ ] Edit `pstack/tests/test_pstack_pack.py`.
+- [ ] WAIT. Do not edit `pstack/formulas/pstack-how.formula.toml` while dest locks sequential investigator collect then write.
+- [ ] WAIT. Do not edit `pstack/formulas/pstack-why.formula.toml` while dest locks sequential investigator collect then write.
+- [ ] WAIT. Do not create expansion assets under `pstack/assets/workflows/` this leftover.
+- [ ] WAIT. Do not edit dest Gherkin that today locks sequential investigator collect/write.
+- [ ] WAIT. Do not edit `pstack/tests/test_pstack_pack.py` for persona expansion this leftover.
 
 **Build.**
 
-- [ ] Replace how and why two-step investigator graphs with `type = "expansion"` persona lanes on existing agents. Do not stamp `gc.provider_panel`.
+- [ ] WAIT. Replace how and why two-step investigator graphs with `type = "expansion"` persona lanes on existing agents only after dest no longer locks sequential investigator collect then write. Do not stamp `gc.provider_panel`. Do not start this leftover.
 
 **You see.**
 
@@ -328,19 +329,19 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Stamp provider panel after panel consumer (panel-stamp)
 
-**Depends on.** how-schema
+**Depends on.** how-schema. Dest remaining-units after `pr-pstack-publish` and a Gas City consumer of `gc.provider_panel`. Do not start this leftover.
 
 **Files.**
 
-- [ ] Edit `pstack/formulas/pstack-arena.formula.toml`.
-- [ ] Edit `pstack/formulas/pstack-interrogate.formula.toml`.
-- [ ] Edit `pstack/formulas/pstack-swarm.formula.toml`.
-- [ ] Edit dest remaining-units omit-panel sentences in the same wave as the stamp.
-- [ ] Edit dest standing and delivery evidence omit-panel FilePred.
+- [ ] WAIT. Do not edit `pstack/formulas/pstack-arena.formula.toml` until a Gas City consumer of `gc.provider_panel` exists.
+- [ ] WAIT. Do not edit `pstack/formulas/pstack-interrogate.formula.toml` until a Gas City consumer of `gc.provider_panel` exists.
+- [ ] WAIT. Do not edit `pstack/formulas/pstack-swarm.formula.toml` until a Gas City consumer of `gc.provider_panel` exists.
+- [ ] WAIT. Do not edit dest remaining-units omit-panel sentences until that consumer exists.
+- [ ] WAIT. Do not edit dest standing and delivery evidence omit-panel FilePred until that consumer exists.
 
 **Build.**
 
-- [ ] Stamp `gc.provider_panel` and `gc.child_artifact_path_template` only after a Gas City consumer of `gc.provider_panel` exists. Delete shared `.gc/pstack/arena-candidate.md` in the same wave.
+- [ ] WAIT. Stamp `gc.provider_panel` and `gc.child_artifact_path_template` only after a Gas City consumer of `gc.provider_panel` exists. Delete shared `.gc/pstack/arena-candidate.md` in the same wave. Dest remaining-units next after sling is `pr-pstack-publish`. Do not start this leftover.
 
 **You see.**
 
@@ -390,16 +391,16 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Appendix A. Prototype evidence
 
-No new prototype ran in this leftover. Prior arena on PR #1 scored sequential collapse 15, expansion fidelity 15, thinner wrap 14. Lead pick for HEAD dest is sequential mapping. how-expand is the later leftover. Panel stamp stays blocked until a Gas City consumer of `gc.provider_panel` exists. Unproven is a live Gas City cook of `gc.provider_panel`.
+No new prototype ran in this leftover. Topology forks went to arena, not throwaway code. Swarm workers A-D triaged issues 2-11 at HEAD `0672191`. Arena candidates A, B, and C all picked spawn-none. Cross-judge scored A and B 12, C 11. Parent base is B with A dest-id fence and verification-rule Arm string, plus C WAIT Files and Build boxes. Interrogate A, B, and C all flagged the inverted dest-standing fold latch and live how-expand/panel-stamp Files. Those grafts landed in this file. Prior arena on PR #1 scored sequential collapse 15, expansion fidelity 15, thinner wrap 14. Lead pick for HEAD dest is sequential mapping. how-expand is dest-wait. Panel stamp stays blocked until a Gas City consumer of `gc.provider_panel` exists. Unproven is a live Gas City cook of `gc.provider_panel`.
 
 ## Appendix B. Alternatives rejected
 
-Full Cursor N-model in formula TOML lost. Fake N-model with extra run_targets and city patches lost. Stamp from Gherkin alone lost. Thinner wrap that deletes how/why/architect slings lost. Restamp of pin 29c84db lost. Edits to gastownhall CI lost.
+Full Cursor N-model in formula TOML lost. Fake N-model with extra run_targets and city patches lost. Stamp from Gherkin alone lost. Thinner wrap that deletes how/why/architect slings lost. Restamp of pin 29c84db lost. Edits to gastownhall CI lost. Rewrite dest remaining-units onto issues 3-11 lost. Dropping landed PR sections without proving host `check-plan.mjs` lost. Treating remaining method-report fold as live Build lost. Starting how-expand because how-schema landed on feat lost. Treating host sling as the next dest click lost. Next dest click after proven sling is `pr-pstack-publish`. This leftover does not publish.
 
 ## Appendix C. Risks
 
-Identity split (pack name tommy-ca/pstack vs catalog pstack) stays dest. Check may fail validate_registry --require-git. Owner watches that job and does not restamp. Blacksmith queue cancelled PR #1 Check after 24h. Owner watches runner pickup. how-expand changes dest sequential lock. Owner waits for operator review.
+Identity split (pack name tommy-ca/pstack vs catalog pstack) stays dest. Check may fail validate_registry --require-git. Owner watches that job and does not restamp. Blacksmith queue cancelled PR #1 Check after 24h. Owner watches runner pickup. how-expand changes dest sequential lock. Owner waits for operator review. Standing orders that list six PR ids without spawn-none will re-arm landed units. Owner persists the Arm string in this file. Dest remaining-units and this parity graph share panel-stamp as a tail. Dest wins. Do not start `#6` from how-schema land. GitHub issue bodies may still name ancestor `d7b206c`. Workspace HEAD after this leftover is the docs SHA. Tracker honesty is dest-safe and is not a dest remaining-units rewrite.
 
 ## Appendix D. Links and reading list
 
-Read `pstack/ARCHITECTURE.md`, `openspec/specs/gascity-provider-panel/spec.md`, `openspec/specs/pstack-gascity-pack/spec.md`, `docs/pstack-program-plan.md`. how-expand and panel-stamp get `skills/how/SKILL.md` and `skills/interrogate/SKILL.md`. Trail is local `.audit/pstack-parity.tsv` per `skills/show-me-your-work/SKILL.md`. Issue https://github.com/tommy-ca/gascity-packs/issues/11 is evidence-contract dest honesty. Issue https://github.com/tommy-ca/gascity-packs/issues/10 is why-schema after how-schema. Both are program PR ids.
+Read `pstack/ARCHITECTURE.md`, `openspec/specs/gascity-provider-panel/spec.md`, `openspec/specs/pstack-gascity-pack/spec.md`, `docs/pstack-program-plan.md`. TRACEABILITY live program is `docs/pstack-program-plan.md`. Live plan checker is host plugin `/home/tommyk/.grok/skills/poteto-mode/scripts/check-plan.mjs`. Dest standing is `python scripts/check_pstack_dest_standing.py`. Delivery evidence and pack tests wrap `mise exec npm:@fission-ai/openspec@1.12.0`. how-expand and panel-stamp get `skills/how/SKILL.md` and `skills/interrogate/SKILL.md` when dest authorizes a start. Trail is local `.audit/pstack-parity.tsv` per `skills/show-me-your-work/SKILL.md`. Epic https://github.com/tommy-ca/gascity-packs/issues/2 tracks this parity graph. Issues 3, 4 alias-cut, 10, and 11 landed on feat. Issues 5 and 6 are dest-wait. Remaining issue 4 fold is dest-wait. Issues 7, 8, and 9 stay later with no PR sections.
