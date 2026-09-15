@@ -15,7 +15,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md. Spawn none of the six parity PR ids this leftover. Spawn none of dest remaining-units ids this leftover. PR ids how-schema method-report evidence-contract why-schema how-expand panel-stamp stay the skeleton. how-schema, method-report alias-cut, evidence-contract, and why-schema landed on feat. Remaining method-report collect/write fold waits dest sequential pstack-how, pstack-why, and pstack-architect. how-expand and panel-stamp stay dest-wait. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Operator lands. Done when dest levers stay green and panel keys stay omitted until a Gas City consumer of gc.provider_panel exists."
+- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md. Spawn none of the six parity PR ids this leftover. Spawn none of dest remaining-units ids this leftover. Dest remaining-units stay on docs/pstack-program-plan.md as pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. PR ids how-schema method-report evidence-contract why-schema how-expand panel-stamp stay the skeleton. how-schema, method-report alias-cut, evidence-contract, and why-schema landed on feat. Remaining method-report collect/write fold waits dest sequential how, why, and architect. how-expand and panel-stamp stay dest-wait. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Operator lands. Done when dest levers stay green and panel keys stay omitted until a Gas City consumer of gc.provider_panel exists."
 - [ ] Read these from the installed plugin at program start. Re-read them at every tick.
   - [ ] `git show origin/main:skills/poteto-mode/playbooks/autopilot-stack.md`
   - [ ] `git show origin/main:skills/swarm/SKILL.md`
@@ -23,19 +23,19 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
   - [ ] `git show origin/main:skills/poteto-mode/playbooks/opening-a-pr.md`
   - [ ] `git show origin/main:skills/how/SKILL.md`
 - [ ] Arm the 30-minute audit tick with `scheduler_create` (`interval: "30m"`, `fire_immediately: true`) and `monitor` for event wakes. Never leave the cadence to memory.
-- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from trunk and the persisted plan. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by side effects only. Do not dispatch replacements for landed-on-feat or dest-wait ids. Stand down a stuck live lane and dispatch its replacement now. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
+- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from trunk and the persisted plan. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by side effects only. This leftover has no live spawn lanes. Do not dispatch replacements for landed-on-feat or dest-wait ids. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
 - [ ] On the operator's hold or stand-down, send every owner a zero-writes order at once.
 
 ### Spawn owners
 
-- [ ] From this parent session, spawn none of the six parity PR ids this leftover. Spawn none of dest remaining-units ids this leftover. Depth is 1. Owners do not spawn. Unchecked Verify and Merge boxes on landed PR sections wait on PR 1 evidence. They are not a Build spawn.
+- [ ] From this parent session, spawn none of the six parity PR ids this leftover. Spawn none of dest remaining-units ids this leftover. Depth is 1. Owners do not spawn. Unchecked Verify and Merge boxes on landed PR sections wait on GitHub https://github.com/tommy-ca/gascity-packs/pull/1 evidence. They are not a Build spawn.
 - [ ] Follow this dependency graph. Do not start dest-wait units. Dest remaining-units stay on `docs/pstack-program-plan.md` as `pr-pstack-land-honesty` then `pr-pstack-publish` then `pr-pstack-panel-stamp`. This leftover does not publish and does not spawn those ids.
   - [x] how-schema landed on feat. Do not spawn. Write is `pstack.explanation.v1`. Sequential collect then write stays.
   - [x] method-report alias cut landed on feat. Do not spawn. Empty aliases gone. Formula count is 37. Floor 28 holds. Remaining collect/write fold stays dest-wait inside this PR section.
   - [x] evidence-contract landed on feat. Do not spawn. Pack schema load owns `required_fields` list shape.
   - [x] why-schema landed on feat. Do not spawn. Write is `pstack.explanation.v1`. Sequential collect then write stays.
-  - [ ] how-expand after how-schema. Dest-wait. Dest still locks sequential investigator collect then write. Do not start.
-  - [ ] panel-stamp after how-schema. Dest-wait on a Gas City consumer of `gc.provider_panel` before formula keys. Dest remaining-units next after proven sling is `pr-pstack-publish`. Do not start.
+  - [ ] WAIT. how-expand after how-schema. Dest-wait. Dest still locks sequential investigator collect then write. Do not start.
+  - [ ] WAIT. panel-stamp after how-schema. Dest-wait on a Gas City consumer of `gc.provider_panel` before formula keys. Dest remaining-units next after proven sling is `pr-pstack-publish`. Do not start.
 - [ ] Hold the file boundaries. All PR ids touch only `pstack/`, `docs/pstack-*`, `openspec/specs/pstack-*`, `scripts/check_pstack_*`, `scripts/pstack_*`, and `tests/test_pstack_*`. They do not edit `.github/` or `gascity/`.
 - [ ] Hold the review gate. how-expand and panel-stamp change an interaction. They wait for the operator's review in chat with screenshots and a video before merge.
 
@@ -72,7 +72,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 - [x] Edit `pstack/formulas/pstack-how.formula.toml`.
 - [x] Edit `openspec/specs/pstack-gascity-pack/spec.md`.
 - [x] Edit `pstack/tests/test_pstack_pack.py`.
-- [ ] Edit `scripts/check_pstack_dest_standing.py` if dest remaining-units names the schema.
+- [ ] WAIT. Do not edit `scripts/check_pstack_dest_standing.py` for explanation.v1. Dest remaining-units does not name that schema.
 
 **Build.**
 
@@ -117,11 +117,11 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Fold method-report clones (method-report)
 
-**Depends on.** None.
+**Depends on.** None. Remaining fold waits dest sequential how, why, and architect. Do not start the fold this leftover.
 
 **Files.**
 
-- [ ] WAIT. Do not edit dest-named sequential `pstack-how`, `pstack-why`, or `pstack-architect`, and do not create `pstack/formulas/pstack-method-report.formula.toml` while dest still names those three as sequential investigator formulas.
+- [ ] WAIT. Do not edit dest-named sequential `pstack-how`, `pstack-why`, or `pstack-architect`, and do not create `pstack/formulas/pstack-method-report.formula.toml` while dest still says how, why, and architect stay sequential investigator formulas.
 - [x] Edit `pstack/mappings/playbooks.toml`.
 - [x] Edit `pstack/tests/test_pstack_pack.py`.
 - [x] Keep formula count at or above 28.
@@ -129,7 +129,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 **Build.**
 
 - [x] Delete empty aliases `pstack-perf-issue`, `pstack-refactoring`, and `pstack-shipping`.
-- [ ] WAIT. Do not fold remaining collect/write reports into `pstack-method-report` keyed by `pstack.playbook` while dest still names sequential `pstack-how`, `pstack-why`, and `pstack-architect`. Alias-cut lanes are not this proof. Fold stays blocked while `openspec/specs/pstack-gascity-pack/spec.md` still says how, why, and architect stay sequential investigator formulas, and pack tests still lock collect then write on how, why, and architect. Do not create `pstack/formulas/pstack-method-report.formula.toml`. Dest standing must still print `ok dest standing` on any later fold tree. That green line is an invariant, not the wait.
+- [ ] WAIT. Do not fold remaining collect/write reports into `pstack-method-report` keyed by `pstack.playbook` while dest still says how, why, and architect stay sequential investigator formulas. Alias-cut lanes are not this proof. Fold stays blocked while `openspec/specs/pstack-gascity-pack/spec.md` still contains that sentence, and pack tests still lock collect then write on how and why. Do not create `pstack/formulas/pstack-method-report.formula.toml`. Dest standing must still print `ok dest standing` on any later fold tree. That green line is an invariant, not the wait.
 
 **You see.**
 
@@ -288,24 +288,24 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **You see.**
 
-- [ ] `pstack-how` has `type = "expansion"` and no `gc.provider_panel`.
+- [ ] WAIT. Do not require `pstack-how` `type = "expansion"` this leftover.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Pack tests lock expansion without panel keys. Run pack pytest.
+- [ ] WAIT. Do not run expansion pack tests this leftover.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
 
-- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk is sequential how, record that and gate expansion plus dest standing ok. Save `how-expand-l1.png`. Pass when dest standing prints ok dest standing.
-- [ ] Lane 2. Delivery evidence. Save `how-expand-l2.png`. Pass when ok delivery evidence.
-- [ ] Lane 3. how formula type expansion. Save `how-expand-l3.png`. Pass when type = "expansion" is in the file.
-- [ ] Lane 4. No provider_panel. Save `how-expand-l4.png`. Pass when rg is empty.
-- [ ] Lane 5. why expansion. Save `how-expand-l5.png`. Pass when pstack-why has type = "expansion".
-- [ ] Lane 6. architect stays sequential until its own leftover. Save `how-expand-l6.png`. Pass when pstack-architect still has collect and write.
-- [ ] Lane 7. Omit-panel. Save `how-expand-l7.png`. Pass when ok omit-panel.
-- [ ] Lane 8. Pack name. Save `how-expand-l8.png`. Pass when ok pack-name.
-- [ ] Lane 9. Pin. Save `how-expand-l9.png`. Pass when ok pin.
-- [ ] Lane 10. Pytest. Save `how-expand-l10.png`. Pass when pytest reports passed.
+- [ ] Lane 1. WAIT. Regression lane against trunk. Run dest standing at trunk and head. Save `how-expand-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 2. WAIT. Delivery evidence. Save `how-expand-l2.png`. Pass when ok delivery evidence.
+- [ ] Lane 3. WAIT. how formula stays sequential. Save `how-expand-l3.png`. Pass when dest still says how stays a sequential investigator formula.
+- [ ] Lane 4. WAIT. No provider_panel. Save `how-expand-l4.png`. Pass when rg is empty.
+- [ ] Lane 5. WAIT. why stays sequential. Save `how-expand-l5.png`. Pass when pstack-why has no type = "expansion".
+- [ ] Lane 6. WAIT. architect stays sequential until its own leftover. Save `how-expand-l6.png`. Pass when pstack-architect still has collect and write.
+- [ ] Lane 7. WAIT. Omit-panel. Save `how-expand-l7.png`. Pass when ok omit-panel.
+- [ ] Lane 8. WAIT. Pack name. Save `how-expand-l8.png`. Pass when ok pack-name.
+- [ ] Lane 9. WAIT. Pin. Save `how-expand-l9.png`. Pass when ok pin.
+- [ ] Lane 10. WAIT. Pytest. Save `how-expand-l10.png`. Pass when pytest reports passed.
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
@@ -316,16 +316,16 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Review gate.** The operator reviews before merge.
 
-- [ ] Copy lane 3 screenshots into `/tmp/media/how-expand-review-type.png`.
-- [ ] Record a 30 to 60 second video of the change on the worktree child's real surface. Save it as `/tmp/media/how-expand-review.mp4`.
-- [ ] Post the screenshots and the video in chat. Stop at merge-ready. Wait for the operator's click.
+- [ ] WAIT. Do not copy how-expand screenshots this leftover.
+- [ ] WAIT. Do not record a how-expand review video this leftover.
+- [ ] WAIT. Do not post how-expand review media this leftover. The operator does not click.
 
 **Merge.**
 
-- [ ] Root's clean verdict at the exact head SHA.
-- [ ] Bugbot triage done.
-- [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the base-branch stack and the operator lands it bottom-up.
+- [ ] WAIT. Do not merge how-expand this leftover.
+- [ ] WAIT. Bugbot triage does not start.
+- [ ] WAIT. Do not rebase how-expand this leftover.
+- [ ] WAIT. The operator does not land how-expand this leftover.
 
 ## Stamp provider panel after panel consumer (panel-stamp)
 
@@ -345,24 +345,24 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **You see.**
 
-- [ ] Arena children write distinct paths and dest omit-panel is inverted only after a Gas City consumer of `gc.provider_panel` exists.
+- [ ] WAIT. Do not invert dest omit-panel this leftover.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Pack tests lock panel keys only when dest invert lands. Run pack pytest.
+- [ ] WAIT. Do not run panel-stamp pack tests this leftover.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
 
-- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk omits panel, record that and gate consumer evidence plus dest standing. Save `panel-stamp-l1.png`. Pass when dest standing prints ok dest standing.
-- [ ] Lane 2. Delivery evidence. Save `panel-stamp-l2.png`. Pass when ok delivery evidence.
-- [ ] Lane 3. Gas City consumer of `gc.provider_panel` documented. Save `panel-stamp-l3.png`. Pass when the PR body names the Gas City SHA that consumes the key.
-- [ ] Lane 4. Shared arena-candidate.md gone. Save `panel-stamp-l4.png`. Pass when that path is not in formulas.
-- [ ] Lane 5. child_artifact_path_template present. Save `panel-stamp-l5.png`. Pass when rg hits arena formula.
-- [ ] Lane 6. gascity/ still has no panel unless a Gas City consumer of `gc.provider_panel` landed there out of tree. Save `panel-stamp-l6.png`. Pass when this packs tree matches dest.
-- [ ] Lane 7. Pack name. Save `panel-stamp-l7.png`. Pass when ok pack-name.
-- [ ] Lane 8. Pin unchanged. Save `panel-stamp-l8.png`. Pass when ok pin.
-- [ ] Lane 9. No restamp. Save `panel-stamp-l9.png`. Pass when registry pin is 29c84db.
-- [ ] Lane 10. Pytest. Save `panel-stamp-l10.png`. Pass when pytest reports passed.
+- [ ] Lane 1. WAIT. Regression lane against trunk. Run dest standing at trunk and head. Save `panel-stamp-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 2. WAIT. Delivery evidence. Save `panel-stamp-l2.png`. Pass when ok delivery evidence.
+- [ ] Lane 3. WAIT. No Gas City consumer SHA in this leftover. Save `panel-stamp-l3.png`. Pass when formulas still omit `gc.provider_panel`.
+- [ ] Lane 4. WAIT. Shared arena-candidate.md may still exist. Save `panel-stamp-l4.png`. Pass when dest omit-panel still holds.
+- [ ] Lane 5. WAIT. child_artifact_path_template stays omitted. Save `panel-stamp-l5.png`. Pass when rg of that key in formulas is empty.
+- [ ] Lane 6. WAIT. gascity/ still has no panel. Save `panel-stamp-l6.png`. Pass when this packs tree matches dest.
+- [ ] Lane 7. WAIT. Pack name. Save `panel-stamp-l7.png`. Pass when ok pack-name.
+- [ ] Lane 8. WAIT. Pin unchanged. Save `panel-stamp-l8.png`. Pass when ok pin.
+- [ ] Lane 9. WAIT. No restamp. Save `panel-stamp-l9.png`. Pass when registry pin is 29c84db.
+- [ ] Lane 10. WAIT. Pytest. Save `panel-stamp-l10.png`. Pass when pytest reports passed.
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
@@ -373,25 +373,26 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Review gate.** The operator reviews before merge.
 
-- [ ] Copy lane 3 screenshots into `/tmp/media/panel-stamp-review-consumer.png`.
-- [ ] Record a 30 to 60 second video of the change on the worktree child's real surface. Save it as `/tmp/media/panel-stamp-review.mp4`.
-- [ ] Post the screenshots and the video in chat. Stop at merge-ready. Wait for the operator's click.
+- [ ] WAIT. Do not copy panel-stamp screenshots this leftover.
+- [ ] WAIT. Do not record a panel-stamp review video this leftover.
+- [ ] WAIT. Do not post panel-stamp review media this leftover. The operator does not click.
 
 **Merge.**
 
-- [ ] Root's clean verdict at the exact head SHA.
-- [ ] Bugbot triage done.
-- [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the base-branch stack and the operator lands it bottom-up.
+- [ ] WAIT. Do not merge panel-stamp this leftover.
+- [ ] WAIT. Bugbot triage does not start.
+- [ ] WAIT. Do not rebase panel-stamp this leftover.
+- [ ] WAIT. The operator does not land panel-stamp this leftover.
 
 ## Close the program
 
-- [ ] Every box above is checked with its evidence.
+- [ ] Leftover done when spawn-none holds, dest standing prints ok dest standing, and formulas omit `gc.provider_panel`. Dest-wait boxes stay WAIT.
+- [ ] Every later dest-authorized box above is checked with its evidence.
 - [ ] Reply to the operator with the report the execution playbook names.
 
 ## Appendix A. Prototype evidence
 
-No new prototype ran in this leftover. Topology forks went to arena, not throwaway code. Swarm workers A-D triaged issues 2-11 at HEAD `0672191`. Arena candidates A, B, and C all picked spawn-none. Cross-judge scored A and B 12, C 11. Parent base is B with A dest-id fence and verification-rule Arm string, plus C WAIT Files and Build boxes. Interrogate A, B, and C all flagged the inverted dest-standing fold latch and live how-expand/panel-stamp Files. Those grafts landed in this file. Prior arena on PR #1 scored sequential collapse 15, expansion fidelity 15, thinner wrap 14. Lead pick for HEAD dest is sequential mapping. how-expand is dest-wait. Panel stamp stays blocked until a Gas City consumer of `gc.provider_panel` exists. Unproven is a live Gas City cook of `gc.provider_panel`.
+No new prototype ran in this leftover. Topology forks went to arena, not throwaway code. Swarm workers A-D triaged issues 2-11 at HEAD `0672191`, then again at `2c97f9b`. Arena candidates A, B, and C all picked spawn-none. The recursive pass skipped a second arena because swarm found tracker SHA drift, not graph drift. Cross-judge scored A and B 12, C 11. Parent base is B with A dest-id fence and verification-rule Arm string, plus C WAIT Files and Build boxes. Interrogate of `2c97f9b` flagged dest-wait spawn-graph boxes and live/review/merge pass predicates that still required expansion or panel keys. Those grafts landed in this file. Prior arena on GitHub pull 1 scored sequential collapse 15, expansion fidelity 15, thinner wrap 14. Lead pick for HEAD dest is sequential mapping. how-expand is dest-wait. Panel stamp stays blocked until a Gas City consumer of `gc.provider_panel` exists. Unproven is a live Gas City cook of `gc.provider_panel`.
 
 ## Appendix B. Alternatives rejected
 
