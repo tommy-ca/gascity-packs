@@ -45,6 +45,9 @@ SLICES: tuple[tuple[str, str, tuple[str, ...], tuple[str, ...]], ...] = (
             "pending_review",
             "MUST wait on those receipts",
             "pstack.arena-runner",
+            "host sling then compiler then panel stamp",
+            "the program says the compiler is outside this packs tree",
+            "Gas City compiler is outside this packs tree",
         ),
     ),
     (
