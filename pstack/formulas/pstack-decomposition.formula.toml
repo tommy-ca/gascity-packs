@@ -1,0 +1,41 @@
+description = """
+PStack implementation of the decomposition-base methodology contract.
+"""
+formula = "pstack-decomposition"
+version = 1
+
+extends = ["decomposition-base"]
+target_required = false
+internal = true
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[[steps]]
+id = "lever-decision"
+title = "Choose the lever before fanout"
+metadata = { "gc.run_target" = "pstack.architect", "gc.build.artifact_schema" = "pstack.lever-decision.v1", "gc.build.artifact_path_keys" = "pstack.artifact_path", "pstack.artifact_schema" = "pstack.lever-decision.v1", "pstack.artifact_path" = ".gc/pstack/lever-decision.md" }
+description_file = "../assets/workflows/pstack-build/lever.md"
+
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "decompose"
+title = "Create implementation convoy"
+needs = ["lever-decision"]
+metadata = { "gc.run_target" = "gc.task-decomposer", "gc.build.artifact_schema" = "gc.build.decomposition.v1", "gc.build.artifact_path_keys" = "gc.build.decomposition_path,gc.var.decomposition_path" }
+description_file = "../assets/workflows/pstack-build/decompose.md"
+
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
