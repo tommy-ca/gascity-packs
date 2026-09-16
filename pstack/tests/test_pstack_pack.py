@@ -1185,6 +1185,38 @@ def test_delivery_evidence_runner_fails_closed(tmp_path: pathlib.Path) -> None:
     assert "openspec-archive" in live_change.stderr
 
 
+def load_delivery_evidence():
+    path = PACKS_ROOT / "scripts/check_pstack_delivery_evidence.py"
+    spec = importlib.util.spec_from_file_location("pstack_delivery_evidence", path)
+    if spec is None or spec.loader is None:
+        raise AssertionError("could not load delivery evidence runner")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_delivery_evidence_openspec_preflight_missing(monkeypatch) -> None:
+    mod = load_delivery_evidence()
+    monkeypatch.setattr(mod.shutil, "which", lambda _: None)
+    assert mod.openspec_cli_missing() == "mapping-gaps: openspec CLI missing"
+
+
+def test_delivery_evidence_openspec_preflight_inactive_shim(monkeypatch) -> None:
+    mod = load_delivery_evidence()
+    monkeypatch.setattr(mod.shutil, "which", lambda _: "/tmp/mise-shim-openspec")
+
+    class Proc:
+        returncode = 1
+        stdout = ""
+        stderr = "mise ERROR No version is set for shim: openspec\n"
+
+    monkeypatch.setattr(mod.subprocess, "run", lambda *_a, **_k: Proc())
+    miss = mod.openspec_cli_missing()
+    assert miss == "mapping-gaps: openspec CLI missing"
+    assert "mise ERROR" not in miss
+
+
 def test_method_formulas_keep_unconsumed_graph_operator_metadata() -> None:
     expected = {
         "pstack-swarm": (("fanout", "gc.graph_operator", "fanout"), ("fanin", "gc.graph_operator", "fanin")),

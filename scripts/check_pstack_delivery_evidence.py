@@ -14,6 +14,7 @@ from typing import NamedTuple
 PIN_COMMIT = "29c84db50f4d0d97ee548b3570094643e53973bf"
 PIN_HASH = "sha256:89aee457"
 PACK_NAME = "tommy-ca/pstack"
+OPENSPEC_MISS = "mapping-gaps: openspec CLI missing"
 
 
 class Cmd(NamedTuple):
@@ -29,6 +30,17 @@ class FilePred(NamedTuple):
 
 def default_root() -> Path:
     return Path(__file__).resolve().parents[1]
+
+
+def openspec_cli_missing() -> str | None:
+    path = shutil.which("openspec")
+    if path is None:
+        return OPENSPEC_MISS
+    proc = subprocess.run([path, "--version"], capture_output=True, text=True)
+    text = f"{proc.stdout}{proc.stderr}"
+    if proc.returncode != 0 or "No version is set for shim" in text:
+        return OPENSPEC_MISS
+    return None
 
 
 def schemas_argv(live: Path) -> tuple[str, ...]:
@@ -124,8 +136,10 @@ def steps(live: Path) -> tuple[Cmd | FilePred, ...]:
 
 
 def run_cmd(name: str, argv: tuple[str, ...], cwd: Path) -> str | None:
-    if name == "mapping-gaps" and shutil.which("openspec") is None:
-        return "mapping-gaps: openspec CLI missing"
+    if name == "mapping-gaps":
+        miss = openspec_cli_missing()
+        if miss is not None:
+            return miss
     proc = subprocess.run(argv, cwd=cwd, capture_output=True, text=True)
     if proc.returncode != 0:
         err = proc.stderr.strip() or proc.stdout.strip() or f"exit {proc.returncode}"

@@ -113,8 +113,8 @@ Each live lane runs in its own isolation worktree child at the PR head. Drive `m
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Wall time of `python pstack/scripts/validate_pstack_schemas.py` plus `python scripts/check_pstack_delivery_evidence.py` at trunk and head.
-- [ ] Probe. `/usr/bin/time -f %e python pstack/scripts/validate_pstack_schemas.py` then delivery evidence, run at trunk and at the head, interleaved. If trunk lacks the validator, record that and use HEAD wall time only.
+- [ ] Metric. Wall time of `python pstack/scripts/validate_pstack_schemas.py` plus `mise exec npm:@fission-ai/openspec@1.12.0 -- python scripts/check_pstack_delivery_evidence.py` at trunk and head.
+- [ ] Probe. `/usr/bin/time -f %e python pstack/scripts/validate_pstack_schemas.py` then `mise exec npm:@fission-ai/openspec@1.12.0 -- python scripts/check_pstack_delivery_evidence.py`, run at trunk and at the head, interleaved. If trunk lacks the validator, record that and use HEAD wall time only.
 - [ ] Baseline. Record the trunk seconds first.
 - [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if schema validation exceeds 5s.
 
@@ -217,8 +217,8 @@ Each live lane runs in its own isolation worktree child at the PR head. Drive `m
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Wall time of `python pstack/scripts/validate_pstack_schemas.py` plus `python scripts/check_pstack_delivery_evidence.py` at trunk and head.
-- [ ] Probe. `/usr/bin/time -f %e python pstack/scripts/validate_pstack_schemas.py` then delivery evidence, run at trunk and at the head, interleaved. If trunk lacks the validator, record that and use HEAD wall time only.
+- [ ] Metric. Wall time of `python pstack/scripts/validate_pstack_schemas.py` plus `mise exec npm:@fission-ai/openspec@1.12.0 -- python scripts/check_pstack_delivery_evidence.py` at trunk and head.
+- [ ] Probe. `/usr/bin/time -f %e python pstack/scripts/validate_pstack_schemas.py` then `mise exec npm:@fission-ai/openspec@1.12.0 -- python scripts/check_pstack_delivery_evidence.py`, run at trunk and at the head, interleaved. If trunk lacks the validator, record that and use HEAD wall time only.
 - [ ] Baseline. Record the trunk seconds first.
 - [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if schema validation exceeds 5s.
 
@@ -268,8 +268,8 @@ Each live lane runs in its own isolation worktree child at the PR head. Drive `m
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Wall time of `python pstack/scripts/validate_pstack_schemas.py` plus `python scripts/check_pstack_delivery_evidence.py` at trunk and head.
-- [ ] Probe. `/usr/bin/time -f %e python pstack/scripts/validate_pstack_schemas.py` then delivery evidence, run at trunk and at the head, interleaved. If trunk lacks the validator, record that and use HEAD wall time only.
+- [ ] Metric. Wall time of `python pstack/scripts/validate_pstack_schemas.py` plus `mise exec npm:@fission-ai/openspec@1.12.0 -- python scripts/check_pstack_delivery_evidence.py` at trunk and head.
+- [ ] Probe. `/usr/bin/time -f %e python pstack/scripts/validate_pstack_schemas.py` then `mise exec npm:@fission-ai/openspec@1.12.0 -- python scripts/check_pstack_delivery_evidence.py`, run at trunk and at the head, interleaved. If trunk lacks the validator, record that and use HEAD wall time only.
 - [ ] Baseline. Record the trunk seconds first.
 - [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if schema validation exceeds 5s.
 
