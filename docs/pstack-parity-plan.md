@@ -10,18 +10,24 @@ The program runs `skills/poteto-mode/playbooks/autopilot-stack.md`. The operator
 
 Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
+That unit-live-perf rule is not pstack Verify. pstack Verify is the pack verification skills and tools. Drive `python pstack/scripts/validate_pstack_schemas.py` and `python scripts/check_pstack_delivery_evidence.py`. Read `pstack/skills/principle-prove-it-works/SKILL.md`, `pstack/agents/verifier/prompt.template.md`, and `pstack/schemas/verification.v1.yaml`. The wrap runs dest standing, schemas, mapping-gaps, pack-name, pin, openspec-archive, and omit-panel. Dest standing is remaining-units boot. It is not pstack Verify by itself. Corpus `create-verification-skill` and `maintain-verification-skill` stay in `[corpus].skills` in `pstack/mappings/playbooks.toml`. They have no sling formulas. Do not generate `.claude/skills/verify` this leftover. Dest remaining-units boot is dest standing plus `python pstack/scripts/apply_intent_change.py --source openspec/changes/archive/2026-09-02-pstack-mapping-gaps --validate-only`. Keep that boot on `docs/pstack-program-plan.md`.
+
 ## Program checklist
 
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md. Spawn none of the six parity PR ids this leftover. Spawn none of dest remaining-units ids this leftover. Dest remaining-units stay on docs/pstack-program-plan.md as pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. PR ids how-schema method-report evidence-contract why-schema how-expand panel-stamp stay the skeleton. how-schema, method-report alias-cut, evidence-contract, and why-schema landed on feat. Remaining method-report collect/write fold waits dest sequential how, why, and architect. how-expand and panel-stamp stay dest-wait. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Operator lands. Done when dest levers stay green and panel keys stay omitted until a Gas City consumer of gc.provider_panel exists."
+- [ ] On her go, write this exact text into the standing orders and persist it on disk. "docs/pstack-parity-plan.md. Spawn none of the six parity PR ids this leftover. Spawn none of dest remaining-units ids this leftover. Dest remaining-units stay on docs/pstack-program-plan.md as pr-pstack-land-honesty then pr-pstack-publish then pr-pstack-panel-stamp. PR ids how-schema method-report evidence-contract why-schema how-expand panel-stamp stay the skeleton. how-schema, method-report alias-cut, evidence-contract, and why-schema landed on feat. Remaining method-report collect/write fold waits dest sequential how, why, and architect. how-expand and panel-stamp stay dest-wait. Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. That rule is not pstack Verify. pstack Verify is the pack verification skills and tools. Drive validate_pstack_schemas.py and check_pstack_delivery_evidence.py. Read principle-prove-it-works and the pstack.verifier agent. create-verification-skill and maintain-verification-skill stay corpus-only. No sling formulas. Do not generate .claude/skills/verify this leftover. Dest remaining-units boot is dest standing plus mapping-gaps validate-only. That boot is not pstack Verify. Spawn none. Do not start #5 or #6. Operator lands. Done when dest levers stay green and panel keys stay omitted until a Gas City consumer of gc.provider_panel exists."
 - [ ] Read these from the installed plugin at program start. Re-read them at every tick.
   - [ ] `git show origin/main:skills/poteto-mode/playbooks/autopilot-stack.md`
   - [ ] `git show origin/main:skills/swarm/SKILL.md`
-  - [ ] `git show origin/main:pstack/scripts/check_pstack_delivery_evidence.py`
+  - [ ] `git show HEAD:pstack/skills/principle-prove-it-works/SKILL.md`
   - [ ] `git show origin/main:skills/poteto-mode/playbooks/opening-a-pr.md`
   - [ ] `git show origin/main:skills/how/SKILL.md`
+  - [ ] `git show HEAD:pstack/agents/verifier/prompt.template.md`
+  - [ ] `git show HEAD:pstack/schemas/verification.v1.yaml`
+  - [ ] `git show HEAD:pstack/scripts/validate_pstack_schemas.py`
+  - [ ] `git show HEAD:scripts/check_pstack_delivery_evidence.py`
 - [ ] Arm the 30-minute audit tick with `scheduler_create` (`interval: "30m"`, `fire_immediately: true`) and `monitor` for event wakes. Never leave the cadence to memory.
 - [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from trunk and the persisted plan. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by side effects only. This leftover has no live spawn lanes. Do not dispatch replacements for landed-on-feat or dest-wait ids. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
 - [ ] On the operator's hold or stand-down, send every owner a zero-writes order at once.
@@ -55,11 +61,15 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 ### Boot recipe, for every live lane
 
-Each live lane runs in its own `isolation: "worktree"` child at the PR head. Drive the real surface (running app, CLI, tests, or Grok browser tools).
+Dest remaining-units boot stays on `docs/pstack-program-plan.md`. It is dest standing plus mapping-gaps validate-only. That boot is not pstack Verify. pstack Verify is the pack verification skills and tools. Live lanes drive those tools.
+
+Each live lane runs in its own `isolation: "worktree"` child at the PR head. Drive `python scripts/check_pstack_delivery_evidence.py`.
 
 - [ ] `git fetch origin <head-branch> && git checkout <head SHA>`.
-- [ ] Run dest levers from the worktree root. Wait for `ok dest standing`.
-- [ ] Run archive-only intent-driven validate. `python pstack/scripts/apply_intent_change.py --source openspec/changes/archive/2026-09-02-pstack-mapping-gaps --validate-only`. Pass when output includes `Change 'pstack-mapping-gaps' is valid`. Do not pass `--change`. Do not create a live `openspec/changes/` dir.
+- [ ] Run `python pstack/scripts/validate_pstack_schemas.py`. Pass when output includes `ok verification.v1.yaml`.
+- [ ] Run `python scripts/check_pstack_delivery_evidence.py` from the worktree root. Pass when output includes `ok delivery evidence`.
+- [ ] That wrap prints `ok dest-standing`, `ok schemas`, `ok mapping-gaps`, `ok pack-name`, `ok pin`, `ok openspec-archive`, and `ok omit-panel`, then `ok delivery evidence`. Dest standing is remaining-units boot. It is not pstack Verify by itself.
+- [ ] Keep OpenSpec archive-only. Do not pass `--change`. Do not create a live `openspec/changes/` dir.
 - [ ] Deliver the lane command on that CLI. Name the read-only diagnostics.
 - [ ] Save every screenshot to `/tmp/swarm-<pr-id>/worker-<n>/<slug>.png` and return the paths with the report.
 
@@ -89,7 +99,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
 
-- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk lacks explanation.v1, record that and gate how formula schema plus dest standing still ok. Save `how-schema-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 1. Regression lane against trunk. Run `python pstack/scripts/validate_pstack_schemas.py` at trunk and head. If trunk lacks that script or explanation.v1, record that and gate HEAD `ok verification.v1.yaml`. Save `how-schema-l1.png`. Pass when HEAD output includes `ok verification.v1.yaml`.
 - [ ] Lane 2. Delivery evidence at head. Save `how-schema-l2.png`. Pass when output includes ok delivery evidence.
 - [ ] Lane 3. Grep how formula for decision.v1. Save `how-schema-l3.png`. Pass when grep is empty.
 - [ ] Lane 4. Grep how formula for explanation.v1. Save `how-schema-l4.png`. Pass when grep hits write metadata.
@@ -102,10 +112,10 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Wall time of dest standing plus delivery evidence at trunk and head.
-- [ ] Probe. `/usr/bin/time -f %e python scripts/check_pstack_dest_standing.py` then delivery evidence, run at trunk and at the head, interleaved. Both sides must produce the metric.
+- [ ] Metric. Wall time of `python pstack/scripts/validate_pstack_schemas.py` plus `python scripts/check_pstack_delivery_evidence.py` at trunk and head.
+- [ ] Probe. `/usr/bin/time -f %e python pstack/scripts/validate_pstack_schemas.py` then delivery evidence, run at trunk and at the head, interleaved. If trunk lacks the validator, record that and use HEAD wall time only.
 - [ ] Baseline. Record the trunk seconds first.
-- [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if dest standing exceeds 5s.
+- [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if schema validation exceeds 5s.
 
 **Review gate.** None.
 
@@ -142,7 +152,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
 
-- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk still has aliases, record that and gate alias absence plus dest standing ok. Save `method-report-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 1. Regression lane against trunk. Run `python pstack/scripts/validate_pstack_schemas.py` at trunk and head. If trunk lacks that script or still has aliases, record that and gate HEAD `ok verification.v1.yaml`. Save `method-report-l1.png`. Pass when HEAD output includes `ok verification.v1.yaml`.
 - [ ] Lane 2. Delivery evidence. Save `method-report-l2.png`. Pass when output includes ok delivery evidence.
 - [ ] Lane 3. Alias pstack-shipping gone. Save `method-report-l3.png`. Pass when the file is missing.
 - [ ] Lane 4. Alias pstack-perf-issue gone. Save `method-report-l4.png`. Pass when the file is missing.
@@ -193,7 +203,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
 
-- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk still names the shared validator as the `required_fields` owner, record that and gate dest Gherkin plus dest standing still ok. Save `evidence-contract-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 1. Regression lane against trunk. Run `python pstack/scripts/validate_pstack_schemas.py` at trunk and head. If trunk lacks that script or still names the shared validator as the `required_fields` owner, record that and gate HEAD `ok verification.v1.yaml`. Save `evidence-contract-l1.png`. Pass when HEAD output includes `ok verification.v1.yaml`.
 - [ ] Lane 2. Delivery evidence at head. Save `evidence-contract-l2.png`. Pass when output includes ok delivery evidence.
 - [ ] Lane 3. Empty `required_fields` YAML fails through pack schema load. Save `evidence-contract-l3.png`. Pass when `validate_pstack_schemas.py` exits non-zero on `required_fields: []`.
 - [ ] Lane 4. Dest names pack schema validator. Save `evidence-contract-l4.png`. Pass when dest Gherkin names `pstack/scripts/validate_pstack_schemas.py`.
@@ -206,10 +216,10 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Wall time of dest standing plus delivery evidence at trunk and head.
-- [ ] Probe. `/usr/bin/time -f %e python scripts/check_pstack_dest_standing.py` then delivery evidence, run at trunk and at the head, interleaved. Both sides must produce the metric.
+- [ ] Metric. Wall time of `python pstack/scripts/validate_pstack_schemas.py` plus `python scripts/check_pstack_delivery_evidence.py` at trunk and head.
+- [ ] Probe. `/usr/bin/time -f %e python pstack/scripts/validate_pstack_schemas.py` then delivery evidence, run at trunk and at the head, interleaved. If trunk lacks the validator, record that and use HEAD wall time only.
 - [ ] Baseline. Record the trunk seconds first.
-- [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if dest standing exceeds 5s.
+- [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if schema validation exceeds 5s.
 
 **Review gate.** None.
 
@@ -244,7 +254,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
 
-- [ ] Lane 1. Regression lane against trunk. Run dest standing at trunk and head. If trunk still writes decision.v1, record that and gate why formula schema plus dest standing still ok. Save `why-schema-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 1. Regression lane against trunk. Run `python pstack/scripts/validate_pstack_schemas.py` at trunk and head. If trunk lacks that script or still writes decision.v1, record that and gate HEAD `ok verification.v1.yaml`. Save `why-schema-l1.png`. Pass when HEAD output includes `ok verification.v1.yaml`.
 - [ ] Lane 2. Delivery evidence at head. Save `why-schema-l2.png`. Pass when output includes ok delivery evidence.
 - [ ] Lane 3. Grep why formula for decision.v1. Save `why-schema-l3.png`. Pass when grep is empty.
 - [ ] Lane 4. Grep why formula for explanation.v1. Save `why-schema-l4.png`. Pass when grep hits write metadata.
@@ -257,10 +267,10 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Wall time of dest standing plus delivery evidence at trunk and head.
-- [ ] Probe. `/usr/bin/time -f %e python scripts/check_pstack_dest_standing.py` then delivery evidence, run at trunk and at the head, interleaved. Both sides must produce the metric.
+- [ ] Metric. Wall time of `python pstack/scripts/validate_pstack_schemas.py` plus `python scripts/check_pstack_delivery_evidence.py` at trunk and head.
+- [ ] Probe. `/usr/bin/time -f %e python pstack/scripts/validate_pstack_schemas.py` then delivery evidence, run at trunk and at the head, interleaved. If trunk lacks the validator, record that and use HEAD wall time only.
 - [ ] Baseline. Record the trunk seconds first.
-- [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if dest standing exceeds 5s.
+- [ ] Rule. Head under 2x trunk. If the scenarios differ, fail if schema validation exceeds 5s.
 
 **Review gate.** None.
 
@@ -297,7 +307,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
 
-- [ ] Lane 1. WAIT. Regression lane against trunk. Run dest standing at trunk and head. Save `how-expand-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 1. WAIT. Regression lane against trunk. Run `python pstack/scripts/validate_pstack_schemas.py` at trunk and head. Save `how-expand-l1.png`. Pass when output includes `ok verification.v1.yaml`.
 - [ ] Lane 2. WAIT. Delivery evidence. Save `how-expand-l2.png`. Pass when ok delivery evidence.
 - [ ] Lane 3. WAIT. how formula stays sequential. Save `how-expand-l3.png`. Pass when dest still says how stays a sequential investigator formula.
 - [ ] Lane 4. WAIT. No provider_panel. Save `how-expand-l4.png`. Pass when rg is empty.
@@ -310,10 +320,10 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Dest standing wall time at trunk and head.
-- [ ] Probe. python scripts/check_pstack_dest_standing.py at trunk and head, interleaved. Both sides must produce the metric.
-- [ ] Baseline. Record the trunk seconds first.
-- [ ] Rule. Head under 2x trunk.
+- [ ] Metric. WAIT. Schema validation wall time at trunk and head.
+- [ ] Probe. WAIT. python pstack/scripts/validate_pstack_schemas.py at trunk and head, interleaved. Both sides must produce the metric.
+- [ ] Baseline. WAIT. Record the trunk seconds first.
+- [ ] Rule. WAIT. Head under 2x trunk.
 
 **Review gate.** The operator reviews before merge.
 
@@ -354,7 +364,7 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on the configured `swarm workers` model at the PR head, per the boot recipe.
 
-- [ ] Lane 1. WAIT. Regression lane against trunk. Run dest standing at trunk and head. Save `panel-stamp-l1.png`. Pass when dest standing prints ok dest standing.
+- [ ] Lane 1. WAIT. Regression lane against trunk. Run `python pstack/scripts/validate_pstack_schemas.py` at trunk and head. Save `panel-stamp-l1.png`. Pass when output includes `ok verification.v1.yaml`.
 - [ ] Lane 2. WAIT. Delivery evidence. Save `panel-stamp-l2.png`. Pass when ok delivery evidence.
 - [ ] Lane 3. WAIT. No Gas City consumer SHA in this leftover. Save `panel-stamp-l3.png`. Pass when formulas still omit `gc.provider_panel`.
 - [ ] Lane 4. WAIT. Shared arena-candidate.md may still exist. Save `panel-stamp-l4.png`. Pass when dest omit-panel still holds.
@@ -367,10 +377,10 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Dest standing wall time at trunk and head.
-- [ ] Probe. python scripts/check_pstack_dest_standing.py at trunk and head, interleaved. Both sides must produce the metric.
-- [ ] Baseline. Record the trunk seconds first.
-- [ ] Rule. Head under 2x trunk.
+- [ ] Metric. WAIT. Schema validation wall time at trunk and head.
+- [ ] Probe. WAIT. python pstack/scripts/validate_pstack_schemas.py at trunk and head, interleaved. Both sides must produce the metric.
+- [ ] Baseline. WAIT. Record the trunk seconds first.
+- [ ] Rule. WAIT. Head under 2x trunk.
 
 **Review gate.** The operator reviews before merge.
 
@@ -387,25 +397,25 @@ Each live lane runs in its own `isolation: "worktree"` child at the PR head. Dri
 
 ## Close the program
 
-- [ ] Leftover done when spawn-none holds, dest standing prints ok dest standing, and formulas omit `gc.provider_panel`. Dest-wait boxes stay WAIT.
+- [ ] Leftover done when spawn-none holds, pack verification wrap prints `ok delivery evidence`, dest remaining-units dest standing still prints `ok dest standing` as dest boot, and formulas omit `gc.provider_panel`. Dest-wait boxes stay WAIT.
 - [ ] Every later dest-authorized box above is checked with its evidence.
 - [ ] Reply to the operator with the report the execution playbook names.
 
 ## Appendix A. Prototype evidence
 
-No new prototype ran in this leftover. Topology forks went to arena, not throwaway code. Swarm workers A-D triaged issues 2-11 at HEAD `0672191`, then again at `2c97f9b`. Arena candidates A, B, and C all picked spawn-none. The recursive pass skipped a second arena because swarm found tracker SHA drift, not graph drift. Cross-judge scored A and B 12, C 11. Parent base is B with A dest-id fence and verification-rule Arm string, plus C WAIT Files and Build boxes. Interrogate of `2c97f9b` flagged dest-wait spawn-graph boxes and live/review/merge pass predicates that still required expansion or panel keys. Those grafts landed in this file. Prior arena on GitHub pull 1 scored sequential collapse 15, expansion fidelity 15, thinner wrap 14. Lead pick for HEAD dest is sequential mapping. how-expand is dest-wait. Panel stamp stays blocked until a Gas City consumer of `gc.provider_panel` exists. Unproven is a live Gas City cook of `gc.provider_panel`. OpenSpec intent-driven attach is archive-only mapping. See Appendix E. No live OpenSpec change directory was authored at HEAD `b9fe1d5`.
+No new prototype ran in this leftover. Topology forks went to arena, not throwaway code. Swarm workers A-D triaged issues 2-11 at HEAD `0672191`, then again at `2c97f9b`. Arena candidates A, B, and C all picked spawn-none. The recursive pass skipped a second arena because swarm found tracker SHA drift, not graph drift. Cross-judge scored A and B 12, C 11. Parent base is B with A dest-id fence and verification-rule Arm string, plus C WAIT Files and Build boxes. Interrogate of `2c97f9b` flagged dest-wait spawn-graph boxes and live/review/merge pass predicates that still required expansion or panel keys. Those grafts landed in this file. Prior arena on GitHub pull 1 scored sequential collapse 15, expansion fidelity 15, thinner wrap 14. Lead pick for HEAD dest is sequential mapping. how-expand is dest-wait. Panel stamp stays blocked until a Gas City consumer of `gc.provider_panel` exists. Unproven is a live Gas City cook of `gc.provider_panel`. OpenSpec intent-driven attach is archive-only mapping. See Appendix E. No live OpenSpec change directory was authored at HEAD `8541356`. Verify-driver arena at `/tmp/arena-verify-driver/` picked A. Cross-judge scored A 16, C 15, B 13. Grafts were B how-to compression and C dropping corpus skills from Arm. pstack Verify is the pack verification skills and tools. Do not generate `.claude/skills/verify`. Dest remaining-units boot at dest standing plus mapping-gaps validate-only is not pstack Verify.
 
 ## Appendix B. Alternatives rejected
 
-Full Cursor N-model in formula TOML lost. Fake N-model with extra run_targets and city patches lost. Stamp from Gherkin alone lost. Thinner wrap that deletes how/why/architect slings lost. Restamp of pin 29c84db lost. Edits to gastownhall CI lost. Rewrite dest remaining-units onto issues 3-11 lost. Dropping landed PR sections without proving host `check-plan.mjs` lost. Treating remaining method-report fold as live Build lost. Starting how-expand because how-schema landed on feat lost. Treating host sling as the next dest click lost. Next dest click after proven sling is `pr-pstack-publish`. This leftover does not publish. Live OpenSpec change directory under `openspec/changes` lost. FilePred requires archive only. Skip OpenSpec lost. Authoring a new intent-driven change for how-expand or panel-stamp lost.
+Full Cursor N-model in formula TOML lost. Fake N-model with extra run_targets and city patches lost. Stamp from Gherkin alone lost. Thinner wrap that deletes how/why/architect slings lost. Restamp of pin 29c84db lost. Edits to gastownhall CI lost. Rewrite dest remaining-units onto issues 3-11 lost. Dropping landed PR sections without proving host `check-plan.mjs` lost. Treating remaining method-report fold as live Build lost. Starting how-expand because how-schema landed on feat lost. Treating host sling as the next dest click lost. Next dest click after proven sling is `pr-pstack-publish`. This leftover does not publish. Live OpenSpec change directory under `openspec/changes` lost. FilePred requires archive only. Skip OpenSpec lost. Authoring a new intent-driven change for how-expand or panel-stamp lost. Generating `.claude/skills/verify` this leftover lost. Treating dest standing as pstack Verify lost. Treating dest remaining-units boot as pstack Verify lost. Naming pstack Verify as `/create-verification-skill` generating a project-local skill then `/maintain-verification-skill` lost. Adding sling formulas for create-verification-skill or maintain-verification-skill lost.
 
 ## Appendix C. Risks
 
-Identity split (pack name tommy-ca/pstack vs catalog pstack) stays dest. Check may fail validate_registry --require-git. Owner watches that job and does not restamp. Blacksmith queue cancelled PR #1 Check after 24h. Owner watches runner pickup. how-expand changes dest sequential lock. Owner waits for operator review. Standing orders that list six PR ids without spawn-none will re-arm landed units. Owner persists the Arm string in this file. Dest remaining-units and this parity graph share panel-stamp as a tail. Dest wins. Do not start `#6` from how-schema land. GitHub issue bodies may still name ancestor `d7b206c`. Workspace HEAD after this leftover is the docs SHA. Tracker honesty is dest-safe and is not a dest remaining-units rewrite. A live directory under `openspec/changes` fails delivery evidence. Owner keeps archive-only.
+Identity split (pack name tommy-ca/pstack vs catalog pstack) stays dest. Check may fail validate_registry --require-git. Owner watches that job and does not restamp. Blacksmith queue cancelled PR #1 Check after 24h. Owner watches runner pickup. how-expand changes dest sequential lock. Owner waits for operator review. Standing orders that list six PR ids without spawn-none will re-arm landed units. Owner persists the Arm string in this file. Dest remaining-units and this parity graph share panel-stamp as a tail. Dest wins. Do not start `#6` from how-schema land. GitHub issue bodies may still name ancestor `d7b206c`. Workspace HEAD after this leftover is the docs SHA. Tracker honesty is dest-safe and is not a dest remaining-units rewrite. A live directory under `openspec/changes` fails delivery evidence. Owner keeps archive-only. Owners who treat dest standing as pstack Verify skip the pack verification tools. Owner persists the How-to-read skills and tools sentence. Generating `.claude/skills/verify` would leave file boundaries. Owner does not generate this leftover.
 
 ## Appendix D. Links and reading list
 
-Read `pstack/ARCHITECTURE.md`, `openspec/specs/gascity-provider-panel/spec.md`, `openspec/specs/pstack-gascity-pack/spec.md`, `docs/pstack-program-plan.md`. TRACEABILITY live program is `docs/pstack-program-plan.md`. Live plan checker is host plugin `/home/tommyk/.grok/skills/poteto-mode/scripts/check-plan.mjs`. Dest standing is `python scripts/check_pstack_dest_standing.py`. Delivery evidence and pack tests wrap `mise exec npm:@fission-ai/openspec@1.12.0`. OpenSpec schema is intent-driven at `openspec/config.yaml`. Validate-only helper is `pstack/scripts/apply_intent_change.py`. Dest remaining-units boot source is `openspec/changes/archive/2026-09-02-pstack-mapping-gaps` without `--change`. Appendix E records the archive-only mapping. how-expand and panel-stamp get `skills/how/SKILL.md` and `skills/interrogate/SKILL.md` when dest authorizes a start. Trail is local `.audit/pstack-parity.tsv` per `skills/show-me-your-work/SKILL.md`. Epic https://github.com/tommy-ca/gascity-packs/issues/2 tracks this parity graph. Issues 3, 4 alias-cut, 10, and 11 landed on feat. Issues 5 and 6 are dest-wait. Remaining issue 4 fold is dest-wait. Issues 7, 8, and 9 stay later with no PR sections.
+Read `pstack/ARCHITECTURE.md`, `openspec/specs/gascity-provider-panel/spec.md`, `openspec/specs/pstack-gascity-pack/spec.md`, `docs/pstack-program-plan.md`. TRACEABILITY live program is `docs/pstack-program-plan.md`. Live plan checker is host plugin `/home/tommyk/.grok/skills/poteto-mode/scripts/check-plan.mjs`. Dest standing is `python scripts/check_pstack_dest_standing.py`. Delivery evidence and pack tests wrap `mise exec npm:@fission-ai/openspec@1.12.0`. OpenSpec schema is intent-driven at `openspec/config.yaml`. Validate-only helper is `pstack/scripts/apply_intent_change.py`. Dest remaining-units boot source is `openspec/changes/archive/2026-09-02-pstack-mapping-gaps` without `--change`. Appendix E records the archive-only mapping. how-expand and panel-stamp get `skills/how/SKILL.md` and `skills/interrogate/SKILL.md` when dest authorizes a start. Trail is local `.audit/pstack-parity.tsv` per `skills/show-me-your-work/SKILL.md`. Epic https://github.com/tommy-ca/gascity-packs/issues/2 tracks this parity graph. Issues 3, 4 alias-cut, 10, and 11 landed on feat. Issues 5 and 6 are dest-wait. Remaining issue 4 fold is dest-wait. Issues 7, 8, and 9 stay later with no PR sections. pstack Verify is `pstack/skills/principle-prove-it-works/SKILL.md`, `pstack/agents/verifier/prompt.template.md`, `pstack/schemas/verification.v1.yaml`, `pstack/scripts/validate_pstack_schemas.py`, and `scripts/check_pstack_delivery_evidence.py`. Corpus `create-verification-skill` and `maintain-verification-skill` sit in `[corpus].skills` in `pstack/mappings/playbooks.toml`. They have no sling formulas. Do not generate `.claude/skills/verify` this leftover. Dest remaining-units boot is dest standing plus mapping-gaps validate-only. That boot is not pstack Verify.
 
 ## Appendix E. OpenSpec intent-driven attach
 
