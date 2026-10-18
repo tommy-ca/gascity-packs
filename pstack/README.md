@@ -142,3 +142,10 @@ Pack tests are static or disposable metadata checks. They do not import into a c
 
 See [`REQUIREMENTS.md`](REQUIREMENTS.md) for the GC-METH-012 compatibility
 ledger and evidence commands.
+
+
+## Opt-in three-model Swarm / Arena / Interrogate
+
+The original method formulas remain sequential and backward compatible. Three NEW opt-in formulas, pstack-swarm-multi, pstack-arena-multi, and pstack-interrogate-multi, use three independently routable Gas City Beads bound to three distinct city-configured models (roles pstack.panel-a/b/c), a fail-closed declared-provider/model evidence gate, and synthesis. This does NOT implement dynamic N or gc.provider_panel. No live three-provider run has been verified on this branch.
+
+See docs/multi-model-fanout.md for setup and docs/multi-model-spec.md for normative requirements, code/data flows, security constraints and verification gates. Do not claim production readiness from a formula parse, mocked receipts or an unexecuted CI run.
