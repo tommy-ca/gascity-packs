@@ -18,5 +18,5 @@ max_attempts = 2
 
 [template.check.check]
 mode = "exec"
-path = "../scripts/check_dynamic_task.py"
+path = "../assets/scripts/check_dynamic_task.py"
 timeout = "3m"

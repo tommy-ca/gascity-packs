@@ -34,7 +34,7 @@ max_attempts = 1
 
 [steps.check.check]
 mode = "exec"
-path = "../scripts/check_dynamic_fanin.py"
+path = "../assets/scripts/check_dynamic_fanin.py"
 timeout = "3m"
 
 [[steps]]
