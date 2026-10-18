@@ -51,16 +51,27 @@ func TestPStackDynamicPerItemRouteDispatch(t *testing.T) {
                 if err:=routeFanoutFragmentSteps(f,control,options,beads.NewMemStore());err!=nil {
                     t.Fatalf("host route N=%d item=%d: %v",count,i,err)
                 }
-                found:=false
+                workAttempt, controlNode := false, false
                 for _, step := range f.Steps {
                     if step.Metadata[beadmeta.RunTargetMetadataKey] != targetName { continue }
                     routed:=step.Metadata[beadmeta.RoutedToMetadataKey]
-                    if routed!="app/"+targetName {
-                        t.Fatalf("item %d host gc.routed_to=%q, expected %q",i,routed,"app/"+targetName)
+                    if step.Metadata[beadmeta.KindMetadataKey]==beadmeta.KindRalph {
+                        if routed!="app/"+config.ControlDispatcherAgentName {
+                            t.Fatalf("item %d Ralph control incorrectly routed %q",i,routed)
+                        }
+                        controlNode=true
+                        continue
                     }
-                    found=true
+                    if strings.Contains(step.ID, ".iteration.") {
+                        if routed!="app/"+targetName {
+                            t.Fatalf("item %d executing attempt routed %q, expected %q",i,routed,"app/"+targetName)
+                        }
+                        workAttempt=true
+                    }
                 }
-                if !found { t.Fatalf("item %d missing per-item routed work step",i) }
+                if !controlNode || !workAttempt {
+                    t.Fatalf("item %d missing independently routed worker attempt / controller: ctrl=%t worker=%t fragment=%+v",i,controlNode,workAttempt,f.Steps)
+                }
                 routes[targetName]=true
             }
             if len(routes)!=2 { t.Fatalf("not heterogeneous routes: %v",routes) }
