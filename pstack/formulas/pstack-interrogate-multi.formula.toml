@@ -1,0 +1,69 @@
+# Explicit, opt-in three-model native Gas City DAG. No dynamic provider-panel metadata.
+description = "Real three-lane interrogate review with independently routed worker beads and gated fan-in."
+formula = "pstack-interrogate-multi"
+version = 1
+target_required = false
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[catalog]
+name = "pstack-interrogate-multi"
+description = "Three distinct city-configured model lanes; requires artifact_root and source_revision."
+
+[vars]
+[vars.subject_path]
+description = "Bounded scope or evidence source to inspect."
+required = true
+
+[vars.artifact_root]
+description = "Unique per-run rig-relative output root, not shared with another run."
+required = true
+
+[vars.source_revision]
+description = "Immutable source revision (commit SHA or equivalent) to review."
+required = true
+
+[[steps]]
+id = "select"
+title = "Scope interrogate and prepare independent model lanes"
+metadata = { "gc.run_target" = "pstack.coordinator", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/brief.md" }
+description_file = "../assets/workflows/pstack-multi/prepare.md"
+[[steps]]
+id = "lane-a"
+title = "Independent model A — security-correctness"
+needs = ["select"]
+metadata = { "gc.run_target" = "pstack.panel-a", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.lane_id" = "a", "pstack.multi.review_dimension" = "security-correctness", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/lane-a.json" }
+description_file = "../assets/workflows/pstack-multi/worker.md"
+[[steps]]
+id = "lane-b"
+title = "Independent model B — maintainability-architecture"
+needs = ["select"]
+metadata = { "gc.run_target" = "pstack.panel-b", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.lane_id" = "b", "pstack.multi.review_dimension" = "maintainability-architecture", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/lane-b.json" }
+description_file = "../assets/workflows/pstack-multi/worker.md"
+[[steps]]
+id = "lane-c"
+title = "Independent model C — runtime-verification"
+needs = ["select"]
+metadata = { "gc.run_target" = "pstack.panel-c", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.lane_id" = "c", "pstack.multi.review_dimension" = "runtime-verification", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/lane-c.json" }
+description_file = "../assets/workflows/pstack-multi/worker.md"
+[[steps]]
+id = "evidence-gate"
+title = "Fail-closed validation of all three independent model receipts"
+needs = ["lane-a", "lane-b", "lane-c"]
+metadata = { "gc.run_target" = "gc.run-operator", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate" }
+description_file = "../assets/workflows/pstack-multi/gate.md"
+[steps.check]
+max_attempts = 1
+
+[steps.check.check]
+mode = "exec"
+path = "../scripts/check_multi_model_evidence.py"
+timeout = "3m"
+
+[[steps]]
+id = "judgment"
+title = "Synthesize verified interrogate evidence"
+needs = ["evidence-gate"]
+metadata = { "gc.run_target" = "pstack.review-synthesizer", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.summary_schema" = "gc.build.review.v1", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/summary.md" }
+description_file = "../assets/workflows/pstack-multi/synthesize.md"

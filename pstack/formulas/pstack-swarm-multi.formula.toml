@@ -1,0 +1,69 @@
+# Explicit, opt-in three-model native Gas City DAG. No dynamic provider-panel metadata.
+description = "Real three-lane swarm review with independently routed worker beads and gated fan-in."
+formula = "pstack-swarm-multi"
+version = 1
+target_required = false
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[catalog]
+name = "pstack-swarm-multi"
+description = "Three distinct city-configured model lanes; requires artifact_root and source_revision."
+
+[vars]
+[vars.subject_path]
+description = "Bounded scope or evidence source to inspect."
+required = true
+
+[vars.artifact_root]
+description = "Unique per-run rig-relative output root, not shared with another run."
+required = true
+
+[vars.source_revision]
+description = "Immutable source revision (commit SHA or equivalent) to review."
+required = true
+
+[[steps]]
+id = "frame"
+title = "Scope swarm and prepare independent model lanes"
+metadata = { "gc.run_target" = "pstack.coordinator", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/brief.md" }
+description_file = "../assets/workflows/pstack-multi/prepare.md"
+[[steps]]
+id = "lane-a"
+title = "Independent model A — source-evidence"
+needs = ["frame"]
+metadata = { "gc.run_target" = "pstack.panel-a", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.lane_id" = "a", "pstack.multi.review_dimension" = "source-evidence", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/lane-a.json" }
+description_file = "../assets/workflows/pstack-multi/worker.md"
+[[steps]]
+id = "lane-b"
+title = "Independent model B — integration-evidence"
+needs = ["frame"]
+metadata = { "gc.run_target" = "pstack.panel-b", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.lane_id" = "b", "pstack.multi.review_dimension" = "integration-evidence", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/lane-b.json" }
+description_file = "../assets/workflows/pstack-multi/worker.md"
+[[steps]]
+id = "lane-c"
+title = "Independent model C — failure-modes"
+needs = ["frame"]
+metadata = { "gc.run_target" = "pstack.panel-c", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.lane_id" = "c", "pstack.multi.review_dimension" = "failure-modes", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/lane-c.json" }
+description_file = "../assets/workflows/pstack-multi/worker.md"
+[[steps]]
+id = "evidence-gate"
+title = "Fail-closed validation of all three independent model receipts"
+needs = ["lane-a", "lane-b", "lane-c"]
+metadata = { "gc.run_target" = "gc.run-operator", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm" }
+description_file = "../assets/workflows/pstack-multi/gate.md"
+[steps.check]
+max_attempts = 1
+
+[steps.check.check]
+mode = "exec"
+path = "../scripts/check_multi_model_evidence.py"
+timeout = "3m"
+
+[[steps]]
+id = "fanin"
+title = "Synthesize verified swarm evidence"
+needs = ["evidence-gate"]
+metadata = { "gc.run_target" = "pstack.review-synthesizer", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.summary_schema" = "pstack.swarm-result.v1", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/summary.md" }
+description_file = "../assets/workflows/pstack-multi/synthesize.md"
