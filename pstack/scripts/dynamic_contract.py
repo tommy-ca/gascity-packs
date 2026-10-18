@@ -57,7 +57,7 @@ def city_roles(city_path: Path, rig: str) -> dict:
             roles[name] = patch
     return roles
 
-def validate(plan: dict, policy: dict, city_path: Path, rig: str, root: Path, workflow_id: str) -> dict:
+def validate(plan: dict, policy: dict, city_path: Path, rig: str, root: Path, workflow_id: str, allowed_subject: str | None = None) -> dict:
     record(plan, {"method", "revision", "artifact_root", "tasks"}, "plan")
     record(policy, {"version", "max_tasks", "routes"}, "policy")
     method = plan["method"]
@@ -68,6 +68,9 @@ def validate(plan: dict, policy: dict, city_path: Path, rig: str, root: Path, wo
         raise ContractError("revision must be immutable 40/64-digit hex SHA")
     runroot = text_field(plan["artifact_root"], "artifact_root", 200)
     secure_child(root, runroot)
+    subject = secure_child(root, allowed_subject) if allowed_subject is not None else None
+    if subject is not None and not subject.exists():
+        raise ContractError("authorized subject does not exist")
     if policy["version"] != 1 or type(policy["max_tasks"]) is not int or not 2 <= policy["max_tasks"] <= MAX_ITEMS:
         raise ContractError("invalid policy cap")
     allowed = policy["routes"]
@@ -104,8 +107,11 @@ def validate(plan: dict, policy: dict, city_path: Path, rig: str, root: Path, wo
             raise ContractError("task selected a route outside allowlist")
         scope_ref = text_field(task["scope_ref"], "scope_ref", 200)
         # Only reference files relative to rig; prevent absolute, symlink and traversal.
-        if not secure_child(root, scope_ref).exists():
+        scope = secure_child(root, scope_ref)
+        if not scope.exists():
             raise ContractError("task scope does not exist in rig root")
+        if subject is not None and scope != subject and subject not in scope.parents:
+            raise ContractError("task scope escapes authorized subject")
         objective = text_field(task["objective"], "objective", 500)
         if any(x in objective for x in ("\x00", "\r")):
             raise ContractError("invalid objective characters")
@@ -148,6 +154,29 @@ def inspect_bead(bead_id: str) -> dict:
     return bead["metadata"]
 
 
+def validate_publish_context(args, meta: dict, plan: dict, trusted_root: str) -> None:
+    if not trusted_root or Path(args.root).resolve() != Path(trusted_root).resolve():
+        raise ContractError("requested root differs from host rig root")
+    for key, expected in (
+        ("gc.root_bead_id", args.workflow_id),
+        ("pstack.dynamic.method", plan["method"]),
+        ("pstack.dynamic.revision", plan["revision"]),
+        ("pstack.dynamic.artifact_root", plan["artifact_root"]),
+        ("pstack.dynamic.rig_name", args.rig),
+    ):
+        if meta.get(key) != expected:
+            raise ContractError(f"source bead {key} disagrees with validated plan")
+    for key, requested in (
+        ("pstack.dynamic.city_config", args.city),
+        ("pstack.dynamic.route_policy", args.policy),
+    ):
+        value = meta.get(key)
+        if not value or Path(value).resolve() != Path(requested).resolve():
+            raise ContractError(f"source bead {key} differs from operator-selected path")
+    if not meta.get("pstack.dynamic.subject_path"):
+        raise ContractError("missing authorized source scope")
+
+
 def publish(bead_id: str, data: dict) -> None:
     raw = json.dumps(data, separators=(",", ":"), ensure_ascii=True)
     current = inspect_bead(bead_id)
@@ -178,27 +207,24 @@ def main() -> int:
     ap.add_argument("--bead-id")
     args = ap.parse_args()
     try:
-        data = validate(
-            json.loads(Path(args.plan).read_text(encoding="utf-8")),
-            json.loads(Path(args.policy).read_text(encoding="utf-8")),
-            Path(args.city), args.rig, Path(args.root), args.workflow_id,
-        )
+        import os
+        planned = json.loads(Path(args.plan).read_text(encoding="utf-8"))
+        meta = None
         if args.bead_id:
-            import os
             actual = os.environ.get("GC_BEAD_ID")
             if not actual or actual != args.bead_id:
                 raise ContractError("metadata publish is allowed only from the actual GC_BEAD_ID")
             meta = inspect_bead(args.bead_id)
-            planned = json.loads(Path(args.plan).read_text(encoding="utf-8"))
-            for key, expected in (
-                ("gc.root_bead_id", args.workflow_id),
-                ("pstack.dynamic.method", planned["method"]),
-                ("pstack.dynamic.revision", planned["revision"]),
-                ("pstack.dynamic.artifact_root", planned["artifact_root"]),
-                ("pstack.dynamic.rig_name", args.rig),
-            ):
-                if meta.get(key) != expected:
-                    raise ContractError(f"source bead {key} disagrees with validated plan")
+            trusted = next((os.environ[k] for k in ("GC_RIG_ROOT", "GC_BEADS_SCOPE_ROOT", "GC_STORE_PATH")
+                            if os.environ.get(k)), "")
+            validate_publish_context(args, meta, planned, trusted)
+        data = validate(
+            planned,
+            json.loads(Path(args.policy).read_text(encoding="utf-8")),
+            Path(args.city), args.rig, Path(args.root), args.workflow_id,
+            allowed_subject=meta.get("pstack.dynamic.subject_path") if meta else None,
+        )
+        if args.bead_id:
             publish(args.bead_id, data)
         else:
             print(json.dumps(data, indent=2))
