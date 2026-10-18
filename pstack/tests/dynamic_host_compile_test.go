@@ -32,6 +32,37 @@ func TestPStackDynamicFanoutHostCompiler(t *testing.T) {
             if !fanout { t.Fatal("missing host-minted dynamic plan fanout control") }
         })
     }
+    synth, err := Compile(context.Background(), "pstack-dynamic-synthesize", []string{dir},
+        map[string]string{
+            "method":"swarm", "revision":strings.Repeat("a", 40), "artifact_root":"runs/run-1",
+            "source_root_bead":"bd-source", "planning_bead":"bd-plan",
+        })
+    if err != nil { t.Fatalf("real host synthesis Compile: %v", err) }
+    checkFound, attemptFound := false, false
+    for _, step := range synth.Steps {
+        if step.ID == "verify-fanin" && step.Metadata["gc.kind"] == "ralph" {
+            checkFound = true
+            check := step.Metadata["gc.check_path"]
+            if check == "" || !filepath.IsAbs(check) {
+                t.Fatalf("fan-in check script path must be trusted resolved absolute: %q", check)
+            }
+            stat, err := os.Stat(check)
+            if err != nil { t.Fatalf("fan-in executable unavailable: %v", err) }
+            if stat.Mode()&0111 == 0 { t.Fatalf("Gas City check script not executable: %q", check) }
+        }
+        if strings.Contains(step.ID, "verify-fanin.iteration.1") {
+            attemptFound = true
+            if _, ok := step.Metadata["pstack.dynamic.source_root_bead"]; !ok {
+                t.Fatalf("host check subject lacks source-workflow metadata: %+v", step.Metadata)
+            }
+            if _, ok := step.Metadata["pstack.dynamic.planning_bead"]; !ok {
+                t.Fatalf("host check subject lacks planning-bead metadata: %+v", step.Metadata)
+            }
+        }
+    }
+    if !checkFound || !attemptFound {
+        t.Fatalf("missing real host fan-in check control or attempt: check=%t attempt=%t", checkFound, attemptFound)
+    }
     target := &Step{ID: "plan.item.1", Title: "Runtime item"}
     vars := map[string]string{
         "task_id":"issue-a", "route_target":"myorg.fast-research",
