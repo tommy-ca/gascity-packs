@@ -13,14 +13,21 @@ PACK_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = PACK_ROOT.parent
 DEFAULT_SPEC_ROOT = REPO_ROOT / "openspec"
 _DATE_PREFIX = re.compile(r"^\d{4}-\d{2}-\d{2}-")
+_SAFE_CHANGE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 
 
 def change_name(source: Path, explicit: str | None) -> str:
-    if explicit:
-        return explicit
-    name = source.name
-    stripped = _DATE_PREFIX.sub("", name, count=1)
-    return stripped or name
+    name = explicit if explicit is not None else _DATE_PREFIX.sub("", source.name, count=1)
+    # The name becomes a filesystem component below openspec/changes.
+    # Reject traversal and separators before any copy or destructive replacement.
+    if (
+        not name
+        or name in {".", ".."}
+        or len(name) > 128
+        or _SAFE_CHANGE_NAME.fullmatch(name) is None
+    ):
+        raise SystemExit(f"invalid OpenSpec change name: {name!r}")
+    return name
 
 
 def source_dir(path: Path) -> Path:
