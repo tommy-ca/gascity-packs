@@ -16,7 +16,7 @@ PACK = Path(__file__).resolve().parents[1]
 REV = "a" * 40
 
 def load(name):
-    p = PACK / "scripts" / name
+    p = PACK / ("assets/scripts" if name in {"check_dynamic_task.py", "check_dynamic_fanin.py"} else "scripts") / name
     spec = importlib.util.spec_from_file_location(name.removesuffix(".py"), p)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
@@ -75,7 +75,7 @@ def test_dynamic_worker_is_one_reusable_expansion():
     item = body["template"][0]
     assert item["metadata"]["gc.run_target"] == "{route_target}"
     assert item["metadata"]["pstack.dynamic.artifact_path"] == "{artifact_path}"
-    assert item["check"]["check"]["path"] == "../scripts/check_dynamic_task.py"
+    assert item["check"]["check"]["path"] == "../assets/scripts/check_dynamic_task.py"
 
 @pytest.mark.parametrize("mutator", [
     lambda p: p["tasks"][0].update(route_target="evil.shell"),
@@ -261,7 +261,7 @@ def test_synthesis_is_separate_and_depends_on_verified_fanin():
     body = tomllib.loads((PACK / "formulas/pstack-dynamic-synthesize.formula.toml").read_text())
     steps = {x["id"]: x for x in body["steps"]}
     assert set(steps) == {"verify-fanin", "synthesize", "verify"}
-    assert steps["verify-fanin"]["check"]["check"]["path"] == "../scripts/check_dynamic_fanin.py"
+    assert steps["verify-fanin"]["check"]["check"]["path"] == "../assets/scripts/check_dynamic_fanin.py"
     assert steps["synthesize"]["needs"] == ["verify-fanin"]
     assert steps["verify"]["needs"] == ["synthesize"]
 
@@ -366,5 +366,5 @@ def test_planner_claim_fails_closed_without_session_or_claim(monkeypatch):
 def test_host_exec_check_scripts_are_executable():
     import os
     for p in ("check_dynamic_fanin.py", "check_dynamic_task.py"):
-        path = PACK / "scripts" / p
+        path = PACK / "assets" / "scripts" / p
         assert os.access(path, os.X_OK), f"Gas City exec-check script not executable: {p}"

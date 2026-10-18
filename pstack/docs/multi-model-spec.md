@@ -98,3 +98,6 @@ Current supported implementation therefore uses two independently launched formu
 2. pstack-dynamic-synthesize: accepts the actual completed source root and planning Bead IDs, has a check_dynamic_fanin.py gate verifying closed/pass source root and the exact dynamic receipt inventory, then runs synthesis and verification.
 
 The operator or a higher-level Gas City coordinator starts phase 2 only after phase 1 passes; there is **no automatic phase-2 dispatch**, no polling sub-scheduler and no promise of zero-touch end-to-end automation. The existing flowchart above is a logical two-phase view rather than one atomic formula. A future host primitive may compose phases with a real reference to a minted fanout control, but it must be proved with live host tests first. Failure to enforce this boundary risks synthesizing before children finish, so the separation is intentional.
+
+
+**Host asset resolution:** Both dynamic exec checks are executable files under `pstack/assets/scripts/`. Formula check declarations use `../assets/scripts/...` so Gas City's real compiler resolves a trusted absolute file path. Generic `../scripts/...` does not receive that special resolution and must not be used for controller checks.

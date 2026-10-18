@@ -74,3 +74,6 @@ Route/sling the resulting phase-2 workflow only after phase 1 passes. Its verify
 
 
 **Runtime claim identity:** In a model-backed agent shell, `GC_BEAD_ID` is not reliably exported. Obtain the planning Bead ID using `gc hook current --id-only` from that session; `dynamic_contract.py --bead-id` internally resolves and validates the same current claim, refusing a mismatched or absent claim. A check script executed by the host controller receives `GC_BEAD_ID` separately.
+
+
+**Host asset resolution:** Both dynamic exec checks are executable files under `pstack/assets/scripts/`. Formula check declarations use `../assets/scripts/...` so Gas City's real compiler resolves a trusted absolute file path. Generic `../scripts/...` does not receive that special resolution and must not be used for controller checks.

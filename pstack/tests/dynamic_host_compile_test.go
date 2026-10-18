@@ -84,4 +84,16 @@ func TestPStackDynamicFanoutHostCompiler(t *testing.T) {
         }
     }
     if !found { t.Fatalf("per-item dynamic role target was not substituted: %+v", fragment.Steps) }
+    foundWorkerCheck := false
+    for _, step := range fragment.Steps {
+        if check := step.Metadata["gc.check_path"]; check != "" {
+            foundWorkerCheck = true
+            if !filepath.IsAbs(check) { t.Fatalf("worker check is not resolved pack asset: %q", check) }
+            stat, err := os.Stat(check)
+            if err != nil || stat.Mode()&0111 == 0 {
+                t.Fatalf("worker exec-check script missing / not executable %q: %v", check, err)
+            }
+        }
+    }
+    if !foundWorkerCheck { t.Fatal("worker expansion must contain executable host check") }
 }
