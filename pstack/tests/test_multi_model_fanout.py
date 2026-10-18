@@ -187,3 +187,33 @@ def test_receipts_must_match_declared_role_config(tmp_path):
         evidence.validate_receipts(
             tmp_path, ".gc/runs/test/pstack/multi/swarm", "swarm", "bead-1", "abc1234", mismatched
         )
+
+
+def test_evidence_rejects_symlinked_directory_and_oversized_receipt(tmp_path):
+    check = load_script("check_multi_model_evidence.py")
+    folder = setup_receipts(tmp_path)
+    b = folder / "lane-b.json"
+    b.write_bytes(b" " * 1_048_577)
+    with pytest.raises(check.EvidenceError):
+        checked(check, tmp_path)
+    b.write_text(json.dumps(receipt("b")))
+    real = folder.parent / "swarm-real"
+    folder.rename(real)
+    folder.symlink_to(real, target_is_directory=True)
+    with pytest.raises(check.EvidenceError):
+        checked(check, tmp_path)
+
+
+def test_evidence_rejects_too_many_findings_and_references(tmp_path):
+    check = load_script("check_multi_model_evidence.py")
+    folder = setup_receipts(tmp_path)
+    many = receipt("b")
+    many["findings"] = many["findings"] * 201
+    (folder / "lane-b.json").write_text(json.dumps(many))
+    with pytest.raises(check.EvidenceError):
+        checked(check, tmp_path)
+    many = receipt("b")
+    many["evidence"] = many["evidence"] * 501
+    (folder / "lane-b.json").write_text(json.dumps(many))
+    with pytest.raises(check.EvidenceError):
+        checked(check, tmp_path)
