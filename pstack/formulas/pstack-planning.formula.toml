@@ -1,0 +1,54 @@
+description = """
+PStack implementation of the planning-base methodology contract.
+"""
+formula = "pstack-planning"
+version = 1
+
+extends = ["planning-base"]
+target_required = false
+internal = true
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[vars]
+[vars.principle_manifest]
+description = "Path to the complete PStack principle manifest."
+default = "principles/manifest.toml"
+
+[[steps]]
+id = "requirements"
+title = "Produce approved requirements"
+needs = ["prepare-planning"]
+metadata = { "gc.run_target" = "pstack.investigator", "gc.build.artifact_schema" = "gc.build.requirements.v1", "gc.build.artifact_path_keys" = "gc.build.requirements_path,gc.var.requirements_path" }
+description_file = "../assets/workflows/pstack-build/requirements.md"
+
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "plan"
+title = "Produce implementation plan"
+needs = ["requirements"]
+metadata = { "gc.run_target" = "pstack.architect", "gc.build.artifact_schema" = "gc.build.plan.v1", "gc.build.artifact_path_keys" = "gc.build.plan_path,gc.var.plan_path" }
+description_file = "../assets/workflows/pstack-build/plan.md"
+
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "plan-review"
+title = "Approve implementation plan"
+needs = ["plan"]
+metadata = { "gc.run_target" = "pstack.review-synthesizer" }
+description_file = "../assets/workflows/pstack-build/plan-review.md"

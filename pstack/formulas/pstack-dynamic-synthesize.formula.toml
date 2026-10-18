@@ -1,0 +1,52 @@
+# Explicit second-phase formula: root workflow must finish all dynamic child Beads first.
+description = "Validate completed host dynamic workflow then synthesize and verify all actual children."
+formula = "pstack-dynamic-synthesize"
+version = 1
+target_required = false
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[catalog]
+name = "pstack-dynamic-synthesize"
+description = "Fail-closed post-fanout synthesis; requires actual root and planning bead IDs."
+
+[vars]
+[vars.method]
+required = true
+[vars.revision]
+required = true
+[vars.artifact_root]
+required = true
+[vars.source_root_bead]
+required = true
+[vars.planning_bead]
+required = true
+
+[[steps]]
+id = "verify-fanin"
+title = "Verify completed host fanout and exactly all dynamic child receipts"
+metadata = { "gc.run_target" = "gc.run-operator", "pstack.dynamic.method" = "{{method}}", "pstack.dynamic.revision" = "{{revision}}", "pstack.dynamic.artifact_root" = "{{artifact_root}}", "pstack.dynamic.source_root_bead" = "{{source_root_bead}}", "pstack.dynamic.planning_bead" = "{{planning_bead}}" }
+description_file = "../assets/workflows/pstack-dynamic/gate.md"
+
+[steps.check]
+max_attempts = 1
+
+[steps.check.check]
+mode = "exec"
+path = "../assets/scripts/check_dynamic_fanin.py"
+timeout = "3m"
+
+[[steps]]
+id = "synthesize"
+title = "Aggregate independently completed dynamic method evidence"
+needs = ["verify-fanin"]
+metadata = { "gc.run_target" = "pstack.review-synthesizer", "pstack.dynamic.method" = "{{method}}", "pstack.dynamic.revision" = "{{revision}}", "pstack.dynamic.artifact_root" = "{{artifact_root}}", "pstack.dynamic.source_root_bead" = "{{source_root_bead}}", "pstack.dynamic.planning_bead" = "{{planning_bead}}" }
+description_file = "../assets/workflows/pstack-dynamic/synthesize.md"
+
+[[steps]]
+id = "verify"
+title = "Verify evidence-based synthesis"
+needs = ["synthesize"]
+metadata = { "gc.run_target" = "pstack.verifier", "pstack.dynamic.method" = "{{method}}", "pstack.dynamic.revision" = "{{revision}}", "pstack.dynamic.artifact_root" = "{{artifact_root}}" }
+description_file = "../assets/workflows/pstack-dynamic/verify.md"

@@ -1,0 +1,62 @@
+name: PStack Multi-Model Static Checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "pstack/**"
+      - ".github/workflows/pstack-multimodel.yml"
+  push:
+    branches: [feat/pstack-pack-honesty]
+    paths:
+      - "pstack/**"
+      - ".github/workflows/pstack-multimodel.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  static-contract:
+    name: PStack static DAG and safety contracts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Python 3.12
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+      - name: Install minimal test dependency
+        run: python3 -m pip install pytest
+      - name: Run isolated PStack safety and fanout tests
+        run: |
+          python3 -m pytest -q \
+            pstack/tests/test_apply_intent_change_security.py \
+            pstack/tests/test_multi_model_fanout.py
+      - name: Parse all PStack formula TOML
+        run: python3 -c 'import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in pathlib.Path("pstack/formulas").glob("*.toml")]'
+
+
+  host-compiler:
+    name: Gas City host-native dynamic formula compilation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PStack source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Checkout pinned Gas City host
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: gastownhall/gascity
+          ref: e7d4e23548b7f99a6543335ddd4e0c050e39f25e
+          path: gascity-host
+      - name: Install host Go version
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version-file: gascity-host/go.mod
+          cache: false
+      - name: Compile dynamic formula and per-item routing against real host
+        run: |
+          cp pstack/tests/dynamic_host_compile_test.go gascity-host/internal/formula/pstack_dynamic_external_test.go
+          cp pstack/tests/dynamic_host_dispatch_test.go gascity-host/internal/dispatch/pstack_dynamic_external_test.go
+          cd gascity-host
+          PSTACK_FORMULAS="$GITHUB_WORKSPACE/pstack/formulas" go test ./internal/formula ./internal/dispatch -run '^TestPStackDynamic' -count=1 -v -timeout=7m

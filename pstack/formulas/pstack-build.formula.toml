@@ -1,0 +1,227 @@
+description = """
+PStack implementation of build-base.
+
+This concrete workflow gates requirements, subtraction, foundation, and lever
+decisions with PStack principles, then runs implementation, evidence-bound
+review, and publish on the same full-lifecycle stage contract as build-base.
+"""
+formula = "pstack-build"
+version = 1
+
+extends = ["build-base"]
+target_required = true
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[catalog]
+name = "pstack-build"
+description = "Run the PStack principle-gated build lifecycle from requirements through evidence-bound review and optional publish."
+
+[metadata.gc.methodology]
+allowed_drain_policies = ["separate", "same-session"]
+implementation_strategy = "drain"
+interaction_modes = ["interactive", "autonomous", "headless"]
+review_modes = ["report", "agent", "interactive"]
+
+[vars]
+[vars.implementation_target]
+description = "PStack implementation role target."
+default = "pstack.implementation-worker"
+
+[vars.planning_formula]
+description = "PStack planning formula."
+default = "pstack-planning"
+
+[vars.decomposition_formula]
+description = "PStack decomposition formula."
+default = "pstack-decomposition"
+
+[vars.implementation_formula]
+description = "PStack implementation formula."
+default = "pstack-implementation"
+
+[vars.implementation_item_formula]
+description = "PStack single-item implementation formula."
+default = "pstack-work-item"
+
+[vars.code_review_formula]
+description = "PStack code-review formula."
+default = "pstack-review"
+
+[vars.review_fix_formula]
+description = "PStack review-fix formula."
+default = "pstack-fix-loop"
+
+[vars.principle_manifest]
+description = "Path to the complete PStack principle manifest."
+default = "principles/manifest.toml"
+
+[[steps]]
+id = "requirements"
+title = "Generate requirements"
+needs = ["prepare"]
+metadata = { "gc.run_target" = "pstack.investigator", "gc.build.artifact_schema" = "gc.build.requirements.v1", "gc.build.artifact_path_keys" = "gc.build.requirements_path,gc.var.requirements_path" }
+description_file = "../assets/workflows/pstack-build/requirements.md"
+
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "principle-selection"
+title = "Select applicable PStack principles"
+needs = ["requirements"]
+metadata = { "gc.run_target" = "pstack.investigator", "gc.build.artifact_schema" = "pstack.principle-application.v1", "gc.build.artifact_path_keys" = "pstack.artifact_path", "pstack.artifact_schema" = "pstack.principle-application.v1", "pstack.artifact_path" = "{{artifact_root}}/pstack/principle-selection.md", "pstack.principle_manifest" = "{{principle_manifest}}" }
+description_file = "../assets/workflows/pstack-build/principles.md"
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "subtract-assessment"
+title = "Assess subtraction before addition"
+needs = ["principle-selection"]
+metadata = { "gc.run_target" = "pstack.architect", "gc.build.artifact_schema" = "pstack.decision.v1", "gc.build.artifact_path_keys" = "pstack.artifact_path", "pstack.artifact_schema" = "pstack.decision.v1", "pstack.artifact_path" = "{{artifact_root}}/pstack/subtract-assessment.md" }
+description_file = "../assets/workflows/pstack-build/subtract.md"
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "foundation"
+title = "Model foundation, domain, and boundaries"
+needs = ["subtract-assessment"]
+metadata = { "gc.run_target" = "pstack.architect", "gc.build.artifact_schema" = "pstack.foundation.v1", "gc.build.artifact_path_keys" = "pstack.artifact_path", "pstack.artifact_schema" = "pstack.foundation.v1", "pstack.artifact_path" = "{{artifact_root}}/pstack/foundation.md" }
+description_file = "../assets/workflows/pstack-build/foundation.md"
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "plan"
+title = "Write implementation plan"
+needs = ["foundation"]
+metadata = { "gc.run_target" = "pstack.architect", "gc.build.artifact_schema" = "gc.build.plan.v1", "gc.build.artifact_path_keys" = "gc.build.plan_path,gc.var.plan_path" }
+description_file = "../assets/workflows/pstack-build/plan.md"
+
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "plan-review"
+title = "Run design review"
+needs = ["plan"]
+metadata = { "gc.run_target" = "pstack.review-synthesizer" }
+description_file = "../assets/workflows/pstack-build/plan-review.md"
+
+[[steps]]
+id = "lever-decision"
+title = "Choose the lever before fanout"
+needs = ["plan-review"]
+metadata = { "gc.run_target" = "pstack.architect", "gc.build.artifact_schema" = "pstack.lever-decision.v1", "gc.build.artifact_path_keys" = "pstack.artifact_path", "pstack.artifact_schema" = "pstack.lever-decision.v1", "pstack.artifact_path" = "{{artifact_root}}/pstack/lever-decision.md" }
+description_file = "../assets/workflows/pstack-build/lever.md"
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "decompose"
+title = "Create task beads"
+needs = ["lever-decision"]
+metadata = { "gc.run_target" = "gc.task-decomposer", "gc.build.artifact_schema" = "gc.build.decomposition.v1", "gc.build.artifact_path_keys" = "gc.build.decomposition_path,gc.var.decomposition_path" }
+description_file = "../assets/workflows/pstack-build/decompose.md"
+
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "implement"
+title = "Drain build implementation"
+needs = ["decompose"]
+condition = "{{drain_policy}} == separate"
+metadata = { "gc.run_target" = "{{implementation_target}}" }
+description_file = "../assets/workflows/pstack-build/implement.md"
+
+[steps.drain]
+context = "separate"
+formula = "pstack-work"
+member_access = "exclusive"
+
+[[steps]]
+id = "implement-same-session"
+title = "Drain build implementation in one shared session"
+needs = ["decompose"]
+condition = "{{drain_policy}} == same-session"
+metadata = { "gc.run_target" = "{{implementation_target}}" }
+description_file = "../assets/workflows/pstack-build/implement-same-session.md"
+
+[steps.drain]
+context = "shared"
+formula = "pstack-work-item"
+on_item_failure = "skip_remaining"
+member_access = "exclusive"
+
+[steps.drain.item]
+single_lane = true
+
+[[steps]]
+id = "review"
+title = "Run PStack implementation review"
+needs = ["summarize-implementation"]
+metadata = { "gc.run_target" = "pstack.review-synthesizer", "gc.build.artifact_schema" = "gc.build.review.v1", "gc.build.artifact_path_keys" = "gc.build.review_report_path" }
+expand = "pstack-build-review"
+expand_vars = { implementation_target = "{{implementation_target}}", review_mode = "{{review_mode}}", artifact_path_keys = "gc.build.review_report_path" }
+description_file = "../assets/workflows/pstack-build/review.md"
+
+[[steps]]
+id = "finalize"
+title = "Finalize pstack"
+needs = ["review"]
+metadata = { "gc.run_target" = "gc.run-operator", "gc.build.artifact_schema" = "gc.build.final-report.v1", "gc.build.artifact_path_keys" = "gc.build.final_report_path" }
+description_file = "../assets/workflows/pstack-build/finalize.md"
+
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "publish"
+title = "Optionally publish pstack"
+needs = ["finalize"]
+metadata = { "gc.run_target" = "gc.publisher" }
+description_file = "../assets/workflows/pstack-build/publish.md"

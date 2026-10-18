@@ -1,0 +1,70 @@
+description = "PStack run an experience-first feature build."
+formula = "pstack-feature"
+version = 1
+
+extends = ["pstack-build"]
+target_required = true
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[catalog]
+name = "pstack-feature"
+description = "PStack run an experience-first feature build."
+
+[[steps]]
+id = "experience"
+title = "Define target experience"
+needs = ["requirements"]
+metadata = { "gc.run_target" = "pstack.architect", "pstack.artifact_schema" = "gc.build.requirements.v1" }
+description_file = "../assets/workflows/pstack-variants/pstack-feature/experience.md"
+
+[[steps]]
+id = "principle-selection"
+title = "Select principles after target experience"
+needs = ["requirements", "experience"]
+metadata = { "gc.run_target" = "pstack.investigator", "gc.build.artifact_schema" = "pstack.principle-application.v1", "gc.build.artifact_path_keys" = "pstack.artifact_path", "pstack.artifact_schema" = "pstack.principle-application.v1", "pstack.artifact_path" = "{{artifact_root}}/pstack/principle-selection.md", "pstack.principle_manifest" = "{{principle_manifest}}" }
+description_file = "../assets/workflows/pstack-build/principles.md"
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "build"
+title = "Run pstack build"
+needs = ["experience", "implement", "implement-same-session"]
+metadata = { "gc.run_target" = "pstack.architect" }
+description_file = "../assets/workflows/pstack-variants/pstack-feature/build.md"
+
+[[steps]]
+id = "verify"
+title = "Verify user-visible outcome"
+needs = ["build"]
+metadata = { "gc.run_target" = "pstack.verifier", "gc.build.artifact_schema" = "pstack.verification.v1", "gc.build.artifact_path_keys" = "pstack.artifact_path", "pstack.artifact_schema" = "pstack.verification.v1", "pstack.artifact_path" = "{{artifact_root}}/pstack/verification.md" }
+description_file = "../assets/workflows/pstack-variants/pstack-feature/verify.md"
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
+
+[[steps]]
+id = "finalize"
+title = "Finalize pstack feature"
+needs = ["review", "verify"]
+metadata = { "gc.run_target" = "gc.run-operator", "gc.build.artifact_schema" = "gc.build.final-report.v1", "gc.build.artifact_path_keys" = "gc.build.final_report_path" }
+description_file = "../assets/workflows/pstack-build/finalize.md"
+
+[steps.check]
+max_attempts = 3
+
+[steps.check.check]
+mode = "exec"
+path = ".gc/scripts/checks/build-artifact-valid.sh"
+timeout = "5m"
