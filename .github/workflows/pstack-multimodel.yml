@@ -35,3 +35,27 @@ jobs:
             pstack/tests/test_multi_model_fanout.py
       - name: Parse all PStack formula TOML
         run: python3 -c 'import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in pathlib.Path("pstack/formulas").glob("*.toml")]'
+
+
+  host-compiler:
+    name: Gas City host-native dynamic formula compilation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PStack source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Checkout pinned Gas City host
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          repository: gastownhall/gascity
+          ref: e7d4e23548b7f99a6543335ddd4e0c050e39f25e
+          path: gascity-host
+      - name: Install host Go version
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version-file: gascity-host/go.mod
+          cache: false
+      - name: Compile dynamic formula and per-item routing against real host
+        run: |
+          cp pstack/tests/dynamic_host_compile_test.go gascity-host/internal/formula/pstack_dynamic_external_test.go
+          cd gascity-host
+          PSTACK_FORMULAS="$GITHUB_WORKSPACE/pstack/formulas" go test ./internal/formula -run '^TestPStackDynamicFanoutHostCompiler$' -count=1 -v -timeout=5m
