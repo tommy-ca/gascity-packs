@@ -39,7 +39,7 @@ def check_city(path: Path, rig: str) -> dict[str, tuple[str, str]]:
         if not isinstance(model, str) or not model.strip() or model.lower() in {"auto", "default", "unknown"}:
             raise PanelConfigError(f"{role}: explicit model required")
         results[role] = (provider, model)
-    if len({v[1] for v in results.values()}) != 3:
+    if len({v[1].casefold() for v in results.values()}) != 3:
         raise PanelConfigError("all three roles must declare distinct models")
     return results
 
