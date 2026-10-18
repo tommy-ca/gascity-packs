@@ -104,7 +104,8 @@ def validate(plan: dict, policy: dict, city_path: Path, rig: str, root: Path, wo
             raise ContractError("task selected a route outside allowlist")
         scope_ref = text_field(task["scope_ref"], "scope_ref", 200)
         # Only reference files relative to rig; prevent absolute, symlink and traversal.
-        secure_child(root, scope_ref)
+        if not secure_child(root, scope_ref).exists():
+            raise ContractError("task scope does not exist in rig root")
         objective = text_field(task["objective"], "objective", 500)
         if any(x in objective for x in ("\x00", "\r")):
             raise ContractError("invalid objective characters")
@@ -132,8 +133,27 @@ def validate(plan: dict, policy: dict, city_path: Path, rig: str, root: Path, wo
         raise ContractError("fanout metadata exceeds 60KB")
     return data
 
+def inspect_bead(bead_id: str) -> dict:
+    proc = subprocess.run(["gc", "bd", "show", bead_id, "--json"],
+                          capture_output=True, text=True, timeout=30)
+    if proc.returncode:
+        raise ContractError("cannot inspect planning bead")
+    bead = json.loads(proc.stdout)
+    if isinstance(bead, list):
+        if len(bead) != 1:
+            raise ContractError("ambiguous planning bead")
+        bead = bead[0]
+    if not isinstance(bead, dict) or not isinstance(bead.get("metadata"), dict):
+        raise ContractError("planning bead metadata unavailable")
+    return bead["metadata"]
+
+
 def publish(bead_id: str, data: dict) -> None:
     raw = json.dumps(data, separators=(",", ":"), ensure_ascii=True)
+    current = inspect_bead(bead_id)
+    existing = current.get("gc.output_json")
+    if existing and existing != raw:
+        raise ContractError("source already has different fanout data; refusing overwrite")
     proc = subprocess.run(
         ["gc", "bd", "update", bead_id, "--set-metadata", "gc.output_json=" + raw],
         check=False, capture_output=True, text=True, timeout=30,
@@ -164,6 +184,21 @@ def main() -> int:
             Path(args.city), args.rig, Path(args.root), args.workflow_id,
         )
         if args.bead_id:
+            import os
+            actual = os.environ.get("GC_BEAD_ID")
+            if not actual or actual != args.bead_id:
+                raise ContractError("metadata publish is allowed only from the actual GC_BEAD_ID")
+            meta = inspect_bead(args.bead_id)
+            planned = json.loads(Path(args.plan).read_text(encoding="utf-8"))
+            for key, expected in (
+                ("gc.root_bead_id", args.workflow_id),
+                ("pstack.dynamic.method", planned["method"]),
+                ("pstack.dynamic.revision", planned["revision"]),
+                ("pstack.dynamic.artifact_root", planned["artifact_root"]),
+                ("pstack.dynamic.rig_name", args.rig),
+            ):
+                if meta.get(key) != expected:
+                    raise ContractError(f"source bead {key} disagrees with validated plan")
             publish(args.bead_id, data)
         else:
             print(json.dumps(data, indent=2))
