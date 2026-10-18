@@ -71,3 +71,6 @@ gc formula cook pstack-dynamic-synthesize \
 ~~~
 
 Route/sling the resulting phase-2 workflow only after phase 1 passes. Its verify-fanin check validates the completed source workflow, source planning manifest, actual task count and every receipt before allowing the synthesizer to run. This gives a fail-closed, two-phase composition without a pack-specific scheduler. It still requires a disposable live host demonstration.
+
+
+**Runtime claim identity:** In a model-backed agent shell, `GC_BEAD_ID` is not reliably exported. Obtain the planning Bead ID using `gc hook current --id-only` from that session; `dynamic_contract.py --bead-id` internally resolves and validates the same current claim, refusing a mismatched or absent claim. A check script executed by the host controller receives `GC_BEAD_ID` separately.

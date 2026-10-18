@@ -200,6 +200,25 @@ def publish(bead_id: str, data: dict) -> None:
     if json.loads(current.get("metadata", {}).get("gc.output_json", "null")) != data:
         raise ContractError("gc.output_json did not persist exact validated plan")
 
+def current_claim_id() -> str:
+    """Agent session gets current claim via host back-channel, not GC_BEAD_ID."""
+    import os
+    bead = os.environ.get("GC_BEAD_ID", "").strip()
+    if not bead:
+        if not os.environ.get("GC_SESSION_ID"):
+            raise ContractError("no GC_SESSION_ID or controller-provided GC_BEAD_ID")
+        result = subprocess.run(
+            ["gc", "hook", "current", "--id-only"],
+            capture_output=True, text=True, timeout=30,
+        )
+        if result.returncode:
+            raise ContractError("cannot resolve Gas City session's current claimed bead")
+        bead = result.stdout.strip()
+    if not bead or len(bead) > 128 or any(c.isspace() or ord(c) < 33 for c in bead):
+        raise ContractError("invalid current claimed bead ID")
+    return bead
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     for field in ("plan", "policy", "city", "root", "rig", "workflow-id"):
@@ -211,9 +230,9 @@ def main() -> int:
         planned = json.loads(Path(args.plan).read_text(encoding="utf-8"))
         meta = None
         if args.bead_id:
-            actual = os.environ.get("GC_BEAD_ID")
-            if not actual or actual != args.bead_id:
-                raise ContractError("metadata publish is allowed only from the actual GC_BEAD_ID")
+            actual = current_claim_id()
+            if actual != args.bead_id:
+                raise ContractError("metadata publish is allowed only for the agent's actual claimed Bead")
             meta = inspect_bead(args.bead_id)
             trusted = next((os.environ[k] for k in ("GC_RIG_ROOT", "GC_BEADS_SCOPE_ROOT", "GC_STORE_PATH")
                             if os.environ.get(k)), "")

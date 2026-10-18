@@ -282,3 +282,40 @@ def test_scope_must_stay_inside_operator_authorized_subject(tmp_path):
     plan["tasks"][0]["scope_ref"] = "other.py"
     with pytest.raises(check.ContractError):
         check.validate(plan, policy, city, "app", tmp_path, "root-01", allowed_subject="src")
+
+
+
+def test_planner_claim_uses_session_backchannel(tmp_path, monkeypatch):
+    check = load("dynamic_contract.py")
+    monkeypatch.delenv("GC_BEAD_ID", raising=False)
+    monkeypatch.setenv("GC_SESSION_ID", "session-bead-a")
+    calls = []
+    def run(args, **kwargs):
+        calls.append(args)
+        return SimpleNamespace(returncode=0, stdout="bd-task-123\n", stderr="")
+    monkeypatch.setattr(check.subprocess, "run", run)
+    assert check.current_claim_id() == "bd-task-123"
+    assert calls == [["gc", "hook", "current", "--id-only"]]
+    monkeypatch.setenv("GC_BEAD_ID", "bd-from-check")
+    assert check.current_claim_id() == "bd-from-check"
+    assert len(calls) == 1
+
+
+def test_planner_claim_fails_closed_without_session_or_claim(monkeypatch):
+    check = load("dynamic_contract.py")
+    monkeypatch.delenv("GC_BEAD_ID", raising=False)
+    monkeypatch.delenv("GC_SESSION_ID", raising=False)
+    with pytest.raises(check.ContractError):
+        check.current_claim_id()
+    monkeypatch.setenv("GC_SESSION_ID", "session-bead-a")
+    monkeypatch.setattr(check.subprocess, "run",
+        lambda *args, **kwargs: SimpleNamespace(returncode=1, stdout="", stderr="not claimed"))
+    with pytest.raises(check.ContractError):
+        check.current_claim_id()
+
+
+def test_host_exec_check_scripts_are_executable():
+    import os
+    for p in ("check_dynamic_fanin.py", "check_dynamic_task.py"):
+        path = PACK / "scripts" / p
+        assert os.access(path, os.X_OK), f"Gas City exec-check script not executable: {p}"
