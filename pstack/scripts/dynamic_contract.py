@@ -177,46 +177,38 @@ def validate_publish_context(args, meta: dict, plan: dict, trusted_root: str) ->
         raise ContractError("missing authorized source scope")
 
 
-def publish(bead_id: str, data: dict) -> None:
+def publish(bead_id: str, data: dict, store_ref: str) -> None:
+    """Atomically publish once in the authorized local rig; never last-writer-wins."""
     raw = json.dumps(data, separators=(",", ":"), ensure_ascii=True)
-    current = inspect_bead(bead_id)
-    existing = current.get("gc.output_json")
-    if existing and existing != raw:
-        raise ContractError("source already has different fanout data; refusing overwrite")
-    proc = subprocess.run(
-        ["gc", "bd", "update", bead_id, "--set-metadata", "gc.output_json=" + raw],
+    if not re.fullmatch(r"rig:[A-Za-z0-9][A-Za-z0-9._-]*", store_ref):
+        raise ContractError("invalid exact rig store ref")
+    # Host CAS outcomes: swapped | already_next | conflict. Conflict exits 0;
+    # always parse its structured outcome instead of trusting process status.
+    result = subprocess.run(
+        ["gc", "beads", "metadata-cas", bead_id,
+         "--store-ref=" + store_ref, "--key=gc.output_json",
+         "--expected=", "--next=" + raw, "--json"],
         check=False, capture_output=True, text=True, timeout=30,
     )
-    if proc.returncode:
-        raise ContractError("gc bd update refused metadata: " + proc.stderr[:300])
-    check = subprocess.run(["gc", "bd", "show", bead_id, "--json"], capture_output=True, text=True, timeout=30)
-    if check.returncode:
-        raise ContractError("cannot verify metadata persistence")
-    current = json.loads(check.stdout)
-    if isinstance(current, list):
-        if len(current) != 1:
-            raise ContractError("ambiguous source bead")
-        current = current[0]
-    if json.loads(current.get("metadata", {}).get("gc.output_json", "null")) != data:
-        raise ContractError("gc.output_json did not persist exact validated plan")
-
-def current_claim_id() -> str:
-    """Agent session gets current claim via host back-channel, not GC_BEAD_ID."""
-    import os
-    bead = os.environ.get("GC_BEAD_ID", "").strip()
-    if not bead:
-        if not os.environ.get("GC_SESSION_ID"):
-            raise ContractError("no GC_SESSION_ID or controller-provided GC_BEAD_ID")
-        result = subprocess.run(
-            ["gc", "hook", "current", "--id-only"],
-            capture_output=True, text=True, timeout=30,
-        )
-        if result.returncode:
-            raise ContractError("cannot resolve Gas City session's current claimed bead")
-        bead = result.stdout.strip()
-    if not bead or len(bead) > 128 or any(c.isspace() or ord(c) < 33 for c in bead):
-        raise ContractError("invalid current claimed bead ID")
-    return bead
+    if result.returncode:
+        raise ContractError("host metadata CAS unavailable/failed: " + result.stderr[:300])
+    try:
+        outcome = json.loads(result.stdout)
+    except (ValueError, TypeError) as exc:
+        raise ContractError("invalid metadata CAS response") from exc
+    if (not isinstance(outcome, dict) or outcome.get("ok") is not True
+            or outcome.get("key") != "gc.output_json"
+            or outcome.get("bead_id") != bead_id
+            or outcome.get("store_ref") != store_ref
+            or outcome.get("outcome") not in {"swapped", "already_next"}):
+        raise ContractError("metadata CAS conflict or inconsistent host result")
+    current = inspect_bead(bead_id)
+    try:
+        stored = json.loads(current.get("gc.output_json", "null"))
+    except (ValueError, TypeError) as exc:
+        raise ContractError("invalid post-CAS metadata readback") from exc
+    if stored != data:
+        raise ContractError("CAS response did not persist exact validated plan")
 
 
 def main() -> int:
@@ -244,7 +236,7 @@ def main() -> int:
             allowed_subject=meta.get("pstack.dynamic.subject_path") if meta else None,
         )
         if args.bead_id:
-            publish(args.bead_id, data)
+            publish(args.bead_id, data, 'rig:' + args.rig)
         else:
             print(json.dumps(data, indent=2))
     except (ContractError, ValueError, OSError, subprocess.TimeoutExpired) as exc:
