@@ -60,11 +60,13 @@ def test_dynamic_host_formula_fans_out_from_output(method):
     assert on["bond"] == "pstack-dynamic-worker"
     assert on["parallel"] is True
     assert on["vars"]["route_target"] == "{item.route_target}"
-    assert steps["synthesize"]["needs"] == ["plan-fanout"]
+    assert len(steps) == 1
+    assert "synthesize" not in steps
+    # Host injects plan-fanout AFTER authored-graph validation; it is not a legal authored needs reference.
     assert not any(x.startswith("lane-") for x in steps)
     assert "gc.provider_panel" not in str(body)
     assert all(x["required"] for x in body["vars"].values())
-    assert "verify" in steps if method == "arena" else "verify" not in steps
+    assert "verify" not in steps  # synthesis is a separately gated second workflow
 
 def test_dynamic_worker_is_one_reusable_expansion():
     body = tomllib.loads((PACK / "formulas/pstack-dynamic-worker.formula.toml").read_text())
@@ -207,3 +209,33 @@ def test_fixed_panel_roles_and_templates_are_not_required():
     for legacy in ("swarm", "arena", "interrogate"):
         formula = tomllib.loads((PACK / f"formulas/pstack-{legacy}.formula.toml").read_text())
         assert not any(x["id"].startswith("lane-") for x in formula["steps"])
+
+
+def test_synthesis_is_separate_and_depends_on_verified_fanin():
+    body = tomllib.loads((PACK / "formulas/pstack-dynamic-synthesize.formula.toml").read_text())
+    steps = {x["id"]: x for x in body["steps"]}
+    assert set(steps) == {"verify-fanin", "synthesize", "verify"}
+    assert steps["verify-fanin"]["check"]["check"]["path"] == "../scripts/check_dynamic_fanin.py"
+    assert steps["synthesize"]["needs"] == ["verify-fanin"]
+    assert steps["verify"]["needs"] == ["synthesize"]
+
+
+def test_fanin_requires_source_workflow_pass_and_exact_task_receipts(tmp_path):
+    plan, policy, city = environment(tmp_path, 5)
+    items = load("dynamic_contract.py").validate(plan, policy, city, "app", tmp_path, "root-01")["tasks"]
+    checker = load("check_dynamic_fanin.py")
+    worker = load("check_dynamic_task.py")
+    for item in items:
+        store_receipt(tmp_path, item)
+        assert worker.validate(tmp_path, metadata(item))["task_id"] == item["task_id"]
+    planning = {"id": "plan-bead", "metadata": {"gc.root_bead_id":"root-01",
+                "gc.output_json": json.dumps({"tasks": items})}}
+    root = {"id": "root-01", "status":"closed", "metadata":{"gc.outcome":"pass"}}
+    assert len(checker.validate(tmp_path, root, planning, "swarm", REV, "root-01")) == 5
+    root["metadata"]["gc.outcome"] = "fail"
+    with pytest.raises(checker.FanInError):
+        checker.validate(tmp_path, root, planning, "swarm", REV, "root-01")
+    root["metadata"]["gc.outcome"] = "pass"
+    (tmp_path / items[3]["artifact_path"]).unlink()
+    with pytest.raises(checker.FanInError):
+        checker.validate(tmp_path, root, planning, "swarm", REV, "root-01")
