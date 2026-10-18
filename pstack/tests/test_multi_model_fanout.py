@@ -202,7 +202,7 @@ def test_publish_fails_on_nonpersisted_metadata(tmp_path, monkeypatch):
             }), stderr="")
         return SimpleNamespace(returncode=0, stdout=json.dumps({"metadata":{}}), stderr="")
     monkeypatch.setattr(check.subprocess, "run", run)
-    with pytest.raises(check.ContractError, match="readback"):
+    with pytest.raises(check.ContractError, match="persist"):
         check.publish("bead-001", output, "rig:app")
     assert calls[0][:4] == ["gc", "beads", "metadata-cas", "bead-001"]
     assert "--expected=" in calls[0] and "--key=gc.output_json" in calls[0]
@@ -343,8 +343,11 @@ def test_planner_claim_uses_session_backchannel(tmp_path, monkeypatch):
     assert check.current_claim_id() == "bd-task-123"
     assert calls == [["gc", "hook", "current", "--id-only"]]
     monkeypatch.setenv("GC_BEAD_ID", "bd-from-check")
+    # An agent session must use the claim back-channel, not a stale/forged env ID.
+    assert check.current_claim_id() == "bd-task-123"
+    assert len(calls) == 2
+    monkeypatch.delenv("GC_SESSION_ID")
     assert check.current_claim_id() == "bd-from-check"
-    assert len(calls) == 1
 
 
 def test_planner_claim_fails_closed_without_session_or_claim(monkeypatch):

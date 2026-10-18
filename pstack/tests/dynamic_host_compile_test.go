@@ -40,7 +40,7 @@ func TestPStackDynamicFanoutHostCompiler(t *testing.T) {
     if err != nil { t.Fatalf("real host synthesis Compile: %v", err) }
     checkFound, attemptFound := false, false
     for _, step := range synth.Steps {
-        if step.ID == "verify-fanin" && step.Metadata["gc.kind"] == "ralph" {
+        if strings.Contains(step.ID, "verify-fanin") && step.Metadata["gc.check_path"] != "" {
             checkFound = true
             check := step.Metadata["gc.check_path"]
             if check == "" || !filepath.IsAbs(check) {

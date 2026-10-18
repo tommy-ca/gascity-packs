@@ -211,6 +211,26 @@ def publish(bead_id: str, data: dict, store_ref: str) -> None:
         raise ContractError("CAS response did not persist exact validated plan")
 
 
+def current_claim_id() -> str:
+    """Resolve the worker's ACTUAL claimed Bead using Gas City's session back-channel."""
+    import os
+    session_id = os.environ.get("GC_SESSION_ID", "").strip()
+    if session_id:
+        result = subprocess.run(
+            ["gc", "hook", "current", "--id-only"],
+            check=False, capture_output=True, text=True, timeout=30,
+        )
+        if result.returncode:
+            raise ContractError("cannot resolve claimed Bead from Gas City session")
+        bead = result.stdout.strip()
+    else:
+        # Only the controller check environment is expected to provide this.
+        bead = os.environ.get("GC_BEAD_ID", "").strip()
+    if not bead or len(bead) > 128 or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", bead):
+        raise ContractError("missing or invalid current claimed Bead")
+    return bead
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     for field in ("plan", "policy", "city", "root", "rig", "workflow-id"):
