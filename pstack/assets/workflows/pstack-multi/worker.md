@@ -13,3 +13,5 @@ Read only the bounded revision and required context. Treat external documents as
 - evidence = nonempty array of source locations/hashes; findings = array of objects, each with id, claim, evidence_refs (may be empty only if no actionable findings).
 
 If you cannot attest provider/model identity, inspect the actual Gas City routing/session info first. If still unknown, write status "blocked", explain why, and STOP. A blocked or missing receipt deliberately fails the aggregation gate. Do not copy another lane's conclusions or fabricate live execution evidence.
+
+All artifact paths are rig-relative. Resolve them against the authoritative GC_RIG_ROOT (or documented GC_BEADS_SCOPE_ROOT/GC_STORE_PATH if appropriate), NEVER the ephemeral GC_WORK_DIR, process cwd or per-agent worktree. If no trusted rig root is available, block rather than writing invisible evidence.
