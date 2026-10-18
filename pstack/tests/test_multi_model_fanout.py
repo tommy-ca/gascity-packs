@@ -239,3 +239,46 @@ def test_fanin_requires_source_workflow_pass_and_exact_task_receipts(tmp_path):
     (tmp_path / items[3]["artifact_path"]).unlink()
     with pytest.raises(checker.FanInError):
         checker.validate(tmp_path, root, planning, "swarm", REV, "root-01")
+
+
+def test_publish_context_rejects_policy_city_root_substitution(tmp_path):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path)
+    policyfile = tmp_path / "routes.json"
+    policyfile.write_text(json.dumps(policy))
+    args = SimpleNamespace(
+        root=str(tmp_path), city=str(city), policy=str(policyfile),
+        workflow_id="root-01", rig="app"
+    )
+    meta = {
+        "gc.root_bead_id": "root-01",
+        "pstack.dynamic.method": "swarm",
+        "pstack.dynamic.revision": REV,
+        "pstack.dynamic.artifact_root": "runs/run-001",
+        "pstack.dynamic.rig_name": "app",
+        "pstack.dynamic.city_config": str(city),
+        "pstack.dynamic.route_policy": str(policyfile),
+        "pstack.dynamic.subject_path": "src",
+    }
+    check.validate_publish_context(args, meta, plan, str(tmp_path))
+    for field, attr, invalid in (
+        ("route_policy", "policy", str(tmp_path / "unapproved.json")),
+        ("city_config", "city", str(tmp_path / "different-city.toml")),
+    ):
+        mutated = SimpleNamespace(**vars(args))
+        setattr(mutated, attr, invalid)
+        with pytest.raises(check.ContractError):
+            check.validate_publish_context(mutated, meta, plan, str(tmp_path))
+    with pytest.raises(check.ContractError):
+        check.validate_publish_context(args, meta, plan, str(tmp_path.parent))
+
+
+def test_scope_must_stay_inside_operator_authorized_subject(tmp_path):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path)
+    result = check.validate(plan, policy, city, "app", tmp_path, "root-01", allowed_subject="src")
+    assert len(result["tasks"]) == 5
+    (tmp_path / "other.py").write_text("x = 3")
+    plan["tasks"][0]["scope_ref"] = "other.py"
+    with pytest.raises(check.ContractError):
+        check.validate(plan, policy, city, "app", tmp_path, "root-01", allowed_subject="src")
