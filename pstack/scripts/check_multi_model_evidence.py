@@ -34,6 +34,11 @@ def validate_receipts(
     rel = Path(artifact_dir)
     if rel.is_absolute():
         raise EvidenceError("artifact_dir must be rig-relative")
+    cursor = root
+    for component in rel.parts:
+        cursor = cursor / component
+        if cursor.is_symlink():
+            raise EvidenceError("artifact directory contains a symlink")
     folder = (root / rel).resolve()
     if folder == root or root not in folder.parents:
         raise EvidenceError("artifact directory escapes rig root")
@@ -43,6 +48,8 @@ def validate_receipts(
         file = folder / f"lane-{lane}.json"
         if file.is_symlink() or not file.is_file():
             raise EvidenceError(f"{file}: missing or symlink")
+        if file.stat().st_size > 1_048_576:
+            raise EvidenceError(f"{file}: receipt exceeds 1 MiB")
         try:
             data = json.loads(file.read_text(encoding="utf-8"))
         except (OSError, UnicodeError, ValueError) as exc:
@@ -62,16 +69,16 @@ def validate_receipts(
         model = required(data, "model")
         if bindings is not None and (required(data, "provider"), model) != bindings.get(f"pstack.panel-{lane}"):
             raise EvidenceError(f"{file}: provider/model does not match configured city role")
-        if model.lower() in {"auto", "default", "unknown"} or model in models:
+        if model.casefold() in {"auto", "default", "unknown"} or model.casefold() in models:
             raise EvidenceError(f"{file}: unverified or duplicate model identity")
-        models.add(model)
+        models.add(model.casefold())
         evidence = data.get("evidence")
-        if not isinstance(evidence, list) or not evidence or not all(
+        if not isinstance(evidence, list) or not evidence or len(evidence) > 500 or not all(
             isinstance(s, str) and s.strip() for s in evidence
         ):
             raise EvidenceError(f"{file}: missing evidence")
         findings = data.get("findings")
-        if not isinstance(findings, list):
+        if not isinstance(findings, list) or len(findings) > 200:
             raise EvidenceError(f"{file}: findings must be an array")
         for finding in findings:
             if not isinstance(finding, dict):
