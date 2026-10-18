@@ -57,5 +57,6 @@ jobs:
       - name: Compile dynamic formula and per-item routing against real host
         run: |
           cp pstack/tests/dynamic_host_compile_test.go gascity-host/internal/formula/pstack_dynamic_external_test.go
+          cp pstack/tests/dynamic_host_dispatch_test.go gascity-host/internal/dispatch/pstack_dynamic_external_test.go
           cd gascity-host
-          PSTACK_FORMULAS="$GITHUB_WORKSPACE/pstack/formulas" go test ./internal/formula -run '^TestPStackDynamicFanoutHostCompiler$' -count=1 -v -timeout=5m
+          PSTACK_FORMULAS="$GITHUB_WORKSPACE/pstack/formulas" go test ./internal/formula ./internal/dispatch -run '^TestPStackDynamic' -count=1 -v -timeout=7m
