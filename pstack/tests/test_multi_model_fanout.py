@@ -195,13 +195,59 @@ def test_publish_fails_on_nonpersisted_metadata(tmp_path, monkeypatch):
     calls = []
     def run(args, **kwargs):
         calls.append(args)
-        if args[2] == "update":
-            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        if args[:3] == ["gc", "beads", "metadata-cas"]:
+            return SimpleNamespace(returncode=0, stdout=json.dumps({
+                "ok": True, "key": "gc.output_json", "bead_id": "bead-001",
+                "store_ref": "rig:app", "outcome": "swapped"
+            }), stderr="")
         return SimpleNamespace(returncode=0, stdout=json.dumps({"metadata":{}}), stderr="")
     monkeypatch.setattr(check.subprocess, "run", run)
+    with pytest.raises(check.ContractError, match="readback"):
+        check.publish("bead-001", output, "rig:app")
+    assert calls[0][:4] == ["gc", "beads", "metadata-cas", "bead-001"]
+    assert "--expected=" in calls[0] and "--key=gc.output_json" in calls[0]
+    assert not any(call[:3] == ["gc", "bd", "update"] for call in calls)
+
+
+@pytest.mark.parametrize("outcome,success", [
+    ("swapped", True), ("already_next", True), ("conflict", False)
+])
+def test_atomic_fanout_metadata_publish_outcomes(tmp_path, monkeypatch, outcome, success):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path)
+    output = check.validate(plan, policy, city, "app", tmp_path, "root-01")
+    calls = []
+    def run(args, **kwargs):
+        calls.append(args)
+        if args[:3] == ["gc", "beads", "metadata-cas"]:
+            return SimpleNamespace(returncode=0, stdout=json.dumps({
+                "ok": True, "key": "gc.output_json", "bead_id": "bead-001",
+                "store_ref": "rig:app", "outcome": outcome
+            }), stderr="")
+        return SimpleNamespace(returncode=0, stdout=json.dumps({
+            "metadata": {"gc.output_json": json.dumps(output)}
+        }), stderr="")
+    monkeypatch.setattr(check.subprocess, "run", run)
+    if success:
+        check.publish("bead-001", output, "rig:app")
+        assert len(calls) == 2
+    else:
+        with pytest.raises(check.ContractError, match="conflict"):
+            check.publish("bead-001", output, "rig:app")
+        assert len(calls) == 1
+
+
+def test_atomic_publish_rejects_bad_store_ref_or_broken_host(tmp_path, monkeypatch):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path)
+    output = check.validate(plan, policy, city, "app", tmp_path, "root-01")
     with pytest.raises(check.ContractError):
-        check.publish("bead-001", output)
-    assert any(call[:5] == ["gc", "bd", "update", "bead-001", "--set-metadata"] for call in calls)
+        check.publish("bead-001", output, "city:../../outside")
+    monkeypatch.setattr(check.subprocess, "run",
+        lambda args, **kwargs: SimpleNamespace(returncode=1, stdout="", stderr="unsupported"))
+    with pytest.raises(check.ContractError, match="CAS unavailable"):
+        check.publish("bead-001", output, "rig:app")
+
 
 def test_fixed_panel_roles_and_templates_are_not_required():
     for lane in "abc":
