@@ -1,5 +1,5 @@
 # Dynamic item count, per-item route target and outputs; no fixed model panel.
-description = "PStack arena with runtime-size heterogeneous model fanout."
+description = "PStack arena dynamic host-owned fanout; synthesize via pstack-dynamic-synthesize only after source workflow closes."
 formula = "pstack-arena-multi"
 version = 2
 target_required = false
@@ -48,16 +48,3 @@ method = "{item.method}"
 provider = "{item.provider}"
 model = "{item.model}"
 
-[[steps]]
-id = "synthesize"
-title = "Aggregate dynamically generated arena children"
-needs = ["plan-fanout"]
-metadata = { "gc.run_target" = "pstack.review-synthesizer", "pstack.dynamic.method" = "arena", "pstack.dynamic.artifact_root" = "{{artifact_root}}", "pstack.dynamic.revision" = "{{revision}}" }
-description_file = "../assets/workflows/pstack-dynamic/synthesize.md"
-
-[[steps]]
-id = "verify"
-title = "Verify dynamic arena synthesis"
-needs = ["synthesize"]
-metadata = { "gc.run_target" = "pstack.verifier", "pstack.dynamic.revision" = "{{revision}}", "pstack.dynamic.artifact_root" = "{{artifact_root}}" }
-description_file = "../assets/workflows/pstack-dynamic/verify.md"
