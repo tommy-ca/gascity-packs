@@ -1,4 +1,7 @@
-"""Real native DAG shape and negative evidence tests; no live model claim."""
+"""Dynamic N-task PStack host-fanout contracts and negative routing checks.
+
+Static tests only: native Gas City runtime integration is a separate proof gate.
+"""
 from __future__ import annotations
 
 import importlib.util
@@ -6,214 +9,195 @@ import json
 import sys
 import tomllib
 from pathlib import Path
-
+from types import SimpleNamespace
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
+PACK = Path(__file__).resolve().parents[1]
+REV = "a" * 40
 
-
-def load_script(filename: str):
-    spec = importlib.util.spec_from_file_location(filename.removesuffix(".py"), ROOT / "scripts" / filename)
-    assert spec is not None and spec.loader is not None
+def load(name):
+    p = PACK / "scripts" / name
+    spec = importlib.util.spec_from_file_location(name.removesuffix(".py"), p)
+    assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
-
-@pytest.mark.parametrize("name,first,join", (
-    ("swarm", "frame", "fanin"),
-    ("arena", "trigger", "judge"),
-    ("interrogate", "select", "judgment"),
-))
-def test_independent_model_lanes(name, first, join):
-    path = ROOT / "formulas" / f"pstack-{name}-multi.formula.toml"
-    formula = tomllib.loads(path.read_text(encoding="utf-8"))
-    assert formula["requires"]["formula_compiler"] == ">=2.0.0"
-    assert all(v["required"] for v in formula["vars"].values())
-    steps = {step["id"]: step for step in formula["steps"]}
-    assert len(steps) == (7 if name == "arena" else 6)
-    assert not steps[first].get("needs")
-    targets = []
-    outputs = []
-    for lane in "abc":
-        step = steps[f"lane-{lane}"]
-        assert step["needs"] == [first]
-        meta = step["metadata"]
-        assert meta["gc.run_target"] == f"pstack.panel-{lane}"
-        assert meta["pstack.multi.lane_id"] == lane
-        assert meta["pstack.multi.artifact_dir"] == "{{artifact_root}}/pstack/multi/" + name
-        assert meta["pstack.multi.output_path"].endswith(f"lane-{lane}.json")
-        targets.append(meta["gc.run_target"])
-        outputs.append(meta["pstack.multi.output_path"])
-    assert len(set(targets)) == len(set(outputs)) == 3
-    assert set(steps["evidence-gate"]["needs"]) == {"lane-a", "lane-b", "lane-c"}
-    assert steps["evidence-gate"]["check"]["check"]["path"] == "../scripts/check_multi_model_evidence.py"
-    assert steps["evidence-gate"]["check"]["check"]["mode"] == "exec"
-    assert steps["evidence-gate"]["metadata"]["pstack.multi.city_config"] == "{{city_config}}"
-    assert steps["evidence-gate"]["metadata"]["pstack.multi.rig_name"] == "{{rig_name}}"
-    assert steps[join]["needs"] == ["evidence-gate"]
-    if name == "arena":
-        assert steps["verify"]["needs"] == ["judge"]
-    assert "gc.provider_panel" not in path.read_text()
-    assert "gc.graph_operator" not in path.read_text()
-    for step in steps.values():
-        assert (path.parent / step["description_file"]).resolve().is_file()
-
-
-def test_panel_roles_are_providerless():
-    for lane in "abc":
-        config = tomllib.loads((ROOT / f"agents/panel-{lane}/agent.toml").read_text())
-        assert config["scope"] == "rig"
-        assert config["fallback"] is True
-        assert "provider" not in config
-        assert "option_defaults" not in config
-
-
-def receipt(lane, **override):
-    value = dict(
-        schema="pstack.multi-lane.v1", workflow="swarm", workflow_id="bead-1",
-        lane_id=lane, run_target=f"pstack.panel-{lane}",
-        provider=("claude", "codex", "gemini")["abc".index(lane)],
-        model=("sonnet", "gpt-5.5", "gemini-2.5-pro")["abc".index(lane)],
-        source_revision="abc1234", status="complete",
-        summary="Evidence-backed finding", evidence=["file.py:12"],
-        findings=[dict(id="F1", claim="Observed", evidence_refs=["file.py:12"])],
-    )
-    value.update(override)
-    return value
-
-
-def setup_receipts(root):
-    folder = root / ".gc" / "runs" / "test" / "pstack" / "multi" / "swarm"
-    folder.mkdir(parents=True)
-    for lane in "abc":
-        (folder / f"lane-{lane}.json").write_text(json.dumps(receipt(lane)))
-    return folder
-
-
-def checked(check, root):
-    return check.validate_receipts(root, ".gc/runs/test/pstack/multi/swarm", "swarm", "bead-1", "abc1234")
-
-
-def test_three_lane_gate_passes_valid_receipts(tmp_path):
-    check = load_script("check_multi_model_evidence.py")
-    setup_receipts(tmp_path)
-    assert len(checked(check, tmp_path)) == 3
-
-
-@pytest.mark.parametrize("changes", [
-    {"model": "sonnet"},
-    {"source_revision": "old-sha"},
-    {"status": "blocked"},
-    {"workflow_id": "wrong-run"},
-    {"lane_id": "a"},
-    {"model": "auto"},
-    {"evidence": []},
-    {"findings": [dict(id="F1", claim="Unsupported", evidence_refs=[])]},
-])
-def test_three_lane_gate_blocks_invalid_receipts(tmp_path, changes):
-    check = load_script("check_multi_model_evidence.py")
-    folder = setup_receipts(tmp_path)
-    (folder / "lane-b.json").write_text(json.dumps(receipt("b", **changes)))
-    with pytest.raises(check.EvidenceError):
-        checked(check, tmp_path)
-
-
-def test_three_lane_gate_blocks_missing_corrupt_symlink_and_escape(tmp_path):
-    check = load_script("check_multi_model_evidence.py")
-    folder = setup_receipts(tmp_path)
-    b = folder / "lane-b.json"
-    b.unlink()
-    with pytest.raises(check.EvidenceError):
-        checked(check, tmp_path)
-    b.write_text("corrupt json")
-    with pytest.raises(check.EvidenceError):
-        checked(check, tmp_path)
-    b.unlink()
-    elsewhere = tmp_path / "elsewhere.json"
-    elsewhere.write_text(json.dumps(receipt("b")))
-    b.symlink_to(elsewhere)
-    with pytest.raises(check.EvidenceError):
-        checked(check, tmp_path)
-    with pytest.raises(check.EvidenceError):
-        check.validate_receipts(tmp_path, "../../outside", "swarm", "bead-1", "abc1234")
-
-
-def city(models=("sonnet", "gpt-5.5", "gemini-2.5-pro")):
+def environment(tmp_path, count=5, role_count=2):
+    roles = [(f"city.worker-{i}", ("claude", "codex", "gemini")[i % 3], f"model-{i}") for i in range(role_count)]
     lines = ['[[rigs]]', 'name = "app"']
-    for lane, provider, model in zip("abc", ("claude", "codex", "gemini"), models):
-        lines += ["[[rigs.patches]]", f'agent = "pstack.panel-{lane}"',
-                  f'provider = "{provider}"',
-                  f'option_defaults = {{ model = "{model}" }}']
-    return "\n".join(lines) + "\n"
+    for target, provider, model in roles:
+        lines += ["[[rigs.patches]]", f'agent = "{target}"',
+                  f'provider = "{provider}"', f'option_defaults = {{ model = "{model}" }}']
+    city = tmp_path / "city.toml"
+    city.write_text("\n".join(lines) + "\n")
+    policy = {"version": 1, "max_tasks": 64,
+              "routes": [dict(target=r, provider=p, model=m) for r,p,m in roles]}
+    plan = {"method": "swarm", "revision": REV, "artifact_root": "runs/run-001",
+            "tasks": [dict(id=f"task{i}", route_target=roles[i % len(roles)][0],
+                           scope_ref="src/module.py", objective=f"Inspect slice {i}")
+                      for i in range(count)]}
+    return plan, policy, city
 
+@pytest.mark.parametrize("count", [2, 3, 5, 8, 64])
+def test_dynamic_cardinality_without_panels(tmp_path, count):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path, count)
+    result = check.validate(plan, policy, city, "app", tmp_path, "root-01")
+    assert len(result["tasks"]) == count
+    assert len({x["model"] for x in result["tasks"]}) == 2
+    assert len({x["artifact_path"] for x in result["tasks"]}) == count
 
-def test_declared_city_model_binding_preflight(tmp_path):
-    check = load_script("check_multi_model_city.py")
-    path = tmp_path / "city.toml"
-    path.write_text(city())
-    assert len(check.check_city(path, "app")) == 3
-    path.write_text(city(("sonnet", "sonnet", "gemini-2.5-pro")))
-    with pytest.raises(check.PanelConfigError):
-        check.check_city(path, "app")
-    path.write_text(city().replace('provider = "gemini"', 'provider = "unknown-runtime"'))
-    with pytest.raises(check.PanelConfigError):
-        check.check_city(path, "app")
-    path.write_text(city().replace('model = "sonnet"', 'model = "auto"'))
-    with pytest.raises(check.PanelConfigError):
-        check.check_city(path, "app")
+@pytest.mark.parametrize("method", ["swarm", "arena", "interrogate"])
+def test_dynamic_host_formula_fans_out_from_output(method):
+    body = tomllib.loads((PACK / f"formulas/pstack-{method}-multi.formula.toml").read_text())
+    steps = {x["id"]: x for x in body["steps"]}
+    on = steps["plan"]["on_complete"]
+    assert on["for_each"] == "output.tasks"
+    assert on["bond"] == "pstack-dynamic-worker"
+    assert on["parallel"] is True
+    assert on["vars"]["route_target"] == "{item.route_target}"
+    assert steps["synthesize"]["needs"] == ["plan-fanout"]
+    assert not any(x.startswith("lane-") for x in steps)
+    assert "gc.provider_panel" not in str(body)
+    assert all(x["required"] for x in body["vars"].values())
+    assert "verify" in steps if method == "arena" else "verify" not in steps
 
+def test_dynamic_worker_is_one_reusable_expansion():
+    body = tomllib.loads((PACK / "formulas/pstack-dynamic-worker.formula.toml").read_text())
+    assert body["type"] == "expansion"
+    assert len(body["template"]) == 1
+    item = body["template"][0]
+    assert item["metadata"]["gc.run_target"] == "{route_target}"
+    assert item["metadata"]["pstack.dynamic.artifact_path"] == "{artifact_path}"
+    assert item["check"]["check"]["path"] == "../scripts/check_dynamic_task.py"
 
-def test_original_method_formulas_are_not_replaced():
-    for stem in ("swarm", "arena", "interrogate"):
-        old = tomllib.loads((ROOT / "formulas" / f"pstack-{stem}.formula.toml").read_text())
-        assert not any(step["id"].startswith("lane-") for step in old["steps"])
+@pytest.mark.parametrize("mutator", [
+    lambda p: p["tasks"][0].update(route_target="evil.shell"),
+    lambda p: p["tasks"][0].update(id="../escape"),
+    lambda p: p["tasks"][1].update(id="TASK0"),
+    lambda p: p["tasks"][0].update(scope_ref="../../outside"),
+    lambda p: p.update(revision="floating-main"),
+    lambda p: p.update(artifact_root="../../bad"),
+    lambda p: p["tasks"][0].update(objective="bad\x00instruction"),
+    lambda p: p.update(tasks=p["tasks"][:1]),
+])
+def test_dynamic_plan_rejects_malicious_or_invalid_input(tmp_path, mutator):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path)
+    mutator(plan)
+    with pytest.raises(check.ContractError):
+        check.validate(plan, policy, city, "app", tmp_path, "root-01")
 
+def test_dynamic_plan_rejects_duplicate_or_unbound_routes(tmp_path):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path)
+    policy["routes"].append(dict(policy["routes"][0]))
+    with pytest.raises(check.ContractError):
+        check.validate(plan, policy, city, "app", tmp_path, "root-01")
+    policy["routes"].pop()
+    text = city.read_text().replace('model = "model-0"', 'model = "mismatch"')
+    city.write_text(text)
+    with pytest.raises(check.ContractError):
+        check.validate(plan, policy, city, "app", tmp_path, "root-01")
 
-def test_receipts_must_match_declared_role_config(tmp_path):
-    evidence = load_script("check_multi_model_evidence.py")
-    city_check = load_script("check_multi_model_city.py")
-    path = tmp_path / "city.toml"
-    path.write_text(city())
-    binding = city_check.check_city(path, "app")
-    setup_receipts(tmp_path)
-    assert len(evidence.validate_receipts(
-        tmp_path, ".gc/runs/test/pstack/multi/swarm", "swarm", "bead-1", "abc1234", binding
-    )) == 3
-    mismatched = dict(binding)
-    mismatched["pstack.panel-a"] = ("claude", "a-different-model")
-    with pytest.raises(evidence.EvidenceError):
-        evidence.validate_receipts(
-            tmp_path, ".gc/runs/test/pstack/multi/swarm", "swarm", "bead-1", "abc1234", mismatched
-        )
+def test_dynamic_plan_blocks_single_model_or_over_cap(tmp_path):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path, 5, 1)
+    with pytest.raises(check.ContractError):
+        check.validate(plan, policy, city, "app", tmp_path, "root-01")
+    plan, policy, city = environment(tmp_path, 8, 2)
+    policy["max_tasks"] = 4
+    with pytest.raises(check.ContractError):
+        check.validate(plan, policy, city, "app", tmp_path, "root-01")
 
+def test_dynamic_plan_blocks_symlinked_scope_and_artifact_root(tmp_path):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path)
+    (tmp_path / "src").symlink_to(tmp_path.parent, target_is_directory=True)
+    with pytest.raises(check.ContractError):
+        check.validate(plan, policy, city, "app", tmp_path, "root-01")
+    (tmp_path / "src").unlink()
+    (tmp_path / "runs").symlink_to(tmp_path.parent, target_is_directory=True)
+    with pytest.raises(check.ContractError):
+        check.validate(plan, policy, city, "app", tmp_path, "root-01")
 
-def test_evidence_rejects_symlinked_directory_and_oversized_receipt(tmp_path):
-    check = load_script("check_multi_model_evidence.py")
-    folder = setup_receipts(tmp_path)
-    b = folder / "lane-b.json"
-    b.write_bytes(b" " * 1_048_577)
-    with pytest.raises(check.EvidenceError):
-        checked(check, tmp_path)
-    b.write_text(json.dumps(receipt("b")))
-    real = folder.parent / "swarm-real"
-    folder.rename(real)
-    folder.symlink_to(real, target_is_directory=True)
-    with pytest.raises(check.EvidenceError):
-        checked(check, tmp_path)
+def metadata(item):
+    return {
+        "pstack.dynamic.task_id": item["task_id"],
+        "pstack.dynamic.route_target": item["route_target"],
+        "pstack.dynamic.revision": item["revision"],
+        "pstack.dynamic.workflow_id": item["workflow_id"],
+        "pstack.dynamic.method": item["method"],
+        "pstack.dynamic.provider": item["provider"],
+        "pstack.dynamic.model": item["model"],
+        "pstack.dynamic.artifact_path": item["artifact_path"],
+    }
 
+def receipt(item, **kwargs):
+    fields = {"schema": "pstack.dynamic-task.v1", "status": "complete",
+              "summary": "Independent evidence", "evidence": ["src/module.py:12"],
+              "findings": [{"claim": "Observed source behavior"}]}
+    fields.update({field: item[field] for field in
+                   ("task_id","route_target","revision","workflow_id","method","provider","model")})
+    fields.update(kwargs)
+    return fields
 
-def test_evidence_rejects_too_many_findings_and_references(tmp_path):
-    check = load_script("check_multi_model_evidence.py")
-    folder = setup_receipts(tmp_path)
-    many = receipt("b")
-    many["findings"] = many["findings"] * 201
-    (folder / "lane-b.json").write_text(json.dumps(many))
-    with pytest.raises(check.EvidenceError):
-        checked(check, tmp_path)
-    many = receipt("b")
-    many["evidence"] = many["evidence"] * 501
-    (folder / "lane-b.json").write_text(json.dumps(many))
-    with pytest.raises(check.EvidenceError):
-        checked(check, tmp_path)
+def store_receipt(tmp_path, item, content=None):
+    p = tmp_path / item["artifact_path"]
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(receipt(item) if content is None else content))
+    return p
+
+def test_dynamic_task_receipt_validation(tmp_path):
+    plan, policy, city = environment(tmp_path)
+    items = load("dynamic_contract.py").validate(plan, policy, city, "app", tmp_path, "root-01")["tasks"]
+    check = load("check_dynamic_task.py")
+    path = store_receipt(tmp_path, items[0])
+    assert check.validate(tmp_path, metadata(items[0]))["task_id"] == "task0"
+    for change in ({"status":"blocked"}, {"revision":"stale"}, {"model":"fake"}, {"evidence":[]}, {"findings":[{}]}):
+        path.write_text(json.dumps(receipt(items[0], **change)))
+        with pytest.raises(check.TaskError):
+            check.validate(tmp_path, metadata(items[0]))
+
+def test_dynamic_task_rejects_oversized_symlink_and_wrong_path(tmp_path):
+    plan, policy, city = environment(tmp_path)
+    item = load("dynamic_contract.py").validate(plan, policy, city, "app", tmp_path, "root-01")["tasks"][0]
+    check = load("check_dynamic_task.py")
+    p = store_receipt(tmp_path, item)
+    p.write_bytes(b" " * 1_048_577)
+    with pytest.raises(check.TaskError):
+        check.validate(tmp_path, metadata(item))
+    p.unlink()
+    outside = tmp_path / "other.json"
+    outside.write_text(json.dumps(receipt(item)))
+    p.symlink_to(outside)
+    with pytest.raises(check.TaskError):
+        check.validate(tmp_path, metadata(item))
+    data = metadata(item)
+    data["pstack.dynamic.artifact_path"] = "../../escape.json"
+    with pytest.raises(check.TaskError):
+        check.validate(tmp_path, data)
+
+def test_publish_fails_on_nonpersisted_metadata(tmp_path, monkeypatch):
+    check = load("dynamic_contract.py")
+    plan, policy, city = environment(tmp_path)
+    output = check.validate(plan, policy, city, "app", tmp_path, "root-01")
+    calls = []
+    def run(args, **kwargs):
+        calls.append(args)
+        if args[2] == "update":
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        return SimpleNamespace(returncode=0, stdout=json.dumps({"metadata":{}}), stderr="")
+    monkeypatch.setattr(check.subprocess, "run", run)
+    with pytest.raises(check.ContractError):
+        check.publish("bead-001", output)
+    assert calls[0][:5] == ["gc", "bd", "update", "bead-001", "--set-metadata"]
+
+def test_fixed_panel_roles_and_templates_are_not_required():
+    for lane in "abc":
+        assert not (PACK / f"agents/panel-{lane}").exists()
+    for legacy in ("swarm", "arena", "interrogate"):
+        formula = tomllib.loads((PACK / f"formulas/pstack-{legacy}.formula.toml").read_text())
+        assert not any(x["id"].startswith("lane-") for x in formula["steps"])

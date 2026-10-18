@@ -1,3 +1,0 @@
-For an Arena synthesis, read summary.md and the three gated candidate JSON receipts in the run-specific directory. Independently verify the chosen shape against actual cited evidence and constraints. Write verification.md with explicit pass/fail/blocked status, trace references, unresolved dissent and the precise checks performed. Do not call additional models or modify application code; do not claim host/provider panel support that was not exercised.
-
-All artifact paths are rig-relative. Resolve them against the authoritative GC_RIG_ROOT (or documented GC_BEADS_SCOPE_ROOT/GC_STORE_PATH if appropriate), NEVER the ephemeral GC_WORK_DIR, process cwd or per-agent worktree. If no trusted rig root is available, block rather than writing invisible evidence.

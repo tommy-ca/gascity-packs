@@ -1,3 +1,0 @@
-description = "Providerless independent multi-model evidence worker, lane C"
-scope = "rig"
-fallback = true
