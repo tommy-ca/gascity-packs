@@ -1,7 +1,7 @@
-# Explicit, opt-in three-model native Gas City DAG. No dynamic provider-panel metadata.
-description = "Real three-lane interrogate review with independently routed worker beads and gated fan-in."
+# Dynamic item count, per-item route target and outputs; no fixed model panel.
+description = "PStack interrogate with runtime-size heterogeneous model fanout."
 formula = "pstack-interrogate-multi"
-version = 1
+version = 2
 target_required = false
 
 [requires]
@@ -9,69 +9,48 @@ formula_compiler = ">=2.0.0"
 
 [catalog]
 name = "pstack-interrogate-multi"
-description = "Three distinct city-configured model lanes; requires artifact_root and source_revision."
+description = "Dynamic, allowlisted model routing; requires live city and validated task plan."
 
 [vars]
-[vars.subject_path]
-description = "Bounded scope or evidence source to inspect."
+[vars.revision]
 required = true
-
 [vars.artifact_root]
-description = "Unique per-run rig-relative output root, not shared with another run."
 required = true
-
-[vars.source_revision]
-description = "Immutable source revision (commit SHA or equivalent) to review."
-required = true
-
 [vars.city_config]
-description = "Absolute consuming city.toml path for declared model identity check."
 required = true
-
 [vars.rig_name]
-description = "Target Gas City rig name, scoped to the binding preflight."
+required = true
+[vars.route_policy]
+required = true
+[vars.subject_path]
 required = true
 
 [[steps]]
-id = "select"
-title = "Scope interrogate and prepare independent model lanes"
-metadata = { "gc.run_target" = "pstack.coordinator", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/brief.md" }
-description_file = "../assets/workflows/pstack-multi/prepare.md"
-[[steps]]
-id = "lane-a"
-title = "Independent model A — security-correctness"
-needs = ["select"]
-metadata = { "gc.run_target" = "pstack.panel-a", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.lane_id" = "a", "pstack.multi.review_dimension" = "security-correctness", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/lane-a.json" }
-description_file = "../assets/workflows/pstack-multi/worker.md"
-[[steps]]
-id = "lane-b"
-title = "Independent model B — maintainability-architecture"
-needs = ["select"]
-metadata = { "gc.run_target" = "pstack.panel-b", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.lane_id" = "b", "pstack.multi.review_dimension" = "maintainability-architecture", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/lane-b.json" }
-description_file = "../assets/workflows/pstack-multi/worker.md"
-[[steps]]
-id = "lane-c"
-title = "Independent model C — runtime-verification"
-needs = ["select"]
-metadata = { "gc.run_target" = "pstack.panel-c", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.lane_id" = "c", "pstack.multi.review_dimension" = "runtime-verification", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/lane-c.json" }
-description_file = "../assets/workflows/pstack-multi/worker.md"
-[[steps]]
-id = "evidence-gate"
-title = "Fail-closed validation of all three independent model receipts"
-needs = ["lane-a", "lane-b", "lane-c"]
-metadata = { "gc.run_target" = "gc.run-operator", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.city_config" = "{{city_config}}", "pstack.multi.rig_name" = "{{rig_name}}" }
-description_file = "../assets/workflows/pstack-multi/gate.md"
-[steps.check]
-max_attempts = 1
+id = "plan"
+title = "Decompose interrogate into validated semantic tasks"
+metadata = { "gc.run_target" = "pstack.coordinator", "pstack.dynamic.method" = "interrogate", "pstack.dynamic.revision" = "{{revision}}", "pstack.dynamic.artifact_root" = "{{artifact_root}}", "pstack.dynamic.city_config" = "{{city_config}}", "pstack.dynamic.rig_name" = "{{rig_name}}", "pstack.dynamic.route_policy" = "{{route_policy}}", "pstack.dynamic.subject_path" = "{{subject_path}}" }
+description_file = "../assets/workflows/pstack-dynamic/plan.md"
 
-[steps.check.check]
-mode = "exec"
-path = "../scripts/check_multi_model_evidence.py"
-timeout = "3m"
+[steps.on_complete]
+for_each = "output.tasks"
+bond = "pstack-dynamic-worker"
+parallel = true
+
+[steps.on_complete.vars]
+task_id = "{item.task_id}"
+route_target = "{item.route_target}"
+scope_ref = "{item.scope_ref}"
+objective = "{item.objective}"
+artifact_path = "{item.artifact_path}"
+revision = "{item.revision}"
+workflow_id = "{item.workflow_id}"
+method = "{item.method}"
+provider = "{item.provider}"
+model = "{item.model}"
 
 [[steps]]
-id = "judgment"
-title = "Synthesize verified interrogate evidence"
-needs = ["evidence-gate"]
-metadata = { "gc.run_target" = "pstack.review-synthesizer", "pstack.multi.workflow" = "interrogate", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/interrogate", "pstack.multi.summary_schema" = "gc.build.review.v1", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/interrogate/summary.md" }
-description_file = "../assets/workflows/pstack-multi/synthesize.md"
+id = "synthesize"
+title = "Aggregate dynamically generated interrogate children"
+needs = ["plan-fanout"]
+metadata = { "gc.run_target" = "pstack.review-synthesizer", "pstack.dynamic.method" = "interrogate", "pstack.dynamic.artifact_root" = "{{artifact_root}}", "pstack.dynamic.revision" = "{{revision}}" }
+description_file = "../assets/workflows/pstack-dynamic/synthesize.md"

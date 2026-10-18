@@ -1,7 +1,7 @@
-# Explicit, opt-in three-model native Gas City DAG. No dynamic provider-panel metadata.
-description = "Real three-lane swarm review with independently routed worker beads and gated fan-in."
+# Dynamic item count, per-item route target and outputs; no fixed model panel.
+description = "PStack swarm with runtime-size heterogeneous model fanout."
 formula = "pstack-swarm-multi"
-version = 1
+version = 2
 target_required = false
 
 [requires]
@@ -9,69 +9,48 @@ formula_compiler = ">=2.0.0"
 
 [catalog]
 name = "pstack-swarm-multi"
-description = "Three distinct city-configured model lanes; requires artifact_root and source_revision."
+description = "Dynamic, allowlisted model routing; requires live city and validated task plan."
 
 [vars]
-[vars.subject_path]
-description = "Bounded scope or evidence source to inspect."
+[vars.revision]
 required = true
-
 [vars.artifact_root]
-description = "Unique per-run rig-relative output root, not shared with another run."
 required = true
-
-[vars.source_revision]
-description = "Immutable source revision (commit SHA or equivalent) to review."
-required = true
-
 [vars.city_config]
-description = "Absolute consuming city.toml path for declared model identity check."
 required = true
-
 [vars.rig_name]
-description = "Target Gas City rig name, scoped to the binding preflight."
+required = true
+[vars.route_policy]
+required = true
+[vars.subject_path]
 required = true
 
 [[steps]]
-id = "frame"
-title = "Scope swarm and prepare independent model lanes"
-metadata = { "gc.run_target" = "pstack.coordinator", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/brief.md" }
-description_file = "../assets/workflows/pstack-multi/prepare.md"
-[[steps]]
-id = "lane-a"
-title = "Independent model A — source-evidence"
-needs = ["frame"]
-metadata = { "gc.run_target" = "pstack.panel-a", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.lane_id" = "a", "pstack.multi.review_dimension" = "source-evidence", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/lane-a.json" }
-description_file = "../assets/workflows/pstack-multi/worker.md"
-[[steps]]
-id = "lane-b"
-title = "Independent model B — integration-evidence"
-needs = ["frame"]
-metadata = { "gc.run_target" = "pstack.panel-b", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.lane_id" = "b", "pstack.multi.review_dimension" = "integration-evidence", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/lane-b.json" }
-description_file = "../assets/workflows/pstack-multi/worker.md"
-[[steps]]
-id = "lane-c"
-title = "Independent model C — failure-modes"
-needs = ["frame"]
-metadata = { "gc.run_target" = "pstack.panel-c", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.lane_id" = "c", "pstack.multi.review_dimension" = "failure-modes", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/lane-c.json" }
-description_file = "../assets/workflows/pstack-multi/worker.md"
-[[steps]]
-id = "evidence-gate"
-title = "Fail-closed validation of all three independent model receipts"
-needs = ["lane-a", "lane-b", "lane-c"]
-metadata = { "gc.run_target" = "gc.run-operator", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.city_config" = "{{city_config}}", "pstack.multi.rig_name" = "{{rig_name}}" }
-description_file = "../assets/workflows/pstack-multi/gate.md"
-[steps.check]
-max_attempts = 1
+id = "plan"
+title = "Decompose swarm into validated semantic tasks"
+metadata = { "gc.run_target" = "pstack.coordinator", "pstack.dynamic.method" = "swarm", "pstack.dynamic.revision" = "{{revision}}", "pstack.dynamic.artifact_root" = "{{artifact_root}}", "pstack.dynamic.city_config" = "{{city_config}}", "pstack.dynamic.rig_name" = "{{rig_name}}", "pstack.dynamic.route_policy" = "{{route_policy}}", "pstack.dynamic.subject_path" = "{{subject_path}}" }
+description_file = "../assets/workflows/pstack-dynamic/plan.md"
 
-[steps.check.check]
-mode = "exec"
-path = "../scripts/check_multi_model_evidence.py"
-timeout = "3m"
+[steps.on_complete]
+for_each = "output.tasks"
+bond = "pstack-dynamic-worker"
+parallel = true
+
+[steps.on_complete.vars]
+task_id = "{item.task_id}"
+route_target = "{item.route_target}"
+scope_ref = "{item.scope_ref}"
+objective = "{item.objective}"
+artifact_path = "{item.artifact_path}"
+revision = "{item.revision}"
+workflow_id = "{item.workflow_id}"
+method = "{item.method}"
+provider = "{item.provider}"
+model = "{item.model}"
 
 [[steps]]
-id = "fanin"
-title = "Synthesize verified swarm evidence"
-needs = ["evidence-gate"]
-metadata = { "gc.run_target" = "pstack.review-synthesizer", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.summary_schema" = "pstack.swarm-result.v1", "pstack.multi.output_path" = "{{artifact_root}}/pstack/multi/swarm/summary.md" }
-description_file = "../assets/workflows/pstack-multi/synthesize.md"
+id = "synthesize"
+title = "Aggregate dynamically generated swarm children"
+needs = ["plan-fanout"]
+metadata = { "gc.run_target" = "pstack.review-synthesizer", "pstack.dynamic.method" = "swarm", "pstack.dynamic.artifact_root" = "{{artifact_root}}", "pstack.dynamic.revision" = "{{revision}}" }
+description_file = "../assets/workflows/pstack-dynamic/synthesize.md"

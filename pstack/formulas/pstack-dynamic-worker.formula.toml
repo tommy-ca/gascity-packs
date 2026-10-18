@@ -1,0 +1,22 @@
+# One atomic reusable worker; Gas City creates one fragment per validated plan item.
+description = "One independently routed dynamic PStack task."
+formula = "pstack-dynamic-worker"
+type = "expansion"
+version = 1
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[[template]]
+id = "{target}.work"
+title = "Dynamic PStack task: {task_id}"
+metadata = { "gc.run_target" = "{route_target}", "pstack.dynamic.task_id" = "{task_id}", "pstack.dynamic.route_target" = "{route_target}", "pstack.dynamic.scope_ref" = "{scope_ref}", "pstack.dynamic.objective" = "{objective}", "pstack.dynamic.artifact_path" = "{artifact_path}", "pstack.dynamic.revision" = "{revision}", "pstack.dynamic.workflow_id" = "{workflow_id}", "pstack.dynamic.method" = "{method}", "pstack.dynamic.provider" = "{provider}", "pstack.dynamic.model" = "{model}" }
+description_file = "../assets/workflows/pstack-dynamic/worker.md"
+
+[template.check]
+max_attempts = 2
+
+[template.check.check]
+mode = "exec"
+path = "../scripts/check_dynamic_task.py"
+timeout = "3m"
