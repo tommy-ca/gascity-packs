@@ -1,0 +1,37 @@
+name: PStack Multi-Model Static Checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "pstack/**"
+      - ".github/workflows/pstack-multimodel.yml"
+  push:
+    branches: [feat/pstack-pack-honesty]
+    paths:
+      - "pstack/**"
+      - ".github/workflows/pstack-multimodel.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  static-contract:
+    name: PStack static DAG and safety contracts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Python 3.12
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+      - name: Install minimal test dependency
+        run: python3 -m pip install pytest
+      - name: Run isolated PStack safety and fanout tests
+        run: |
+          python3 -m pytest -q \
+            pstack/tests/test_apply_intent_change_security.py \
+            pstack/tests/test_multi_model_fanout.py
+      - name: Parse all PStack formula TOML
+        run: python3 -c 'import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in pathlib.Path("pstack/formulas").glob("*.toml")]'
