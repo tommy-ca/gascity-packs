@@ -117,10 +117,14 @@ def test_dynamic_plan_blocks_single_model_or_over_cap(tmp_path):
 def test_dynamic_plan_blocks_symlinked_scope_and_artifact_root(tmp_path):
     check = load("dynamic_contract.py")
     plan, policy, city = environment(tmp_path)
+    (tmp_path / "src" / "module.py").unlink()
+    (tmp_path / "src").rmdir()
     (tmp_path / "src").symlink_to(tmp_path.parent, target_is_directory=True)
     with pytest.raises(check.ContractError):
         check.validate(plan, policy, city, "app", tmp_path, "root-01")
     (tmp_path / "src").unlink()
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "module.py").write_text("x = 1\n")
     (tmp_path / "runs").symlink_to(tmp_path.parent, target_is_directory=True)
     with pytest.raises(check.ContractError):
         check.validate(plan, policy, city, "app", tmp_path, "root-01")
