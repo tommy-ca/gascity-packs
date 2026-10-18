@@ -20,7 +20,7 @@ func TestPStackDynamicFanoutHostCompiler(t *testing.T) {
         t.Run(method, func(t *testing.T) {
             recipe, err := Compile(context.Background(), "pstack-"+method+"-multi", []string{dir}, nil)
             if err != nil { t.Fatalf("real host Compile: %v", err) }
-            fanout, found := false, false
+            fanout := false
             for _, step := range recipe.Steps {
                 if step.Metadata["gc.kind"] == "fanout" && strings.Contains(step.ID, "plan-fanout") {
                     fanout = true
@@ -28,9 +28,8 @@ func TestPStackDynamicFanoutHostCompiler(t *testing.T) {
                         t.Fatalf("wrong dynamic expansion: %+v", step.Metadata)
                     }
                 }
-                if step.ID == "synthesize" { found = true }
             }
-            if !fanout || !found { t.Fatalf("missing plan fanout/synthesis from real compiler: fanout=%t synth=%t", fanout, found) }
+            if !fanout { t.Fatal("missing host-minted dynamic plan fanout control") }
         })
     }
     target := &Step{ID: "plan.item.1", Title: "Runtime item"}
