@@ -43,7 +43,7 @@ Run preflight, using the actual workflow-root bead ID:
 python pstack/scripts/dynamic_contract.py --plan /path/to/plan.json --policy /path/to/routes.json --city /path/to/city.toml --rig app --root /path/to/disposable-rig --workflow-id ACTUAL_ROOT_BEAD
 ~~~
 
-A planning bead MUST run the same command with --bead-id ACTUAL_PLANNING_BEAD before closing. This persists exact validated JSON to gc.output_json; Gas City's on_complete control will then create N per-item child formula fragments (pstack-dynamic-worker) and route them according to each item. Child output checks fail closed on invalid receipts; synthesis waits on the dynamic fanout control. Do not publish an LLM-generated gc.output_json directly.
+A planning bead MUST run the same command with --bead-id ACTUAL_PLANNING_BEAD before closing. This persists exact validated JSON to gc.output_json; Gas City's on_complete control will then create N per-item child formula fragments (pstack-dynamic-worker) and route them according to each item. Child output checks fail closed on invalid receipts; the FIRST workflow root finalizes only after Gas City has settled the dynamically spawned children. Do not publish an LLM-generated gc.output_json directly.
 
 Inspect/instantiate in a disposable city:
 
@@ -55,3 +55,19 @@ gc formula cook pstack-interrogate-multi --var revision=FULL_SOURCE_SHA --var ar
 Cook is not an execution proof. The actual live run must claim the planning bead, stamp verified source output, close it, let the host generate and route per-item child beads, run model-backed sessions, validate receipt files and complete fan-in. Record exact host revision, actual child count/targets, real model session IDs, timestamps and costs.
 
 Implementation limitation: current Gas City on_complete is supported for structured-output dynamic children, but host guidance prefers native drain. The host does not yet expose verified member-specific heterogeneous model target vars through drain. Track #29 for a host-compatible migration; no pack scheduler or inert gc.provider_panel annotation is introduced. LIVE multi-model execution remains pending #28.
+
+
+## Phase 2: synthesize only after completed fanout
+
+Gas City's real v2 compiler does not allow an authored step to name the synthetic plan-fanout node as an explicit needs dependency. Accordingly, synthesis is a **separate formula** and is NOT automatically started by phase 1. Verify the original workflow root is closed with gc.outcome=pass; obtain its actual root Bead and its planning Bead IDs.
+
+~~~sh
+gc formula show pstack-dynamic-synthesize --json
+gc formula cook pstack-dynamic-synthesize \
+  --var method=interrogate --var revision=ACTUAL_FULL_SHA \
+  --var artifact_root=.gc/pstack/runs/test-001 \
+  --var source_root_bead=ACTUAL_FINISHED_ROOT_BEAD \
+  --var planning_bead=ACTUAL_PLANNING_BEAD
+~~~
+
+Route/sling the resulting phase-2 workflow only after phase 1 passes. Its verify-fanin check validates the completed source workflow, source planning manifest, actual task count and every receipt before allowing the synthesizer to run. This gives a fail-closed, two-phase composition without a pack-specific scheduler. It still requires a disposable live host demonstration.

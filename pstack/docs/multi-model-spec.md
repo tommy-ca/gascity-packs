@@ -87,3 +87,14 @@ SOLID/KISS/DRY/YAGNI: one atomic route/plan contract, one per-child validator, o
 4. Shared release CI/CodeQL, OpenSpec compatibility and existing registry/standing/transaction issues #13/#14/#18/#15.
 
 GitHub #21 -> #26 dynamic graph + #27 integrity contracts -> #28 runtime proof; #29 host drain migration, also tracked by #25. No LIVE PASS claim without tier 2/3 evidence.
+
+
+## Executable two-phase fan-in correction
+
+The real Gas City Go compiler rejects authored needs = ["plan-fanout"], because its on_complete control is minted only after authored-step validation. It is **incorrect** to declare a single formula with a static synth step depending on that synthetic ID; simply changing its dependency to plan would cause a race.
+
+Current supported implementation therefore uses two independently launched formulas:
+1. pstack-*-multi: one plan producer, validated output.tasks, native dynamically spawned children, and a host-owned workflow finalizer which waits for the fanout sinks.
+2. pstack-dynamic-synthesize: accepts the actual completed source root and planning Bead IDs, has a check_dynamic_fanin.py gate verifying closed/pass source root and the exact dynamic receipt inventory, then runs synthesis and verification.
+
+The operator or a higher-level Gas City coordinator starts phase 2 only after phase 1 passes; there is **no automatic phase-2 dispatch**, no polling sub-scheduler and no promise of zero-touch end-to-end automation. The existing flowchart above is a logical two-phase view rather than one atomic formula. A future host primitive may compose phases with a real reference to a minted fanout control, but it must be proved with live host tests first. Failure to enforce this boundary risks synthesizing before children finish, so the separation is intentional.

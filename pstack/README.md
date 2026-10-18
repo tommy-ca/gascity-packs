@@ -151,3 +151,6 @@ Opt-in formulas pstack-swarm-multi, pstack-arena-multi, and pstack-interrogate-m
 The existing sequential formulas remain available and unchanged. The dynamic adapter currently uses Gas City's supported output-driven on_complete fanout because native drain has no verified per-member heterogeneous model target projection. This is a transitional backend, not an invented gc.provider_panel API. Source-level unit tests are not proof that independent model-backed sessions actually ran.
 
 See docs/multi-model-spec.md for requirements, data contracts and atomic semantic blocks, and docs/multi-model-fanout.md for config and execution. Dynamic host and model provenance verification is tracked in #28.
+
+
+**Current fan-in execution boundary:** Phase 1 is the dynamic host workflow, which must finish and report gc.outcome=pass; Phase 2 is a separately slung pstack-dynamic-synthesize formula. That second formula first checks the source root and every dynamic task receipt using check_dynamic_fanin.py. The current host does not support naming its synthesized plan-fanout control as an authored dependency. No automatic second-phase dispatch is implied.
