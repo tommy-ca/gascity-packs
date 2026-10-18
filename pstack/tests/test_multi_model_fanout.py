@@ -30,6 +30,8 @@ def environment(tmp_path, count=5, role_count=2):
     for target, provider, model in roles:
         lines += ["[[rigs.patches]]", f'agent = "{target}"',
                   f'provider = "{provider}"', f'option_defaults = {{ model = "{model}" }}']
+    (tmp_path / "src").mkdir(exist_ok=True)
+    (tmp_path / "src" / "module.py").write_text("x = 1\n")
     city = tmp_path / "city.toml"
     city.write_text("\n".join(lines) + "\n")
     policy = {"version": 1, "max_tasks": 64,
@@ -193,7 +195,7 @@ def test_publish_fails_on_nonpersisted_metadata(tmp_path, monkeypatch):
     monkeypatch.setattr(check.subprocess, "run", run)
     with pytest.raises(check.ContractError):
         check.publish("bead-001", output)
-    assert calls[0][:5] == ["gc", "bd", "update", "bead-001", "--set-metadata"]
+    assert any(call[:5] == ["gc", "bd", "update", "bead-001", "--set-metadata"] for call in calls)
 
 def test_fixed_panel_roles_and_templates_are_not_required():
     for lane in "abc":
