@@ -1,74 +1,89 @@
-# Native three-model PStack fanout: formal requirements and architecture
+# Dynamic PStack orchestration: formal requirements and design (v2)
 
-Status: **opt-in code committed, not live-verified**. The three existing sequential method formulas are preserved, and dynamic N-model host expansion remains future work.
+Status: implemented on PR #1, with source-level CI and live runtime integration as distinct validation tiers. Preserves legacy sequential formula names. Replaces earlier fixed three-panel design.
 
-## Source-backed architecture decision
+## Semantic building blocks
 
-Gas City v2 materializes sibling steps as separately claimable durable Beads. A step with needs on all siblings is a real fan-in barrier. The host already uses this pattern in gascity/formulas/build-basic-review.formula.toml. Current Gas City does not consume gc.provider_panel or gc.child_artifact_path_template. Therefore the smallest working design is three fixed sibling Beads dispatched to distinct city-configured model-backed agents, not a pack-specific scheduler or inert metadata.
-
-## Normative requirements
-
-- MM-001: Each multi formula SHALL have one preparation step followed by three independently ready lane Beads, an evidence barrier, and a synthesis step.
-- MM-002: Workers SHALL be independently routed to pstack.panel-a, pstack.panel-b, pstack.panel-c; these pack agents SHALL remain providerless.
-- MM-003: Operators SHALL supply a bounded subject, immutable source revision, unique rig-relative artifact root, absolute city configuration path and target rig name.
-- MM-004: Each worker SHALL only emit its own JSON receipt; it SHALL cite source evidence, name its observed provider/model, and SHALL NOT spawn agents or edit application code.
-- MM-005: The barrier SHALL depend on all three lanes and SHALL reject missing, stale, blocked, malformed, duplicate-model or city-binding-mismatched receipts.
-- MM-006: Synthesis SHALL preserve dissent, unresolved blockers, provenance, and a risk assessment. A majority vote alone SHALL NOT imply verification.
-- MM-007: LIVE PASS SHALL require external session and transcript evidence confirming three distinct effective models and separately claimed Beads. Worker-self-reported model identity is not sufficient.
-- MM-008: Existing sequential formulas and frozen parity contracts SHALL remain unchanged. No unsupported provider panel, Cursor Task, pack scheduler, hosted submit or delayed persona expansion.
-- MM-009: Cancellation, timeout, provider failure, retry exhaustion and revision drift SHALL fail closed.
-- MM-010: Evidence schema changes SHALL use versioned IDs, validators and tests. Model names in code/config shall never be treated as authentication secrets.
-
-## Components / ownership
-
-| Component | Owner | Responsibility |
+| Atomic block | Data/behavior | Owner |
 | --- | --- | --- |
-| Formula compiler | Gas City | Compile DAG, runtime check, dependency barriers |
-| Beads + agents | Gas City | Independent claims, routing, sessions, retries |
-| PStack multi formulas | Pack | Declare fixed lanes and outputs without model names |
-| City rig patches | Operator | Assign real providers, effective model names, quotas |
-| JSON validator | Pack | Fail-closed receipts, revision and declared-role model matching |
-| Session audit | Operator/integration test | Prove actual invoked model and temporal concurrency |
-| Future dynamic panel | Gas City host | Runtime expansion for arbitrary N; not implemented |
+| MethodPolicy | Swarm: independent evidence slices; Arena: alternative designs when triggered; Interrogate: relevant review dimensions | PStack policy |
+| Task | Unique id, bounded scope, objective, pinned revision | Plan |
+| RouteCapability | Operator-allowlisted role, declared provider and model | City / PStack validation |
+| Decomposition | N work items from actual scope and budget (not a fixed model count) | Planner |
+| Fanout | Host materializes one separately claimable child per item | Gas City |
+| Worker | One item, one model-backed session, one evidence artifact | Gas City + reusable worker |
+| EvidenceGate | Receipt validity, status, identity and provenance checks | PStack check |
+| Aggregation | Wait for all children, dedupe claims, preserve dissent, report gaps | Gas City + PStack |
+| Verification | Source-grounded verdict, not majority or model agreement | PStack verifier |
+| FailurePolicy | Retry, cancellation, path safety, drift, spend and limits | Host + pack contract |
 
-## Code flow and data flow
+These semantic blocks compose all three methods without a separate database, scheduler, model SDK, process launcher, worktree manager, or fixed panel.
 
-~~~text
-operator -> city model preflight -> gc formula cook/sling
-    -> frame / trigger / select
-       |------ panel-a -> lane-a.json ------|
-       |------ panel-b -> lane-b.json ------| -> evidence-gate -> synthesize -> Arena verify
-       |------ panel-c -> lane-c.json ------|
-                          (all needs edges)
-~~~
+## Normative behavioral requirements
 
-The recipe carries subject_path, source_revision, artifact_root, city_config and rig_name. Every worker reads immutable input and writes its own artifact under ARTIFACT_ROOT/pstack/multi/WORKFLOW/. The gate checks the three files against the versioned receipt model plus the city rig-patch map. Synthesis consumes gated evidence; it does not launch further models.
+- MM2-001: Work count SHALL derive from task decomposition and policy, with 2..max_tasks and hard cap 64; the model roster size need not equal task count.
+- MM2-002: At least two different actual model identities SHALL be selected for a multi-model run. Different tasks MAY reuse a model.
+- MM2-003: Every task SHALL have a unique safe ID, pinned full source revision, bounded scope, objective, allowlisted target and unique run-relative output path.
+- MM2-004: The trusted route policy SHALL match explicit city rig patches on target, provider and model. An LLM plan SHALL NOT inject commands or provider flags.
+- MM2-005: The host SHALL create one durable child work unit per validated task, with separately routable target and independent output.
+- MM2-006: The producer SHALL validate the entire task manifest BEFORE writing gc.output_json and closing its source bead. Failed preflight SHALL block execution.
+- MM2-007: Each completed child SHALL produce a versioned bounded receipt checked by its own runtime check step. Missing, failed and stale evidence SHALL block.
+- MM2-008: The aggregator SHALL enumerate the actual collection of child outcomes, preserve dissent and unresolved work, and never assume N=3 or consensus=truth.
+- MM2-009: Host session logs/transcripts SHALL attest effective models independently of worker-written JSON before a LIVE PASS.
+- MM2-010: The host owns retries, work claiming, session routing and cancellation. The pack SHALL not run another agent scheduler.
+- MM2-011: Legacy sequential formula interfaces SHALL remain supported; the dynamic bridge SHALL disclose deprecation and current host capability limits.
+- MM2-012: Migration to native drain with per-member model routing SHALL require a verified host consumer, not speculative metadata.
+
+## Code/data flow
+
+  Operator source SHA + unique artifact root + city config + route policy
+                         |
+                 Method decomposition
+                         |
+      validated plan.json (N tasks + route choices)
+                         |
+       pstack/scripts/dynamic_contract.py (policy / path / model checks)
+                         |
+        gc.output_json = {tasks: [normalized immutable work units]}
+                         |
+              Gas City on_complete runtime control
+                         |
+       N parallel child fragments of pstack-dynamic-worker
+          |            |            |            |
+        result 1      result 2     ...        result N
+          |            |                         |
+           child check_dynamic_task.py checks and receipts
+                         |
+         Gas City fanout control waits for all child sinks
+                         |
+                    synthesis
+                         |
+               Arena verification
 
 ## Data schema
 
-pstack.multi-lane.v1 is a JSON object with schema, workflow (swarm, arena, interrogate), workflow_id (actual root Bead), lane_id (a/b/c), run_target, provider, model, source_revision, status (complete or blocked), summary, evidence array, and findings array with id/claim/evidence_refs. Empty findings with explicit evidence can be valid. Empty evidence, incomplete/duplicate identity, symlink endpoint or an escaping directory cannot pass. Configured model comparisons alone still require correlation with actual live sessions.
+Input plan: JSON object with method (swarm|arena|interrogate), revision (full 40/64 hex SHA), artifact_root (unique rig-relative), tasks[] containing id, route_target, scope_ref, objective. Operator policy: JSON version=1, max_tasks 2..64, routes[] containing target, provider, model. Runtime validated output: JSON tasks[] with fields task_id, route_target, scope_ref, objective, artifact_path, revision, workflow_id, method, provider, model. Child receipt schema: pstack.dynamic-task.v1; fields schema, task_id, route_target, revision, workflow_id, method, provider, model, status, summary, evidence[], findings[].
 
-## Failure model and security
+The safe artifact filename derives from the validated run root, method and task ID. It is not arbitrary input. Routes are chosen from an operator-reviewed capability inventory. Actual effective host model identity is NOT attested by a model's own receipt; a separate integration witness must bind session to bead and config.
 
-- No city model binding or identical model labels: the operator preflight blocks; evidence gate also verifies configured models.
-- Missing/failed/mismatched worker: barrier fails; no silent single-provider fallback.
-- Source changes: verify against pinned revision; stop for drift.
-- Path escapes: gate rejects, but it is not OS-level workspace isolation; operational permissions must separately prevent cross-lane or outside-tree writes.
-- Multiple concurrent runs: choose unique paths and isolate/lock shared state.
-- Model spoofing: worker receipts cannot attest actual session identity; live acceptance must compare Gas City effective session models and traces.
-- Resource control: bounded time, token spend, retries, interruption, and cancellation are host/operator responsibilities.
+## Runtime contract and chosen architecture
 
-## Alternatives and tradeoffs
+- Native Gas City v2 drain dynamically scatters an existing convoy into item workflows with max_units, separate work contexts, durability and retries.
+- Native Gas City v2 on_complete expands output.tasks to dynamically sized child formula fragments. The bonded expansion accepts per-item route_target via item variables. The controller links sink dependencies and controls fan-in.
+- Current host drain does not project a member-specific route target/model selector into per-item formula vars. Heterogeneous model routing is thus implemented with supported on_complete as an explicit temporary compatibility bridge. Host docs favor drain, and host lint may warn on this bridge. Host issue #29 specifies the migration.
+- No gc.provider_panel or gc.child_artifact_path_template consumer was found. Do not invent or stamp either. The agent's session backend is not a model roster.
 
-Do not add gc.graph_operator as if it expands children, stamp gc.provider_panel without host support, or introduce an external subprocess session orchestrator. Static three-lane DAG makes a bounded feature possible now. Arbitrary N requires host architecture and tests (#25). Splitting independent read-only work follows PStack separate-before-serializing-shared-state; giving host sole scheduling ownership follows boundary-discipline; fail-closed receipts follow make-operations-idempotent.
+## Security, correctness and Thermos gates
 
-## Thermos acceptance matrix
+Check plan route allowlist, city patch matching, source pin, bounded objectives, path traversal, symlinks, duplicate IDs, max children and metadata size before metadata publication. Each child check must validate single artifact identity and status. Sources/prompts remain untrusted. PStack MUST NOT treat self-reported model labels as runtime proof, grant global secret access, or assert host-level OS filesystem isolation from logical paths. Verify failed/pending/cancelled child effects, retry idempotency, recovery from partial dynamic expansion, and exact expected-vs-spawned cardinality.
 
-Security/correctness: path isolation, prompt-injection isolation, immutable revision, no secrets, no fake model identity, negative provider/receipt tests, runtime failure and recovery. Code quality: under 1000 lines per added file, no duplicate scheduler, minimal formula reuse, typed versioned contracts, simple role names, explicit evidence path.
+SOLID/KISS/DRY/YAGNI: one atomic route/plan contract, one per-child validator, one worker expansion, three thin method entrypoints, and the existing Gas City executor. No copied session state machine or provider dispatch implementation. PStack principles applied: subtract-before-add, boundary discipline, type discipline at dynamic JSON boundaries, separate-before-serializing-shared-state, make-operations-idempotent, exhaust design space only when Arena trigger is true.
 
-Tier 1: Python TOML + static pytest and synthetic failure cases.
-Tier 2: disposable Gas City formula show/cook and compiled Bead DAG inspection.
-Tier 3: real three-model sling with overlapping session timestamps, three independent transcripts, actual model IDs and hashed files, failure/retry/cancel, resource accounting.
-Tier 4: PR release gates; independent blockers #13/#14/#18/#15 still apply.
+## Verification ladder and epic graph
 
-GitHub graph: #21 epic -> #22 native DAG, #23 evidence-gate -> #24 integration proof; future dynamic N #25. Separate upstream/release epic #12 is not waived.
+1. Static/negative tests: cardinalities 2, 3, 5, 8, 64; role allowlist and revision/path attacks; receipt failures; formula TOML parser.
+2. Real host compile/cook/sling in disposable city; inspect actual generated N child beads and actual item run targets; test host warning and output-json variable substitution.
+3. Live two-or-more-model test with independently attested session identifiers, overlapping work, full receipts and timestamps, retries, cancellation, budget and source revision drift.
+4. Shared release CI/CodeQL, OpenSpec compatibility and existing registry/standing/transaction issues #13/#14/#18/#15.
+
+GitHub #21 -> #26 dynamic graph + #27 integrity contracts -> #28 runtime proof; #29 host drain migration, also tracked by #25. No LIVE PASS claim without tier 2/3 evidence.

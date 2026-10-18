@@ -1,91 +1,57 @@
-# Native multi-model fanout on Gas City
+# Dynamic multi-model execution quickstart
 
-This is a deliberately opt-in implementation of **three real, separately routed model lanes** for Swarm, Arena, and Interrogate. It does not replace the frozen sequential formulas or enable the future dynamic N-model provider-panel API.
+The supported opt-in formulas are pstack-swarm-multi, pstack-arena-multi and pstack-interrogate-multi. They accept a runtime-sized, operator-authorized task collection. The original sequential formulas remain separate and unchanged. No panel-a/b/c roles are required.
 
-## Host capability
+## Define operator-owned routes
 
-Current Gas City formula v2 compiles independent sibling steps into separate durable Beads. Steps whose needs list contains only the preparation step are concurrently eligible, and a sibling with needs for all three must wait for all of them. This is the mechanism used in gastownhall/gascity docs/tutorials/05-formulas.md and gascity-packs/gascity/formulas/build-basic-review.formula.toml.
+Register/enable any required named rig agents in the consuming city. Add model bindings to those agents through explicit city rig patches. This example uses two installed agent role names, not a fixed panel; a plan may use 2, 5, 8 or more independent tasks on those models.
 
-There is no working runtime consumer of gc.provider_panel or gc.child_artifact_path_template in the inspected Gas City source. This pack does not stamp those inert fields, invent a scheduler, call Cursor Task, or claim arbitrary N.
-
-Entry points:
-
-- pstack-swarm-multi: frame, three independent evidence slices, gate, fan-in.
-- pstack-arena-multi: design trigger, three independently developed candidate shapes, gate, cross-judge, independent verification.
-- pstack-interrogate-multi: select review dimensions, three independent security/quality/runtime reviewers, gate, deduplicate and judge.
-
-Each uses the providerless pack roles pstack.panel-a, pstack.panel-b and pstack.panel-c. Only the **consuming city** can select different providers and model IDs. A formula by itself cannot prove multi-model execution.
-
-## Configure an actual three-model city
-
-Import the pack roles in the target rig. Then explicitly bind the three panel roles under that rig's patches. Example city.toml fragment (model availability depends on the installed harnesses and account):
+Example city.toml rig fragment:
 
 ~~~toml
 [[rigs]]
 name = "app"
 
-[rigs.imports.pstack]
-source = "/absolute/path/to/gascity-packs/pstack"
-
 [[rigs.patches]]
-agent = "pstack.panel-a"
+agent = "myorg.research-fast"
 provider = "claude"
-option_defaults = { model = "sonnet" }
-max_active_sessions = 1
+option_defaults = { model = "haiku" }
 
 [[rigs.patches]]
-agent = "pstack.panel-b"
+agent = "myorg.review-deep"
 provider = "codex"
 option_defaults = { model = "gpt-5.5" }
-max_active_sessions = 1
-
-[[rigs.patches]]
-agent = "pstack.panel-c"
-provider = "gemini"
-option_defaults = { model = "gemini-2.5-pro" }
-max_active_sessions = 1
 ~~~
 
-A provider is the harness; the model is the effective option_defaults.model. Models belong in city config, not pack formulas or the session backend. No credentials are stored in PStack pack metadata.
+Patching does not create the agents; these targets must already exist in the installed city/rig. Choose actual model labels available to your accounts, and confirm effective live session settings. Never put credentials in the task plan.
 
-Declared binding preflight:
+Operator-approved routes.json:
+
+~~~json
+{"version":1,"max_tasks":16,"routes":[{"target":"myorg.research-fast","provider":"claude","model":"haiku"},{"target":"myorg.review-deep","provider":"codex","model":"gpt-5.5"}]}
+~~~
+
+The plan.json work units come from the selected method's scope and policy, not the number of models:
+
+~~~json
+{"method":"interrogate","revision":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","artifact_root":".gc/pstack/runs/test-001","tasks":[{"id":"security","route_target":"myorg.review-deep","scope_ref":"src/","objective":"Review changed security boundaries"},{"id":"correctness","route_target":"myorg.research-fast","scope_ref":"src/","objective":"Review changed behavior"}]}
+~~~
+
+Run preflight, using the actual workflow-root bead ID:
 
 ~~~sh
-python pstack/scripts/check_multi_model_city.py --city /path/to/city.toml --rig app
+python pstack/scripts/dynamic_contract.py --plan /path/to/plan.json --policy /path/to/routes.json --city /path/to/city.toml --rig app --root /path/to/disposable-rig --workflow-id ACTUAL_ROOT_BEAD
 ~~~
 
-This validates the declared patch shape and three model names but **cannot attest actual model launches or catch all effective option/override changes**. Check the effective model for each live session with Gas City logs/transcripts. Fail closed rather than silently routing all lanes through one default model.
+A planning bead MUST run the same command with --bead-id ACTUAL_PLANNING_BEAD before closing. This persists exact validated JSON to gc.output_json; Gas City's on_complete control will then create N per-item child formula fragments (pstack-dynamic-worker) and route them according to each item. Child output checks fail closed on invalid receipts; synthesis waits on the dynamic fanout control. Do not publish an LLM-generated gc.output_json directly.
 
-## Run
-
-Inside a disposable Gas City city with installed pack and roles, inspect the formula graph first. The city_config argument MUST be an absolute path. The rig_name must resolve to the target rig's three explicit model patches:
+Inspect/instantiate in a disposable city:
 
 ~~~sh
-gc formula show pstack-swarm-multi --json
-gc formula cook pstack-swarm-multi --var subject_path=src/ --var artifact_root=.gc/pstack/runs/run-001 --var source_revision=COMMIT_SHA \
-  --var city_config=/absolute/path/to/city.toml --var rig_name=app
+gc formula show pstack-interrogate-multi --json
+gc formula cook pstack-interrogate-multi --var revision=FULL_SOURCE_SHA --var artifact_root=.gc/pstack/runs/test-001 --var city_config=/path/to/city.toml --var rig_name=app --var route_policy=/path/to/routes.json --var subject_path=src/
 ~~~
 
-Cook does not mean that models were executed. Sling and record which three worker Beads were claimed and which sessions produced receipts. Choose a **unique rig-relative** artifact root per actual workflow. Do not reuse between concurrent runs.
+Cook is not an execution proof. The actual live run must claim the planning bead, stamp verified source output, close it, let the host generate and route per-item child beads, run model-backed sessions, validate receipt files and complete fan-in. Record exact host revision, actual child count/targets, real model session IDs, timestamps and costs.
 
-Each worker writes one JSON receipt to the run root under pstack/multi/swarm, arena, or interrogate, named lane-a.json, lane-b.json, lane-c.json. The versioned contract is pstack/schemas/multi-lane.v1.schema.json. It carries workflow, root Bead ID, actual lane/role, source revision, provider/model claims, findings, evidence and completion status.
-
-A native graph barrier depends on all three worker Beads. Its exec check uses pstack/scripts/check_multi_model_evidence.py and mandates a real city.toml path + rig name. The gate compares the receipts' provider and model to the explicitly configured three role bindings, and rejects missing/corrupt/blocked receipts, duplicate model names, incorrect workflow/run/revision, missing evidence, or symlink/path escape. A passing check is evidence of **internally consistent self-reported receipts, not proof of actual independent providers**. It unblocks the synthesizer only after all three declared lanes have completed.
-
-Offline synthetic example:
-
-~~~sh
-python pstack/scripts/check_multi_model_evidence.py \
-  --root /path/to/disposable-rig \
-  --artifact-dir .gc/pstack/runs/run-001/pstack/multi/swarm \
-  --workflow swarm --workflow-id ACTUAL_ROOT_BEAD --source-revision COMMIT_SHA \
-  --city-config /absolute/path/to/city.toml --rig-name app
-~~~
-
-## Verification and limits
-
-Static tests: pytest -q pstack/tests/test_multi_model_fanout.py. Runtime acceptance requires receipts from **three separate live agent sessions with different effective model names**, durable claim IDs, timestamps demonstrating overlapping work where parallel execution is asserted, actual artifact bytes/hashes, correct immutable input revision, deterministic synthesis, failure/retry/cancel tests, and token/cost telemetry. Record the host and pack SHAs, redacted city configuration and effective session model IDs.
-
-The three artifact paths are logically isolated, **not OS-enforced sandboxing**. Do not grant agents write access to each other's workspaces; enforce read-only source and permissions at the host deployment layer. A receipt can misreport its model; do not trust it without runtime provenance. Missing providers or blocked workers must block aggregation. Synthesizer must preserve dissent, evidence citations, and unresolved blockers rather than equating majority votes with truth.
-
-The original PStack release blockers #13/#14/#18 and CI #15 remain independent. Dynamic N-model child creation belongs to Gas City host work #25, and does not authorize frozen provider-panel-stamp #6.
+Implementation limitation: current Gas City on_complete is supported for structured-output dynamic children, but host guidance prefers native drain. The host does not yet expose verified member-specific heterogeneous model target vars through drain. Track #29 for a host-compatible migration; no pack scheduler or inert gc.provider_panel annotation is introduced. LIVE multi-model execution remains pending #28.

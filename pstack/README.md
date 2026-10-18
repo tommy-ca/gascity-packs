@@ -144,8 +144,10 @@ See [`REQUIREMENTS.md`](REQUIREMENTS.md) for the GC-METH-012 compatibility
 ledger and evidence commands.
 
 
-## Opt-in three-model Swarm / Arena / Interrogate
+## Dynamic multi-model Swarm, Arena and Interrogate
 
-The original method formulas remain sequential and backward compatible. Three NEW opt-in formulas, pstack-swarm-multi, pstack-arena-multi, and pstack-interrogate-multi, use three independently routable Gas City Beads bound to three distinct city-configured models (roles pstack.panel-a/b/c), a fail-closed declared-provider/model evidence gate, and synthesis. This does NOT implement dynamic N or gc.provider_panel. No live three-provider run has been verified on this branch.
+Opt-in formulas pstack-swarm-multi, pstack-arena-multi, and pstack-interrogate-multi now decompose work into a bounded runtime-selected task list. There is no hardcoded number of lanes, panel agent, provider roster, or pack-owned scheduler. Each task chooses an allowlisted, city-configured role; Gas City creates one durable child fragment per task and gates fan-in on all completed child work.
 
-See docs/multi-model-fanout.md for setup and docs/multi-model-spec.md for normative requirements, code/data flows, security constraints and verification gates. Do not claim production readiness from a formula parse, mocked receipts or an unexecuted CI run.
+The existing sequential formulas remain available and unchanged. The dynamic adapter currently uses Gas City's supported output-driven on_complete fanout because native drain has no verified per-member heterogeneous model target projection. This is a transitional backend, not an invented gc.provider_panel API. Source-level unit tests are not proof that independent model-backed sessions actually ran.
+
+See docs/multi-model-spec.md for requirements, data contracts and atomic semantic blocks, and docs/multi-model-fanout.md for config and execution. Dynamic host and model provenance verification is tracked in #28.
