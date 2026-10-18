@@ -24,6 +24,14 @@ required = true
 description = "Immutable source revision (commit SHA or equivalent) to review."
 required = true
 
+[vars.city_config]
+description = "Absolute consuming city.toml path for declared model identity check."
+required = true
+
+[vars.rig_name]
+description = "Target Gas City rig name, scoped to the binding preflight."
+required = true
+
 [[steps]]
 id = "frame"
 title = "Scope swarm and prepare independent model lanes"
@@ -51,7 +59,7 @@ description_file = "../assets/workflows/pstack-multi/worker.md"
 id = "evidence-gate"
 title = "Fail-closed validation of all three independent model receipts"
 needs = ["lane-a", "lane-b", "lane-c"]
-metadata = { "gc.run_target" = "gc.run-operator", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm" }
+metadata = { "gc.run_target" = "gc.run-operator", "pstack.multi.workflow" = "swarm", "pstack.multi.subject_path" = "{{subject_path}}", "pstack.multi.source_revision" = "{{source_revision}}", "pstack.multi.artifact_dir" = "{{artifact_root}}/pstack/multi/swarm", "pstack.multi.city_config" = "{{city_config}}", "pstack.multi.rig_name" = "{{rig_name}}" }
 description_file = "../assets/workflows/pstack-multi/gate.md"
 [steps.check]
 max_attempts = 1

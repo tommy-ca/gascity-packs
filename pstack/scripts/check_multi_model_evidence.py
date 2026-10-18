@@ -26,6 +26,7 @@ def required(data: dict, key: str) -> str:
 
 def validate_receipts(
     root: Path, artifact_dir: str, workflow: str, workflow_id: str, revision: str,
+    bindings: dict[str, tuple[str, str]] | None = None,
 ) -> list[dict]:
     if workflow not in WORKFLOWS or not workflow_id or not revision:
         raise EvidenceError("invalid workflow, root bead id, or revision")
@@ -59,6 +60,8 @@ def validate_receipts(
         required(data, "summary")
         required(data, "provider")
         model = required(data, "model")
+        if bindings is not None and (required(data, "provider"), model) != bindings.get(f"pstack.panel-{lane}"):
+            raise EvidenceError(f"{file}: provider/model does not match configured city role")
         if model.lower() in {"auto", "default", "unknown"} or model in models:
             raise EvidenceError(f"{file}: unverified or duplicate model identity")
         models.add(model)
@@ -84,7 +87,7 @@ def validate_receipts(
     return receipts
 
 
-def gate_args() -> tuple[Path, str, str, str, str]:
+def gate_args() -> tuple[Path, str, str, str, str, str, str]:
     bead_id = os.environ.get("GC_BEAD_ID")
     if not bead_id:
         raise EvidenceError("GC_BEAD_ID is required")
@@ -111,7 +114,9 @@ def gate_args() -> tuple[Path, str, str, str, str]:
     return (Path(root), required(meta, "pstack.multi.artifact_dir"),
             required(meta, "pstack.multi.workflow"),
             required(meta, "gc.root_bead_id"),
-            required(meta, "pstack.multi.source_revision"))
+            required(meta, "pstack.multi.source_revision"),
+            required(meta, "pstack.multi.city_config"),
+            required(meta, "pstack.multi.rig_name"))
 
 
 def main() -> int:
@@ -121,15 +126,29 @@ def main() -> int:
     parser.add_argument("--workflow", choices=sorted(WORKFLOWS))
     parser.add_argument("--workflow-id")
     parser.add_argument("--source-revision")
+    parser.add_argument("--city-config")
+    parser.add_argument("--rig-name")
     args = parser.parse_args()
     try:
         fields = (
-            (args.root, args.artifact_dir, args.workflow, args.workflow_id, args.source_revision)
+            (args.root, args.artifact_dir, args.workflow, args.workflow_id, args.source_revision,
+             args.city_config, args.rig_name)
             if args.root is not None else gate_args()
         )
         if any(value is None for value in fields):
             raise EvidenceError("offline mode requires every explicit argument")
-        validate_receipts(*fields)
+        city_file = Path(fields[5])
+        if not city_file.is_absolute():
+            raise EvidenceError("city_config must be absolute for deterministic host lookup")
+        import importlib.util
+        script = Path(__file__).with_name("check_multi_model_city.py")
+        spec = importlib.util.spec_from_file_location("pstack_multi_model_city", script)
+        if spec is None or spec.loader is None:
+            raise EvidenceError("city preflight loader unavailable")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        bindings = module.check_city(city_file, fields[6])
+        validate_receipts(*fields[:5], bindings=bindings)
     except (EvidenceError, OSError, subprocess.TimeoutExpired, ValueError) as exc:
         print(f"multi-model-evidence: BLOCKED: {exc}", file=sys.stderr)
         return 1

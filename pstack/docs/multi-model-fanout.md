@@ -58,18 +58,19 @@ This validates the declared patch shape and three model names but **cannot attes
 
 ## Run
 
-Inside a disposable Gas City city with installed pack and roles, inspect the formula graph first:
+Inside a disposable Gas City city with installed pack and roles, inspect the formula graph first. The city_config argument MUST be an absolute path. The rig_name must resolve to the target rig's three explicit model patches:
 
 ~~~sh
 gc formula show pstack-swarm-multi --json
-gc formula cook pstack-swarm-multi --var subject_path=src/ --var artifact_root=.gc/pstack/runs/run-001 --var source_revision=COMMIT_SHA
+gc formula cook pstack-swarm-multi --var subject_path=src/ --var artifact_root=.gc/pstack/runs/run-001 --var source_revision=COMMIT_SHA \
+  --var city_config=/absolute/path/to/city.toml --var rig_name=app
 ~~~
 
 Cook does not mean that models were executed. Sling and record which three worker Beads were claimed and which sessions produced receipts. Choose a **unique rig-relative** artifact root per actual workflow. Do not reuse between concurrent runs.
 
 Each worker writes one JSON receipt to the run root under pstack/multi/swarm, arena, or interrogate, named lane-a.json, lane-b.json, lane-c.json. The versioned contract is pstack/schemas/multi-lane.v1.schema.json. It carries workflow, root Bead ID, actual lane/role, source revision, provider/model claims, findings, evidence and completion status.
 
-A native graph barrier depends on all three worker Beads. Its exec check uses pstack/scripts/check_multi_model_evidence.py, which rejects missing/corrupt/blocked receipts, duplicate model names, incorrect workflow/run/revision, missing evidence, or symlink/path escape. A passing check is evidence of **internally consistent self-reported receipts, not proof of actual independent providers**. It unblocks the synthesizer only after all three declared lanes have completed.
+A native graph barrier depends on all three worker Beads. Its exec check uses pstack/scripts/check_multi_model_evidence.py and mandates a real city.toml path + rig name. The gate compares the receipts' provider and model to the explicitly configured three role bindings, and rejects missing/corrupt/blocked receipts, duplicate model names, incorrect workflow/run/revision, missing evidence, or symlink/path escape. A passing check is evidence of **internally consistent self-reported receipts, not proof of actual independent providers**. It unblocks the synthesizer only after all three declared lanes have completed.
 
 Offline synthetic example:
 
@@ -77,7 +78,8 @@ Offline synthetic example:
 python pstack/scripts/check_multi_model_evidence.py \
   --root /path/to/disposable-rig \
   --artifact-dir .gc/pstack/runs/run-001/pstack/multi/swarm \
-  --workflow swarm --workflow-id ACTUAL_ROOT_BEAD --source-revision COMMIT_SHA
+  --workflow swarm --workflow-id ACTUAL_ROOT_BEAD --source-revision COMMIT_SHA \
+  --city-config /absolute/path/to/city.toml --rig-name app
 ~~~
 
 ## Verification and limits

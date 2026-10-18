@@ -50,6 +50,8 @@ def test_independent_model_lanes(name, first, join):
     assert set(steps["evidence-gate"]["needs"]) == {"lane-a", "lane-b", "lane-c"}
     assert steps["evidence-gate"]["check"]["check"]["path"] == "../scripts/check_multi_model_evidence.py"
     assert steps["evidence-gate"]["check"]["check"]["mode"] == "exec"
+    assert steps["evidence-gate"]["metadata"]["pstack.multi.city_config"] == "{{city_config}}"
+    assert steps["evidence-gate"]["metadata"]["pstack.multi.rig_name"] == "{{rig_name}}"
     assert steps[join]["needs"] == ["evidence-gate"]
     if name == "arena":
         assert steps["verify"]["needs"] == ["judge"]
@@ -167,3 +169,21 @@ def test_original_method_formulas_are_not_replaced():
     for stem in ("swarm", "arena", "interrogate"):
         old = tomllib.loads((ROOT / "formulas" / f"pstack-{stem}.formula.toml").read_text())
         assert not any(step["id"].startswith("lane-") for step in old["steps"])
+
+
+def test_receipts_must_match_declared_role_config(tmp_path):
+    evidence = load_script("check_multi_model_evidence.py")
+    city_check = load_script("check_multi_model_city.py")
+    path = tmp_path / "city.toml"
+    path.write_text(city())
+    binding = city_check.check_city(path, "app")
+    setup_receipts(tmp_path)
+    assert len(evidence.validate_receipts(
+        tmp_path, ".gc/runs/test/pstack/multi/swarm", "swarm", "bead-1", "abc1234", binding
+    )) == 3
+    mismatched = dict(binding)
+    mismatched["pstack.panel-a"] = ("claude", "a-different-model")
+    with pytest.raises(evidence.EvidenceError):
+        evidence.validate_receipts(
+            tmp_path, ".gc/runs/test/pstack/multi/swarm", "swarm", "bead-1", "abc1234", mismatched
+        )
