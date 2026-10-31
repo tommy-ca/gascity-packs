@@ -101,3 +101,15 @@ The operator or a higher-level Gas City coordinator starts phase 2 only after ph
 
 
 **Host asset resolution:** Both dynamic exec checks are executable files under `pstack/assets/scripts/`. Formula check declarations use `../assets/scripts/...` so Gas City's real compiler resolves a trusted absolute file path. Generic `../scripts/...` does not receive that special resolution and must not be used for controller checks.
+
+## Engineering host ownership and optional consumer independence (2026-10-31)
+
+**Source ownership:** This Gas City pack and the operator-selected city are the sole owners of host-specific PStack dynamic formulas, agent/route configuration, child Beads, metadata CAS, receipt schemas, runtime lifecycle and effective model-session provenance. A downstream quant or other domain overlay is **neither a dependency nor part of the acceptance test**. No host pack consumer has to install QStack/qorch; conversely QStack must not have to install Gas City.
+
+**Atomic contracts:** (1) DecompositionPlan with N=2..64 bounded immutable-source tasks, (2) operator-validated ModelRoute, (3) native HostExpansion into separately claimable child work, (4) one versioned TaskReceipt per child, (5) explicit two-phase FanIn with root/manifest validation, (6) independent SessionAttestation for actual effective provider/model and retry/cancellation/budget. The first five have source-level implementation/tests on the exact pack PR branch; the sixth and end-to-end provider-backed proof remain unverified under issue #28.
+
+**Owner-respecting code/data flow:** city policy -> pack validation -> planning Bead metadata CAS -> host on_complete expansion -> child claim/attempt and receipt checks -> closed/pass source root -> explicitly dispatched phase-2 fanin check -> synthesis + verification -> optional opaque immutable artifact reference for external consumers. This pack does not author or persist a domain consumer's scientific research lifecycle and does not interpret execution completion as trading readiness.
+
+**Issue graph:** [#21](https://github.com/tommy-ca/gascity-packs/issues/21) owns this PStack/Gas City program; [#26](https://github.com/tommy-ca/gascity-packs/issues/26) owns dynamic task/route wiring, [#27](https://github.com/tommy-ca/gascity-packs/issues/27) owns security and receipt validity, [#28](https://github.com/tommy-ca/gascity-packs/issues/28) owns real runtime/independent verification, and [#29](https://github.com/tommy-ca/gascity-packs/issues/29) owns future canonical native drain/member routes. The superseded [QStack epic #2608](https://github.com/tommy-ca/qstack/issues/2608) is closed as not planned for engine-specific coupling. Do not recreate it by a vendor-aware downstream adapter.
+
+**Review gates:** Apply Cursor PStack principles (subtract-before-add, single writer, type boundaries, idempotence), independent changed-diff Thermos correctness/security and code-quality reviews, and independently attributed Swarm/Arena/Interrogate method receipts. Existing CI compiler and mocked routing checks are not provider-backed LIVE proof. Keep existing formula migration/release blockers OPEN until real proof.
