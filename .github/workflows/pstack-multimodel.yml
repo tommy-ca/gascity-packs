@@ -32,6 +32,8 @@ jobs:
         run: |
           python3 -m pytest -q \
             pstack/tests/test_apply_intent_change_security.py \
+            pstack/tests/test_apply_intent_transaction.py \
+            pstack/tests/test_vendor_refresh_safety.py \
             pstack/tests/test_multi_model_fanout.py
       - name: Parse all PStack formula TOML
         run: python3 -c 'import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in pathlib.Path("pstack/formulas").glob("*.toml")]'
