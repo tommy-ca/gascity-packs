@@ -48,9 +48,23 @@ def copy_change(src: Path, dest_changes: Path) -> None:
         return
     if dest_res in src_res.parents or src_res in dest_res.parents:
         raise SystemExit("OpenSpec --source and dest change path overlap")
-    if dest_changes.exists():
-        shutil.rmtree(dest_changes)
-    shutil.copytree(src, dest_changes)
+    if dest_changes.is_symlink():
+        raise SystemExit("destination change must not be a symlink")
+    # Stage on the destination filesystem, so promotion is an atomic rename.
+    # Keep the previous payload until the replacement has been promoted.
+    with tempfile.TemporaryDirectory(prefix=f".{dest_changes.name}.stage-", dir=dest_changes.parent) as temp:
+        stage = Path(temp) / "candidate"
+        shutil.copytree(src, stage)
+        if not dest_changes.exists():
+            stage.rename(dest_changes)
+            return
+        previous = Path(temp) / "previous"
+        dest_changes.rename(previous)
+        try:
+            stage.rename(dest_changes)
+        except BaseException:
+            previous.rename(dest_changes)
+            raise
 
 
 def validate(spec_root: Path, src: Path, name: str) -> int:
@@ -107,13 +121,16 @@ def main() -> int:
         return validate(spec_root, src, name)
     dest = args.dest.expanduser().resolve()
     dest_changes = dest / "openspec" / "changes" / name
+    # Preflight strictly before touching existing destination state.
+    rc = validate(dest / "openspec", src, name)
+    if rc != 0:
+        return rc
     try:
         copy_change(src, dest_changes)
     except OSError as exc:
         raise SystemExit(f"cannot write {dest_changes}: {exc}") from exc
-    rc = validate(dest / "openspec", src, name)
-    if rc != 0 or not args.archive:
-        return rc
+    if not args.archive:
+        return 0
     return subprocess.run(
         ["openspec", "archive", name, "-y"],
         cwd=dest,

@@ -29,13 +29,15 @@ Gas City mapping lives outside this directory.
 
 
 def assert_safe_paths(dest: Path, runtime: Path) -> None:
-    dest = dest.resolve()
-    runtime = runtime.resolve()
+    # This command deletes and recreates these directories. Never permit an
+    # arbitrary --dest/--runtime to turn a vendor refresh into a recursive delete.
     pack = PACK_ROOT.resolve()
-    if dest in {pack, pack / "agents"}:
-        raise SystemExit(f"refusing dest {dest}; that is pack-owned")
-    if runtime == pack / "agents":
-        raise SystemExit(f"refusing runtime {runtime}; that is pack-owned")
+    expected_dest = pack / "vendor" / "pstack"
+    expected_runtime = pack / "skills"
+    if dest.is_symlink() or runtime.is_symlink():
+        raise SystemExit("refusing symlink vendor destinations")
+    if dest.resolve() != expected_dest or runtime.resolve() != expected_runtime:
+        raise SystemExit("vendor refresh may write only pstack/vendor/pstack and pstack/skills")
 
 
 def copy_listed(src_pstack: Path, dest: Path) -> None:
