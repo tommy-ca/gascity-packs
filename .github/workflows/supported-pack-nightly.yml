@@ -50,8 +50,8 @@ permissions:
   contents: read
 
 env:
-  DOLT_VERSION: "2.1.7"
-  CLAUDE_VERSION: "2.1.123"
+  DOLT_VERSION: "2.6.0"
+  CLAUDE_VERSION: "2.1.283"
 
 jobs:
   static-contracts:
@@ -68,7 +68,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
-          python-version: "3.12"
+          python-version: "3.12.16"
 
       - name: Install Python test dependencies
         run: python3 -m pip install PyYAML pytest
@@ -209,13 +209,13 @@ jobs:
         if: steps.subset.outputs.run_gate == 'true'
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
-          python-version: "3.12"
+          python-version: "3.12.16"
 
       - name: Set up Go
         if: steps.subset.outputs.run_gate == 'true'
         uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
         with:
-          go-version: "1.26.5"
+          go-version: "1.26.10"
 
       - name: Set up Node
         if: steps.subset.outputs.run_gate == 'true'
