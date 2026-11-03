@@ -1,0 +1,50 @@
+# Dynamic item count, per-item route target and outputs; no fixed model panel.
+description = "PStack swarm dynamic host-owned fanout; synthesize via pstack-dynamic-synthesize only after source workflow closes."
+formula = "pstack-swarm-multi"
+version = 2
+target_required = false
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[catalog]
+name = "pstack-swarm-multi"
+description = "Dynamic, allowlisted model routing; requires live city and validated task plan."
+
+[vars]
+[vars.revision]
+required = true
+[vars.artifact_root]
+required = true
+[vars.city_config]
+required = true
+[vars.rig_name]
+required = true
+[vars.route_policy]
+required = true
+[vars.subject_path]
+required = true
+
+[[steps]]
+id = "plan"
+title = "Decompose swarm into validated semantic tasks"
+metadata = { "gc.run_target" = "pstack.coordinator", "pstack.dynamic.method" = "swarm", "pstack.dynamic.revision" = "{{revision}}", "pstack.dynamic.artifact_root" = "{{artifact_root}}", "pstack.dynamic.city_config" = "{{city_config}}", "pstack.dynamic.rig_name" = "{{rig_name}}", "pstack.dynamic.route_policy" = "{{route_policy}}", "pstack.dynamic.subject_path" = "{{subject_path}}" }
+description_file = "../assets/workflows/pstack-dynamic/plan.md"
+
+[steps.on_complete]
+for_each = "output.tasks"
+bond = "pstack-dynamic-worker"
+parallel = true
+
+[steps.on_complete.vars]
+task_id = "{item.task_id}"
+route_target = "{item.route_target}"
+scope_ref = "{item.scope_ref}"
+objective = "{item.objective}"
+artifact_path = "{item.artifact_path}"
+revision = "{item.revision}"
+workflow_id = "{item.workflow_id}"
+method = "{item.method}"
+provider = "{item.provider}"
+model = "{item.model}"
+

@@ -1,0 +1,268 @@
+#!/usr/bin/env python3
+"""PStack dynamic task/route contract. Gas City owns child creation and sessions."""
+from __future__ import annotations
+import argparse
+import json
+import re
+import subprocess
+import sys
+import tomllib
+from pathlib import Path
+
+METHODS = {"swarm", "arena", "interrogate"}
+IDENT = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
+TARGET = re.compile(r"^[A-Za-z][A-Za-z0-9_.-]{0,127}$")
+MAX_ITEMS = 64
+MAX_METADATA = 60000
+
+class ContractError(ValueError):
+    pass
+
+def record(obj, keys, label):
+    if not isinstance(obj, dict) or set(obj) != set(keys):
+        raise ContractError(f"{label}: expected exactly {sorted(keys)}")
+    return obj
+
+def text_field(value, name, limit=256):
+    if not isinstance(value, str) or not value.strip() or len(value) > limit:
+        raise ContractError(f"{name}: empty, malformed or too long")
+    return value
+
+def secure_child(root: Path, rel: str) -> Path:
+    p = Path(rel)
+    if p.is_absolute() or not p.parts or any(x in {"", ".", ".."} for x in p.parts):
+        raise ContractError("unsafe artifact path")
+    base = root.resolve()
+    curr = base
+    for part in p.parts:
+        curr = curr / part
+        if curr.is_symlink():
+            raise ContractError("symlink in artifact path")
+    resolved = curr.resolve()
+    if base not in resolved.parents:
+        raise ContractError("artifact escaped rig")
+    return resolved
+
+def city_roles(city_path: Path, rig: str) -> dict:
+    data = tomllib.loads(city_path.read_text(encoding="utf-8"))
+    matches = [x for x in data.get("rigs", []) if x.get("name") == rig]
+    if len(matches) != 1:
+        raise ContractError(f"expected one rig named {rig!r}")
+    roles = {}
+    for patch in matches[0].get("patches", []):
+        name = patch.get("agent")
+        if name in roles:
+            raise ContractError(f"duplicate city rig patch: {name}")
+        if isinstance(name, str):
+            roles[name] = patch
+    return roles
+
+def validate(plan: dict, policy: dict, city_path: Path, rig: str, root: Path, workflow_id: str, allowed_subject: str | None = None) -> dict:
+    record(plan, {"method", "revision", "artifact_root", "tasks"}, "plan")
+    record(policy, {"version", "max_tasks", "routes"}, "policy")
+    method = plan["method"]
+    if method not in METHODS:
+        raise ContractError("unknown method")
+    revision = text_field(plan["revision"], "revision", 128)
+    if not re.fullmatch(r"[a-fA-F0-9]{40,64}", revision):
+        raise ContractError("revision must be immutable 40/64-digit hex SHA")
+    runroot = text_field(plan["artifact_root"], "artifact_root", 200)
+    secure_child(root, runroot)
+    subject = secure_child(root, allowed_subject) if allowed_subject is not None else None
+    if subject is not None and not subject.exists():
+        raise ContractError("authorized subject does not exist")
+    if policy["version"] != 1 or type(policy["max_tasks"]) is not int or not 2 <= policy["max_tasks"] <= MAX_ITEMS:
+        raise ContractError("invalid policy cap")
+    allowed = policy["routes"]
+    if not isinstance(allowed, list) or not allowed:
+        raise ContractError("missing route inventory")
+    roles = city_roles(city_path, rig)
+    route_map = {}
+    for item in allowed:
+        record(item, {"target", "provider", "model"}, "route")
+        target = text_field(item["target"], "target", 128)
+        if not TARGET.fullmatch(target) or target in route_map:
+            raise ContractError("invalid or duplicate target")
+        provider = text_field(item["provider"], "provider", 128)
+        model = text_field(item["model"], "model", 128)
+        configured = roles.get(target, {})
+        if configured.get("provider") != provider or configured.get("option_defaults", {}).get("model") != model:
+            raise ContractError(f"{target}: not explicitly bound to declared provider and model")
+        if model.casefold() in {"auto", "unknown", "default"}:
+            raise ContractError("model must be concrete")
+        route_map[target] = (provider, model)
+    tasks = plan["tasks"]
+    if not isinstance(tasks, list) or not 2 <= len(tasks) <= policy["max_tasks"]:
+        raise ContractError("task count outside allowed range")
+    task_ids, result, models = set(), [], set()
+    workflow_id = text_field(workflow_id, "workflow_id", 128)
+    for task in tasks:
+        record(task, {"id", "route_target", "scope_ref", "objective"}, "task")
+        task_id = text_field(task["id"], "task id", 64)
+        if not IDENT.fullmatch(task_id) or task_id.casefold() in task_ids:
+            raise ContractError("duplicate or unsafe task id")
+        task_ids.add(task_id.casefold())
+        route = task["route_target"]
+        if route not in route_map:
+            raise ContractError("task selected a route outside allowlist")
+        scope_ref = text_field(task["scope_ref"], "scope_ref", 200)
+        # Only reference files relative to rig; prevent absolute, symlink and traversal.
+        scope = secure_child(root, scope_ref)
+        if not scope.exists():
+            raise ContractError("task scope does not exist in rig root")
+        if subject is not None and scope != subject and subject not in scope.parents:
+            raise ContractError("task scope escapes authorized subject")
+        objective = text_field(task["objective"], "objective", 500)
+        if any(x in objective for x in ("\x00", "\r")):
+            raise ContractError("invalid objective characters")
+        provider, model = route_map[route]
+        models.add(model.casefold())
+        relative = f"{runroot}/pstack/dynamic/{method}/{task_id}.json"
+        secure_child(root, relative)
+        result.append({
+            "task_id": task_id,
+            "route_target": route,
+            "scope_ref": scope_ref,
+            "objective": objective,
+            "artifact_path": relative,
+            "revision": revision,
+            "workflow_id": workflow_id,
+            "method": method,
+            "provider": provider,
+            "model": model,
+        })
+    if len(models) < 2:
+        raise ContractError("multi-model execution needs at least two distinct models")
+    data = {"tasks": result}
+    raw = json.dumps(data, separators=(",", ":"), ensure_ascii=True)
+    if len(raw.encode("utf-8")) > MAX_METADATA:
+        raise ContractError("fanout metadata exceeds 60KB")
+    return data
+
+def inspect_bead(bead_id: str) -> dict:
+    proc = subprocess.run(["gc", "bd", "show", bead_id, "--json"],
+                          capture_output=True, text=True, timeout=30)
+    if proc.returncode:
+        raise ContractError("cannot inspect planning bead")
+    bead = json.loads(proc.stdout)
+    if isinstance(bead, list):
+        if len(bead) != 1:
+            raise ContractError("ambiguous planning bead")
+        bead = bead[0]
+    if not isinstance(bead, dict) or not isinstance(bead.get("metadata"), dict):
+        raise ContractError("planning bead metadata unavailable")
+    return bead["metadata"]
+
+
+def validate_publish_context(args, meta: dict, plan: dict, trusted_root: str) -> None:
+    if not trusted_root or Path(args.root).resolve() != Path(trusted_root).resolve():
+        raise ContractError("requested root differs from host rig root")
+    for key, expected in (
+        ("gc.root_bead_id", args.workflow_id),
+        ("pstack.dynamic.method", plan["method"]),
+        ("pstack.dynamic.revision", plan["revision"]),
+        ("pstack.dynamic.artifact_root", plan["artifact_root"]),
+        ("pstack.dynamic.rig_name", args.rig),
+    ):
+        if meta.get(key) != expected:
+            raise ContractError(f"source bead {key} disagrees with validated plan")
+    for key, requested in (
+        ("pstack.dynamic.city_config", args.city),
+        ("pstack.dynamic.route_policy", args.policy),
+    ):
+        value = meta.get(key)
+        if not value or Path(value).resolve() != Path(requested).resolve():
+            raise ContractError(f"source bead {key} differs from operator-selected path")
+    if not meta.get("pstack.dynamic.subject_path"):
+        raise ContractError("missing authorized source scope")
+
+
+def publish(bead_id: str, data: dict, store_ref: str) -> None:
+    """Atomically publish once in the authorized local rig; never last-writer-wins."""
+    raw = json.dumps(data, separators=(",", ":"), ensure_ascii=True)
+    if not re.fullmatch(r"rig:[A-Za-z0-9][A-Za-z0-9._-]*", store_ref):
+        raise ContractError("invalid exact rig store ref")
+    # Host CAS outcomes: swapped | already_next | conflict. Conflict exits 0;
+    # always parse its structured outcome instead of trusting process status.
+    result = subprocess.run(
+        ["gc", "beads", "metadata-cas", bead_id,
+         "--store-ref=" + store_ref, "--key=gc.output_json",
+         "--expected=", "--next=" + raw, "--json"],
+        check=False, capture_output=True, text=True, timeout=30,
+    )
+    if result.returncode:
+        raise ContractError("host metadata CAS unavailable/failed: " + result.stderr[:300])
+    try:
+        outcome = json.loads(result.stdout)
+    except (ValueError, TypeError) as exc:
+        raise ContractError("invalid metadata CAS response") from exc
+    if (not isinstance(outcome, dict) or outcome.get("ok") is not True
+            or outcome.get("key") != "gc.output_json"
+            or outcome.get("bead_id") != bead_id
+            or outcome.get("store_ref") != store_ref
+            or outcome.get("outcome") not in {"swapped", "already_next"}):
+        raise ContractError("metadata CAS conflict or inconsistent host result")
+    current = inspect_bead(bead_id)
+    try:
+        stored = json.loads(current.get("gc.output_json", "null"))
+    except (ValueError, TypeError) as exc:
+        raise ContractError("invalid post-CAS metadata readback") from exc
+    if stored != data:
+        raise ContractError("CAS response did not persist exact validated plan")
+
+
+def current_claim_id() -> str:
+    """Resolve the worker's ACTUAL claimed Bead using Gas City's session back-channel."""
+    import os
+    session_id = os.environ.get("GC_SESSION_ID", "").strip()
+    if session_id:
+        result = subprocess.run(
+            ["gc", "hook", "current", "--id-only"],
+            check=False, capture_output=True, text=True, timeout=30,
+        )
+        if result.returncode:
+            raise ContractError("cannot resolve claimed Bead from Gas City session")
+        bead = result.stdout.strip()
+    else:
+        # Only the controller check environment is expected to provide this.
+        bead = os.environ.get("GC_BEAD_ID", "").strip()
+    if not bead or len(bead) > 128 or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", bead):
+        raise ContractError("missing or invalid current claimed Bead")
+    return bead
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    for field in ("plan", "policy", "city", "root", "rig", "workflow-id"):
+        ap.add_argument("--" + field, required=True)
+    ap.add_argument("--bead-id")
+    args = ap.parse_args()
+    try:
+        import os
+        planned = json.loads(Path(args.plan).read_text(encoding="utf-8"))
+        meta = None
+        if args.bead_id:
+            actual = current_claim_id()
+            if actual != args.bead_id:
+                raise ContractError("metadata publish is allowed only for the agent's actual claimed Bead")
+            meta = inspect_bead(args.bead_id)
+            trusted = next((os.environ[k] for k in ("GC_RIG_ROOT", "GC_BEADS_SCOPE_ROOT", "GC_STORE_PATH")
+                            if os.environ.get(k)), "")
+            validate_publish_context(args, meta, planned, trusted)
+        data = validate(
+            planned,
+            json.loads(Path(args.policy).read_text(encoding="utf-8")),
+            Path(args.city), args.rig, Path(args.root), args.workflow_id,
+            allowed_subject=meta.get("pstack.dynamic.subject_path") if meta else None,
+        )
+        if args.bead_id:
+            publish(args.bead_id, data, 'rig:' + args.rig)
+        else:
+            print(json.dumps(data, indent=2))
+    except (ContractError, ValueError, OSError, subprocess.TimeoutExpired) as exc:
+        print(f"pstack dynamic plan: BLOCKED: {exc}", file=sys.stderr)
+        return 1
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())

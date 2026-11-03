@@ -1,0 +1,41 @@
+# PStack-specific evidence schema; immutable ID: pstack.explanation.v1
+schema_id: pstack.explanation.v1
+artifact: explanation
+allowed_statuses:
+  - draft
+  - approved
+  - blocked
+  - superseded
+coverage_statuses:
+  - covered
+  - not_applicable
+  - deferred
+  - blocked
+  - out_of_scope
+  - superseded
+
+required_front_matter:
+  - schema
+  - workflow.id
+  - workflow.formula
+  - producer.formula
+  - producer.stage
+  - status
+  - producer.attempt
+  - trace
+  - subject
+  - overview
+  - flow
+  - locations
+  - caveats
+required_fields:
+  - subject
+  - overview
+  - flow
+  - locations
+  - caveats
+evidence_fields:
+  - source_revision
+  - source_path
+  - claim_refs
+  - verification_status
