@@ -12,7 +12,7 @@ source = "/absolute/path/to/gascity-packs/graph-engineering"
 
 The local-path example is for development. To use Git import, point to a reviewed pinned commit and subdirectory instead of unpinned `main`; run `gc import install` and confirm `gc formula catalog --json`.
 
-The new formula **requires an existing, approved input convoy**. It does not create tasks or choose providers automatically. In a correctly configured rig, use Gas City's native targeted invocation:
+The new formula **requires an existing, approved input convoy**. A bounded deterministic `inspect` preflight checks normalized host target identity and rig-contained goal/artifact paths. It **does not prove owner approval**; that remains an external runtime authorization and release gate. It does not create tasks or choose providers automatically. In a correctly configured rig, use Gas City's native targeted invocation:
 
 ```sh
 gc sling gc.run-operator <approved-convoy-id> --on graph-long-horizon \
@@ -35,5 +35,7 @@ approved convoy ─> inspect ─> design ─> native drain(separate, exclusive)
 
 ## Source and semantics
 Read the [OpenSpec proposal](../openspec/changes/2026-11-11-gascity-graph-engineering/proposal.md), [design](../openspec/changes/2026-11-11-gascity-graph-engineering/design.md), [reference schema](schemas/semantic-graph.reference.schema.json), [source census](../openspec/changes/2026-11-11-gascity-graph-engineering/references/source-crosswalk.md) and [feature map](../openspec/changes/2026-11-11-gascity-graph-engineering/references/feature-map.md).
+
+The preflight is an executable safety check on the `inspect` stage, based on the existing Gas City `gc bd show` contract. Its PASS is `INPUT_SANITY_OK` only, never permission to operate or independent reviewer acceptance. Run-mode audit and exact host capability conformance are tracked in issue #34.
 
 For shape/negative checks: `python3 -m pytest graph-engineering/tests/test_graph_engineering_pack.py -q` (requires pytest + jsonschema). For actual runtime and PStack method evidence: read `skills/verify-graph-engineering/SKILL.md`. Static fixture PASS never implies live Gas City formula compilation, session routing, independent review or authorized publication.

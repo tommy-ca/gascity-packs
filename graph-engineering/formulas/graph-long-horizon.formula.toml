@@ -39,8 +39,16 @@ default = "gc.implementation-worker"
 [[steps]]
 id = "inspect"
 title = "Inspect the approved graph intent and convoy"
-metadata = { "gc.run_target" = "gc.run-operator" }
+metadata = { "gc.run_target" = "gc.run-operator", "gc.graph.goal_path" = "{{goal_path}}", "gc.graph.artifact_root" = "{{artifact_root}}", "gc.graph.context_path" = "{{context_path}}", "gc.graph.expected_convoy" = "{{convoy_id}}" }
 description_file = "../assets/workflows/graph-long-horizon/inspect.md"
+
+[steps.check]
+max_attempts = 2
+
+[steps.check.check]
+mode = "exec"
+path = "../assets/scripts/checks/graph-preflight.py"
+timeout = "2m"
 
 [[steps]]
 id = "design"
