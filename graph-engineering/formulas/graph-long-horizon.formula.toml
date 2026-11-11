@@ -1,0 +1,97 @@
+description = """
+Opt-in Gas City graph.v2 execution of an existing approved work convoy,
+followed by independent review lanes and explicit evidence synthesis.
+This pack does not introduce a scheduler, a second ledger, a wiki writer,
+a generic provider router, or a new claim/lease protocol.
+
+Input: an ALREADY APPROVED convoy (the host injects convoy_id on targeted sling).
+Import gc roles at rig scope; choose a city-authorized implementation_target.
+All review output is a proposal until externally checked evidence exists.
+"""
+formula = "graph-long-horizon"
+version = 1
+target_required = true
+sling_container_mode = "source"
+
+[requires]
+formula_compiler = ">=2.0.0"
+
+[catalog]
+name = "graph-long-horizon"
+description = "Run an approved convoy using native Gas City drain and three independent evidence-review lanes; report-only release."
+
+[vars.goal_path]
+description = "Rig-relative path to operator-approved goal/requirements; never trusted from work output alone."
+required = true
+
+[vars.artifact_root]
+description = "Rig-relative directory for the run's source-bound review artifacts."
+required = true
+
+[vars.context_path]
+description = "Optional context artifact provided to item formula."
+default = ""
+
+[vars.implementation_target]
+description = "Existing operator-authorized Gas City role target. Not a raw provider/model name."
+default = "gc.implementation-worker"
+
+[[steps]]
+id = "inspect"
+title = "Inspect the approved graph intent and convoy"
+metadata = { "gc.run_target" = "gc.run-operator" }
+description_file = "../assets/workflows/graph-long-horizon/inspect.md"
+
+[[steps]]
+id = "design"
+title = "Recompose a bounded graph plan"
+needs = ["inspect"]
+metadata = { "gc.run_target" = "gc.design-author" }
+description_file = "../assets/workflows/graph-long-horizon/design.md"
+
+[[steps]]
+id = "drain"
+title = "Execute approved convoy via native Gas City drain"
+needs = ["design"]
+metadata = { "gc.run_target" = "{{implementation_target}}" }
+description_file = "../assets/workflows/graph-long-horizon/drain.md"
+
+[steps.drain]
+context = "separate"
+formula = "do-work"
+member_access = "exclusive"
+
+[[steps]]
+id = "acceptance-review"
+title = "Independently review requirements and accepted work"
+needs = ["drain"]
+metadata = { "gc.run_target" = "gc.implementation-reviewer", "gc.graph.review_kind" = "acceptance" }
+description_file = "../assets/workflows/graph-long-horizon/acceptance-review.md"
+
+[[steps]]
+id = "safety-review"
+title = "Review authority, side effects and concurrency"
+needs = ["drain"]
+metadata = { "gc.run_target" = "gc.design-test-risk-reviewer", "gc.graph.review_kind" = "safety" }
+description_file = "../assets/workflows/graph-long-horizon/safety-review.md"
+
+[[steps]]
+id = "continuity-review"
+title = "Review context-reset, evidence lineage and restartability"
+needs = ["drain"]
+metadata = { "gc.run_target" = "gc.gap-analyst", "gc.graph.review_kind" = "continuity" }
+description_file = "../assets/workflows/graph-long-horizon/continuity-review.md"
+
+[[steps]]
+id = "synthesize"
+title = "Reconcile all review lanes without inventing PASS"
+needs = ["acceptance-review", "safety-review", "continuity-review"]
+metadata = { "gc.run_target" = "gc.review-synthesizer" }
+description_file = "../assets/workflows/graph-long-horizon/synthesize.md"
+
+[[steps]]
+id = "finalize"
+title = "Write source-bound outcome and blockers"
+needs = ["synthesize"]
+metadata = { "gc.run_target" = "gc.run-operator" }
+description_file = "../assets/workflows/graph-long-horizon/finalize.md"

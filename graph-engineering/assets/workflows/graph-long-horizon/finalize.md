@@ -1,0 +1,3 @@
+# Finalize — truthful evidence report
+
+Write one concise report under `{{artifact_root}}` with workflow/root bead ID, input convoy, approved goal revision, all member bead IDs, actual run revision, evidence references, distinct reviewers, unresolved findings, budget use (if measured), retry/cancel history and next action. Status may be PASS only when every native host gate and external independent acceptance receipt genuinely passed on the same revision. Otherwise use ISSUES, BLOCKED, INCONCLUSIVE or NOT_RUN; do not use a successful stage close as proof of effective model routing, independent sessions, or QStack knowledge publication. No side-effectful publish step exists in this formula.

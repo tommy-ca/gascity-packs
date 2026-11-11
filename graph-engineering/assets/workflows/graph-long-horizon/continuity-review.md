@@ -1,0 +1,3 @@
+# Independent long-horizon continuity review lane
+
+Challenge model-context loss, stop/resume, cold reconstruction from Beads and attached artifacts, proper completion of dependent work, and non-skippable review gates. Do not introduce a longgraph ledger alongside Gas City's canonical Bead store. Examine audit artifacts and host state for each accepted frontier, and attempt controlled restart/replay only when the environment allows it. Identify any gap where resumption requires prior conversation memory; that is a failure of durable-state completeness, not proof by assertion. Report exact commands, revisions and missing evidence.
