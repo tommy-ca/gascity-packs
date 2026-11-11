@@ -41,7 +41,7 @@ jobs:
         run: python3 validate_registry.py --require-git
 
       - name: Run Python pack tests
-        run: python3 -m pytest tests contributing-to-gascity/tests gascity/tests discord/tests github/tests oversight-rig/tests slack-full/tests slack-channel/tests pr-pipeline/tests profiler/tests -q
+        run: python3 -m pytest tests contributing-to-gascity/tests gascity/tests graph-engineering/tests discord/tests github/tests oversight-rig/tests slack-full/tests slack-channel/tests pr-pipeline/tests profiler/tests -q
 
       - name: Lint and exercise shared role prompt composition
         run: |
@@ -57,7 +57,7 @@ jobs:
           # deletes that section. A dev gc already reports zero for it, so
           # pinning them would waive findings most contributors never see.
           # Refute: gc lint oversight-rig  (0 findings on main, 4 on v1.4.1)
-          for pack in gascity gascity/roles bmad compound-engineering gstack superpowers profiler \
+          for pack in gascity gascity/roles graph-engineering bmad compound-engineering gstack superpowers profiler \
                       pr-pipeline slack-channel slack-full slack-mini; do
             "$GC_BIN" lint "$pack"
           done

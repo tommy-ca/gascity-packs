@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gascity-pack:graph-review-evidence:reference:v0",
+  "title": "Reference-only, never-trusted review evidence index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "authority",
+    "source_revision",
+    "workflow_root_id",
+    "input_convoy_id",
+    "reviewers",
+    "outcome"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gc.graph-review-evidence/v0"
+    },
+    "authority": {
+      "const": "REFERENCE_ONLY"
+    },
+    "source_revision": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "workflow_root_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_convoy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewers": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "bead_ref",
+          "reviewer_identity",
+          "session_provenance",
+          "verdict",
+          "artifact_ref"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "acceptance",
+              "safety",
+              "continuity"
+            ]
+          },
+          "bead_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewer_identity": {
+            "type": "string",
+            "minLength": 1
+          },
+          "session_provenance": {
+            "enum": [
+              "NOT_VERIFIED",
+              "HOST_REFERENCE_UNCHECKED"
+            ]
+          },
+          "verdict": {
+            "enum": [
+              "NOT_RUN",
+              "BLOCKED",
+              "ISSUES",
+              "INCONCLUSIVE"
+            ]
+          },
+          "artifact_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "outcome": {
+      "enum": [
+        "NOT_RUN",
+        "BLOCKED",
+        "ISSUES",
+        "INCONCLUSIVE"
+      ]
+    }
+  }
+}

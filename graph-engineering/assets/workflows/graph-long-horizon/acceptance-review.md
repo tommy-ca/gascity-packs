@@ -1,0 +1,3 @@
+# Independent acceptance review lane
+
+Read `{{goal_path}}`, the exact code/worktree diff, original convoy member IDs, source revision and retained checks. Reproduce the actual acceptance tests where authorized. Produce an attributable review artifact under `{{artifact_root}}` with reviewer/session ID, exact revision, tested commands, artifact digests, confirmed PASS/ISSUES/BLOCKED/NOT_RUN, findings and remedy. Do not edit implementation sources or claim another model was actually used unless verified from host session evidence. A prose verdict without reproduced evidence is NOT_RUN for independent acceptance.

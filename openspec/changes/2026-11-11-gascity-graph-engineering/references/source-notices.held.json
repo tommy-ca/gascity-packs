@@ -1,0 +1,48 @@
+{
+  "manifest_kind": "DRAFT_METADATA_ONLY_NOT_PRODUCER_OUTPUT",
+  "created_on": "2026-11-11",
+  "rights_status": "HELD",
+  "sources": [
+    {
+      "id": "gascity-host-2026-11-11",
+      "repo": "https://github.com/gastownhall/gascity",
+      "revision": "6bd609f5bfb41f43f444843b1220d0cde4473446",
+      "paths": [
+        "README.md",
+        "LICENSE",
+        "internal/formula/types.go",
+        "internal/formula/graph.go",
+        "internal/formula/requirements.go",
+        "internal/graphv2/invocation.go",
+        "internal/dispatch/drain.go",
+        "internal/dispatch/fanout.go"
+      ],
+      "license_evidence": "root LICENSE MIT (separate deps unreviewed)",
+      "rights_status": "HELD",
+      "captured_bytes": false,
+      "verified_source_sha256": null,
+      "publisher_status": "NOT_RUN",
+      "evidence_class": "STATIC_SOURCE"
+    },
+    {
+      "id": "gascity-packs-2026-11-11",
+      "repo": "https://github.com/gastownhall/gascity-packs",
+      "revision": "7f86098c04ead8cb78706ddc9524cf4cab83b028",
+      "paths": [
+        "README.md",
+        "gascity/pack.toml",
+        "gascity/formulas/build-base.formula.toml",
+        "gascity/formulas/build-basic.formula.toml",
+        "gascity/formulas/do-work.formula.toml",
+        "gascity/formulas/build-basic-review.formula.toml",
+        "gascity/roles/pack.toml"
+      ],
+      "license_evidence": "root license not verified; per-file review required",
+      "rights_status": "HELD",
+      "captured_bytes": false,
+      "verified_source_sha256": null,
+      "publisher_status": "NOT_RUN",
+      "evidence_class": "STATIC_SOURCE"
+    }
+  ]
+}

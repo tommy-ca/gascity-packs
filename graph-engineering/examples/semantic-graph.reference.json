@@ -1,0 +1,82 @@
+{
+  "schema_version": "gc.graph-semantic-reference/v0",
+  "authority": "REFERENCE_ONLY",
+  "goal_ref": "owner-approved/spec.md@<sha>",
+  "evidence_class": "ILLUSTRATIVE",
+  "graph": {
+    "nodes": [
+      {
+        "id": "inspect",
+        "role": "operator",
+        "needs": [],
+        "writer": "host-gas-city",
+        "acceptance_ref": "approve:goal-and-convoy"
+      },
+      {
+        "id": "design",
+        "role": "designer",
+        "needs": [
+          "inspect"
+        ],
+        "writer": "review-artifact-author",
+        "acceptance_ref": "gate:bounded-graph-design"
+      },
+      {
+        "id": "drain",
+        "role": "native-host-control",
+        "needs": [
+          "design"
+        ],
+        "writer": "host-gas-city",
+        "acceptance_ref": "gate:all-input-convoy-members"
+      },
+      {
+        "id": "acceptance-review",
+        "role": "reviewer",
+        "needs": [
+          "drain"
+        ],
+        "writer": "independent-reviewer-a",
+        "acceptance_ref": "gate:reproduced-acceptance"
+      },
+      {
+        "id": "safety-review",
+        "role": "reviewer",
+        "needs": [
+          "drain"
+        ],
+        "writer": "independent-reviewer-b",
+        "acceptance_ref": "gate:authority-and-faults"
+      },
+      {
+        "id": "continuity-review",
+        "role": "reviewer",
+        "needs": [
+          "drain"
+        ],
+        "writer": "independent-reviewer-c",
+        "acceptance_ref": "gate:restart-and-context"
+      },
+      {
+        "id": "synthesize",
+        "role": "synthesizer",
+        "needs": [
+          "acceptance-review",
+          "safety-review",
+          "continuity-review"
+        ],
+        "writer": "review-synthesizer",
+        "acceptance_ref": "gate:all-required-evidence"
+      },
+      {
+        "id": "finalize",
+        "role": "operator",
+        "needs": [
+          "synthesize"
+        ],
+        "writer": "host-gas-city",
+        "acceptance_ref": "gate:closeout-report"
+      }
+    ]
+  }
+}
